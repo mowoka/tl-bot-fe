@@ -16,6 +16,7 @@ interface InputProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   isRequired?: boolean;
+  disabled?: boolean;
 }
 
 const Input = (props: InputProps) => {
@@ -25,11 +26,11 @@ const Input = (props: InputProps) => {
     <>
       {props.type == "password" ? (
         <FormControl className="w-full" variant="outlined">
-          <InputLabel htmlFor="outlined-adornment-password">
-            Password
+          <InputLabel htmlFor={`outlined-adornment-password-${props.label}`}>
+            {props.label}
           </InputLabel>
           <OutlinedInput
-            id="outlined-adornment-password"
+            id={`outlined-adornment-password-${props.label}`}
             type={showPassword ? "text" : "password"}
             value={props.value}
             onChange={props.onChange}
@@ -45,7 +46,7 @@ const Input = (props: InputProps) => {
                 </IconButton>
               </InputAdornment>
             }
-            label="Password"
+            label={props.label}
           />
         </FormControl>
       ) : (
@@ -56,6 +57,7 @@ const Input = (props: InputProps) => {
           type="text"
           value={props.value}
           className="w-full"
+          disabled={props.disabled}
         />
       )}
     </>

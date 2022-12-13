@@ -1,6 +1,6 @@
 import Head from "next/head";
-import FormPanel from "../../components/Login/FormPanel";
-import TitlePanel from "../../components/Login/TitlePanel";
+import FormPanel from "../../components/login/FormPanel";
+import TitlePanel from "../../components/login/TitlePanel";
 
 interface LoginProps {
   title: string;

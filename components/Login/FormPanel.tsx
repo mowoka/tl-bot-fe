@@ -1,10 +1,10 @@
 import Link from "next/link";
-import useLogin from "../../hooks/Login/useLogin";
+import useLogin from "../../hooks/login/useLogin";
 import CButton from "../commons/CButton";
 import Input from "../commons/Input";
 
 const FormPanel = () => {
-  const { email, password, onChange, onSubmit } = useLogin();
+  const { nik, password, onChange, onSubmit } = useLogin();
   return (
     <div className="w-[50%] h-full bg-secondary rounded-l-lg flex flex-col justify-center items-center px-16 py-8">
       <h1 className="text-2xl uppercase font-bold">Login</h1>
@@ -12,10 +12,10 @@ const FormPanel = () => {
         <div className="py-4">
           <Input
             type="text"
-            label="Email"
-            value={email}
-            placeholder="Input Email address"
-            onChange={(e) => onChange(e, "email")}
+            label="NIK"
+            value={nik}
+            placeholder="Input NIK"
+            onChange={(e) => onChange(e, "nik")}
           />
         </div>
         <div className="py-4">
@@ -32,7 +32,7 @@ const FormPanel = () => {
         </div>
         <p className="py-2 text-center">
           still have no account ?{" "}
-          <Link href={"/"} legacyBehavior>
+          <Link href={"/accounts/register"} legacyBehavior>
             <a className="underline">here</a>
           </Link>
         </p>
