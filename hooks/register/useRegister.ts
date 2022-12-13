@@ -12,12 +12,20 @@ export interface RegisterRootProps {
     confirmPassword: string;
 }
 
+export interface ErrrorMessage {
+    show: boolean;
+    message: string;
+    status: "error" | "warning" | "info" | "success";
+}
+
 interface useRegisterProps {
     registerRoot: RegisterRootProps;
+    errorMessage: ErrrorMessage;
     nik: string;
     onChange: (e: React.ChangeEvent<HTMLInputElement>, desc: string) => void;
     onValidateNik: () => void;
     onSubmit: () => void;
+    onCloseError: () => void;
 }
 
 function useRegister(): useRegisterProps {
@@ -33,12 +41,27 @@ function useRegister(): useRegisterProps {
         password: '',
         confirmPassword: '',
     });
+    const [errorMessage, setErrorMessage] = useState<ErrrorMessage>({
+        show: false,
+        message: '',
+        status: "info"
+    });
 
+    const onCloseError = () => {
+        setErrorMessage((prev) => ({ ...prev, show: false }))
+    }
 
     const onValidateNik = () => {
-        console.log(nik)
+        if (!nik) {
+            setErrorMessage({
+                show: true,
+                message: 'NIK field required',
+                status: 'info'
+            })
+        } else {
+            setRegisterRoot((prev) => ({ ...prev, nik: nik }));
+        }
         // logic for validate nik
-        setRegisterRoot((prev) => ({ ...prev, nik: nik }));
     }
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>, desc: string) => {
@@ -70,10 +93,12 @@ function useRegister(): useRegisterProps {
 
     return {
         registerRoot,
+        errorMessage,
         nik,
         onChange,
         onValidateNik,
         onSubmit,
+        onCloseError
     }
 
 }

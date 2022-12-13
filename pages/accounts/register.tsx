@@ -1,4 +1,5 @@
 import Head from "next/head";
+import SnackbarMessage from "../../components/commons/Snackbar";
 import { CollectionForm } from "../../components/register/collectionForm";
 import { RegisterPanel } from "../../components/register/regiterPanel";
 import useRegister from "../../hooks/register/useRegister";
@@ -10,8 +11,15 @@ interface RegisterProps {
 
 const Register = (props: RegisterProps) => {
   const { title, description } = props;
-  const { registerRoot, nik, onChange, onValidateNik, onSubmit } =
-    useRegister();
+  const {
+    registerRoot,
+    errorMessage,
+    onCloseError,
+    nik,
+    onChange,
+    onValidateNik,
+    onSubmit,
+  } = useRegister();
 
   return (
     <div className="h-screen w-screen bg-primary flex justify-center items-center font-primary">
@@ -19,6 +27,12 @@ const Register = (props: RegisterProps) => {
         <title>{title}</title>
         <meta key="description" name="description" content={description} />
       </Head>
+      <SnackbarMessage
+        show={errorMessage.show}
+        message={errorMessage.message}
+        status={errorMessage.status}
+        onClose={onCloseError}
+      />
       {registerRoot.nik ? (
         <CollectionForm
           registerRoot={registerRoot}
