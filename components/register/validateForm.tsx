@@ -19,6 +19,8 @@ export const ValidateForm = (props: ValidateFormProps) => {
         value={nik}
         placeholder="Input NIK"
         onChange={(e) => onChange(e, "nik")}
+        error={nik.length > 0 && nik.length < 16 ? true : false}
+        maxLength={16}
       />
       <div className="pt-12">
         <CButton text="Validate NIK" onClick={onValidateNik} />

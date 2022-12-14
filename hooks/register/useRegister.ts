@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { ApiFetchRaw, reqFetchAPI } from "../../core/clients/apiFetch";
 
 export interface RegisterRootProps {
     nik: string;
@@ -51,7 +52,7 @@ function useRegister(): useRegisterProps {
         setErrorMessage((prev) => ({ ...prev, show: false }))
     }
 
-    const onValidateNik = () => {
+    const onValidateNik = async () => {
         if (!nik) {
             setErrorMessage({
                 show: true,
@@ -59,9 +60,38 @@ function useRegister(): useRegisterProps {
                 status: 'info'
             })
         } else {
-            setRegisterRoot((prev) => ({ ...prev, nik: nik }));
+            if (nik.length < 16) {
+                setErrorMessage({
+                    show: true,
+                    message: 'Minimal NIK character 16',
+                    status: 'info'
+                })
+            } else {
+                // logic for validate nik
+                const data = JSON.stringify({
+                    "nik": nik,
+                })
+                const resValidateNik = await ApiFetchRaw(process.env.BASE_URL_API + 'auth/validate', {
+                    method: 'POST',
+                    body: data,
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                })
+                const { body } = resValidateNik;
+                if (body.success == true) {
+                    setRegisterRoot((prev) => ({ ...prev, nik: nik }));
+                } else {
+                    setErrorMessage({
+                        show: true,
+                        message: body.message,
+                        status: 'info'
+                    })
+                }
+            }
         }
-        // logic for validate nik
+
     }
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>, desc: string) => {

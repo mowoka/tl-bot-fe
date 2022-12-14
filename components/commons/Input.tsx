@@ -17,6 +17,8 @@ interface InputProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   isRequired?: boolean;
   disabled?: boolean;
+  error?: boolean;
+  maxLength?: number;
 }
 
 const Input = (props: InputProps) => {
@@ -51,6 +53,7 @@ const Input = (props: InputProps) => {
         </FormControl>
       ) : (
         <TextField
+          error={props.error}
           label={props.label}
           placeholder={props.placeholder}
           onChange={props.onChange}
@@ -58,6 +61,7 @@ const Input = (props: InputProps) => {
           value={props.value}
           className="w-full"
           disabled={props.disabled}
+          inputProps={{ maxLength: props.maxLength }}
         />
       )}
     </>
