@@ -143,7 +143,7 @@ function useRegister(): useRegisterProps {
                 setErrorMessage({
                     show: true,
                     message: body.message.length ? body.message[0] : '',
-                    status: 'info'
+                    status: "error"
                 });
             }
         }

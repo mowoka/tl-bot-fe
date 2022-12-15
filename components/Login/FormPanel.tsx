@@ -1,10 +1,16 @@
 import Link from "next/link";
-import useLogin from "../../hooks/login/useLogin";
 import CButton from "../commons/CButton";
 import Input from "../commons/Input";
 
-const FormPanel = () => {
-  const { nik, password, onChange, onSubmit } = useLogin();
+interface FormPanelProps {
+  nik: string;
+  password: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>, desc: string) => void;
+  onSubmit: () => void;
+}
+
+const FormPanel = (props: FormPanelProps) => {
+  const { nik, password, onChange, onSubmit } = props;
   return (
     <div className="w-[50%] h-full bg-secondary rounded-l-lg flex flex-col justify-center items-center px-16 py-8">
       <h1 className="text-2xl uppercase font-bold">Login</h1>
@@ -16,6 +22,8 @@ const FormPanel = () => {
             value={nik}
             placeholder="Input NIK"
             onChange={(e) => onChange(e, "nik")}
+            error={nik.length > 0 && nik.length < 16}
+            maxLength={16}
           />
         </div>
         <div className="py-4">
@@ -25,6 +33,8 @@ const FormPanel = () => {
             value={password}
             placeholder="Input Email address"
             onChange={(e) => onChange(e, "password")}
+            error={password.length < 6}
+            maxLength={10}
           />
         </div>
         <div className="py-4">

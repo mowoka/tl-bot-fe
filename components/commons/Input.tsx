@@ -36,6 +36,8 @@ const Input = (props: InputProps) => {
             type={showPassword ? "text" : "password"}
             value={props.value}
             onChange={props.onChange}
+            inputProps={{ maxLength: props.maxLength }}
+            error={props.error}
             endAdornment={
               <InputAdornment position="end">
                 <IconButton
