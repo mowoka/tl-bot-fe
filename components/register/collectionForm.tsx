@@ -30,7 +30,7 @@ export const CollectionForm = (props: CollectionFormProps) => {
             type="text"
             label="ID Telegram"
             value={registerRoot.idTelegram}
-            placeholder="Input NIK"
+            placeholder="Input ID Telegram"
             onChange={(e) => onChange(e, "idTelegram")}
           />
         </div>
@@ -39,7 +39,7 @@ export const CollectionForm = (props: CollectionFormProps) => {
             type="text"
             label="Partner"
             value={registerRoot.partner}
-            placeholder="Input NIK"
+            placeholder="Input Partner"
             onChange={(e) => onChange(e, "partner")}
           />
         </div>
@@ -48,7 +48,7 @@ export const CollectionForm = (props: CollectionFormProps) => {
             type="text"
             label="Sector"
             value={registerRoot.sector}
-            placeholder="Input NIK"
+            placeholder="Input Sector"
             onChange={(e) => onChange(e, "sector")}
           />
         </div>
@@ -57,7 +57,7 @@ export const CollectionForm = (props: CollectionFormProps) => {
             type="text"
             label="witel"
             value={registerRoot.witel}
-            placeholder="Input NIK"
+            placeholder="Input Witel"
             onChange={(e) => onChange(e, "witel")}
           />
         </div>
@@ -66,7 +66,7 @@ export const CollectionForm = (props: CollectionFormProps) => {
             type="text"
             label="Regional"
             value={registerRoot.regional}
-            placeholder="Input NIK"
+            placeholder="Input Regional"
             onChange={(e) => onChange(e, "regional")}
           />
         </div>
@@ -75,7 +75,7 @@ export const CollectionForm = (props: CollectionFormProps) => {
             type="password"
             label="Password"
             value={registerRoot.password}
-            placeholder="Input NIK"
+            placeholder="Input Password"
             onChange={(e) => onChange(e, "password")}
           />
         </div>
@@ -84,7 +84,7 @@ export const CollectionForm = (props: CollectionFormProps) => {
             type="password"
             label="Confirm Password"
             value={registerRoot.confirmPassword}
-            placeholder="Input NIK"
+            placeholder="Input Confirm Password"
             onChange={(e) => onChange(e, "confirm_password")}
           />
         </div>

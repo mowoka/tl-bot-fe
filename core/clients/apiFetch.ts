@@ -1,5 +1,5 @@
 interface ApiResponseBody<T> {
-    statusCode: string;
+    statusCode: number;
     message: string;
     success: boolean;
     data: T

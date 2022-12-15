@@ -1,5 +1,6 @@
+import { useRouter } from "next/router";
 import React, { useState } from "react";
-import { ApiFetchRaw, reqFetchAPI } from "../../core/clients/apiFetch";
+import { ApiFetchRaw } from "../../core/clients/apiFetch";
 
 export interface RegisterRootProps {
     nik: string;
@@ -47,6 +48,8 @@ function useRegister(): useRegisterProps {
         message: '',
         status: "info"
     });
+
+    const router = useRouter();
 
     const onCloseError = () => {
         setErrorMessage((prev) => ({ ...prev, show: false }))
@@ -117,8 +120,33 @@ function useRegister(): useRegisterProps {
 
     }
 
-    const onSubmit = () => {
-        // add logic if password not same
+    const onSubmit = async () => {
+        if (registerRoot.confirmPassword !== registerRoot.password) {
+            setErrorMessage({
+                show: true,
+                message: 'Password must be same',
+                status: 'info'
+            });
+        } else {
+            const resRegisterAccount = await ApiFetchRaw(process.env.BASE_URL_API + 'auth/signup', {
+                method: 'POST',
+                body: JSON.stringify(registerRoot),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+            })
+            const { body } = resRegisterAccount;
+            if (body.statusCode === 200) {
+                router.push('/accounts/login')
+            } else {
+                setErrorMessage({
+                    show: true,
+                    message: body.message.length ? body.message[0] : '',
+                    status: 'info'
+                });
+            }
+        }
     }
 
     return {
