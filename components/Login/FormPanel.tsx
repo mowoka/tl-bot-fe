@@ -1,6 +1,6 @@
 import Link from "next/link";
-import CButton from "../commons/CButton";
-import Input from "../commons/Input";
+import CButton from "../common/CButton";
+import Input from "../common/Input";
 
 interface FormPanelProps {
   nik: string;
@@ -22,7 +22,7 @@ const FormPanel = (props: FormPanelProps) => {
             value={nik}
             placeholder="Input NIK"
             onChange={(e) => onChange(e, "nik")}
-            error={nik.length > 0 && nik.length < 16}
+            error={nik.length > 1 && nik.length < 16}
             maxLength={16}
           />
         </div>
@@ -33,7 +33,7 @@ const FormPanel = (props: FormPanelProps) => {
             value={password}
             placeholder="Input Email address"
             onChange={(e) => onChange(e, "password")}
-            error={password.length < 6}
+            error={password.length > 1 && password.length < 6}
             maxLength={10}
           />
         </div>

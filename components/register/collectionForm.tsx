@@ -1,6 +1,6 @@
 import { RegisterRootProps } from "../../hooks/register/useRegister";
-import CButton from "../commons/CButton";
-import Input from "../commons/Input";
+import CButton from "../common/CButton";
+import Input from "../common/Input";
 
 interface CollectionFormProps {
   registerRoot: RegisterRootProps;

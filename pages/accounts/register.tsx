@@ -1,5 +1,5 @@
 import Head from "next/head";
-import SnackbarMessage from "../../components/commons/Snackbar";
+import SnackbarMessage from "../../components/common/Snackbar";
 import { CollectionForm } from "../../components/register/collectionForm";
 import { RegisterPanel } from "../../components/register/regiterPanel";
 import useRegister from "../../hooks/register/useRegister";
