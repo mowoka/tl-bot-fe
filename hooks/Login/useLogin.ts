@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { ApiFetchRaw } from "../../core/clients/apiFetch";
 import { ErrrorMessage } from "../register/useRegister";
 import useUser from "../common/useUser";
+import { useRouter } from "next/router";
 
 interface useLoginProps {
     nik: string;
@@ -20,6 +21,7 @@ function useLogin(): useLoginProps {
         message: '',
         status: "info"
     });
+    const router = useRouter();
 
     const { login } = useUser();
 
@@ -39,7 +41,7 @@ function useLogin(): useLoginProps {
     const onSubmit = async () => {
         const res = await login(nik, password);
         if (res.statusCode == 200) {
-            console.log('success');
+            router.push('/');
         } else {
             setErrorMessage({
                 show: true,

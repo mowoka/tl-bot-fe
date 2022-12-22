@@ -1,6 +1,6 @@
 import { ApiFetchRaw } from "../../core/clients/apiFetch";
 
-interface UserProfile {
+export interface UserProfile {
     "nik": string,
     "name": string,
     "idTelegram": string,
@@ -21,7 +21,10 @@ interface LoginApiResponse {
 
 export interface UserProps {
     login: (nik: string, password: string) => Promise<LoginResponse>;
+    logout: () => void;
 }
+
+const SESSION_KEY = 'persist:root';
 
 function useUser(): UserProps {
 
@@ -44,7 +47,6 @@ function useUser(): UserProps {
                 statusCode: 200,
                 message: body.message,
             }
-            // logic for set session storage
         } else {
             if (body.statusCode == 403) {
                 return {
@@ -62,7 +64,7 @@ function useUser(): UserProps {
 
     const logout = async () => {
         try {
-            window.sessionStorage.removeItem('persist:root');
+            window.sessionStorage.removeItem(SESSION_KEY);
         } catch (e) {
             console.error(e);
         }
@@ -70,16 +72,17 @@ function useUser(): UserProps {
 
     const saveTokenToLocalStorage = (token: string) => {
         try {
-            const sessionKey = 'persist:root';
-            const persistStr = window.sessionStorage.getItem(sessionKey);
+            const persistStr = window.sessionStorage.getItem(SESSION_KEY);
             const persist = persistStr ? JSON.parse(persistStr) :
                 {
                     userProfile: '{"nik":null,"name":null,"idTelegram":null,"partner":null,"sector":null,"witel":null,"regional":null}',
                     userToken: null,
+                    isAuthenticate: false,
                     _persist: '{"version":-1,"rehydrated":true}',
                 }
             persist.userToken = token;
-            window.sessionStorage.setItem(sessionKey, JSON.stringify(persist));
+            persist.isAuthenticate = true;
+            window.sessionStorage.setItem(SESSION_KEY, JSON.stringify(persist));
         } catch (e) {
             console.error(e);
         }
@@ -87,8 +90,8 @@ function useUser(): UserProps {
 
     return {
         login,
+        logout,
     }
-
 }
 
 
