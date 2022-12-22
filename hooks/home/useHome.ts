@@ -1,20 +1,15 @@
+import { useProfile } from "../common/useProfile";
 import { UserProfile } from "../common/useUser";
 
 interface HomeProps {
-    profile: UserProfile;
+    profile: UserProfile | {};
 }
 
 const useHome = (): HomeProps => {
+    const { getProfile } = useProfile();
 
-    const profile: UserProfile = {
-        name: 'a',
-        nik: "12313",
-        idTelegram: 'ad',
-        partner: 'ada',
-        sector: 'ada',
-        witel: 'ada',
-        regional: 'da',
-    }
+    const profile = getProfile();
+
     return {
         profile
     }

@@ -8,6 +8,7 @@ export interface UserProfile {
     "sector": string,
     "witel": string,
     "regional": string,
+    "role": string
 }
 
 interface LoginResponse {
@@ -25,6 +26,7 @@ export interface UserProps {
 }
 
 const SESSION_KEY = 'persist:root';
+const SESSION__PROFILE_KEY = 'ION-profile';
 
 function useUser(): UserProps {
 
@@ -43,6 +45,7 @@ function useUser(): UserProps {
         const { body } = resLogin;
         if (body.statusCode == 200) {
             saveTokenToLocalStorage(body.data.access_token);
+            getMe(body.data.access_token);
             return {
                 statusCode: 200,
                 message: body.message,
@@ -62,6 +65,17 @@ function useUser(): UserProps {
         }
     }
 
+    const getMe = async (token: string) => {
+        const res = await ApiFetchRaw<UserProfile>(process.env.BASE_URL_API + 'users/me', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+        })
+        if (res.status == 200) {
+            saveProfileToLocalStorage(res.body.data);
+        }
+    }
+
     const logout = async () => {
         try {
             window.sessionStorage.removeItem(SESSION_KEY);
@@ -70,12 +84,24 @@ function useUser(): UserProps {
         }
     }
 
+    const saveProfileToLocalStorage = (profile: UserProfile) => {
+        try {
+            const persistStr = window.sessionStorage.getItem(SESSION__PROFILE_KEY);
+            const persist = persistStr ? JSON.parse(persistStr) : {
+                userProfile: '{"nik":null,"name":null,"idTelegram":null,"partner":null,"sector":null,"witel":null,"regional":null,"role":null}',
+            }
+            persist.userProfile = JSON.stringify(profile);
+            window.sessionStorage.setItem(SESSION__PROFILE_KEY, JSON.stringify(persist));
+        } catch (e) {
+            console.error('error save profile', e)
+        }
+    }
+
     const saveTokenToLocalStorage = (token: string) => {
         try {
             const persistStr = window.sessionStorage.getItem(SESSION_KEY);
             const persist = persistStr ? JSON.parse(persistStr) :
                 {
-                    userProfile: '{"nik":null,"name":null,"idTelegram":null,"partner":null,"sector":null,"witel":null,"regional":null}',
                     userToken: null,
                     isAuthenticate: false,
                     _persist: '{"version":-1,"rehydrated":true}',
