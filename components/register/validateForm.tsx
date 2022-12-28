@@ -1,7 +1,7 @@
 import Link from "next/link";
 import React from "react";
-import CButton from "../common/CButton";
 import Input from "../common/Input";
+import { CButton } from "../common/CButton";
 
 interface ValidateFormProps {
   nik: string;

@@ -1,14 +1,14 @@
 import { ApiFetchRaw } from "../../core/clients/apiFetch";
 
 export interface UserProfile {
-    "nik": string,
-    "name": string,
-    "idTelegram": string,
-    "partner": string,
-    "sector": string,
-    "witel": string,
-    "regional": string,
-    "role": string
+    nik: string,
+    name: string,
+    idTelegram: string,
+    partner: string,
+    sector: string,
+    witel: string,
+    regional: string,
+    role: string
 }
 
 interface LoginResponse {
@@ -23,6 +23,7 @@ interface LoginApiResponse {
 export interface UserProps {
     login: (nik: string, password: string) => Promise<LoginResponse>;
     logout: () => void;
+    getToken: () => string;
 }
 
 const SESSION_KEY = 'persist:root';
@@ -84,6 +85,18 @@ function useUser(): UserProps {
         }
     }
 
+    const getToken = (): string => {
+        try {
+            const persistStr = window.sessionStorage.getItem(SESSION_KEY);
+            const persists = persistStr ? JSON.parse(persistStr) : ''
+            if (persists) return persists.userToken
+            return ''
+        } catch (e) {
+            console.error(e);
+            return ''
+        }
+    }
+
     const saveProfileToLocalStorage = (profile: UserProfile) => {
         try {
             const persistStr = window.sessionStorage.getItem(SESSION__PROFILE_KEY);
@@ -117,6 +130,7 @@ function useUser(): UserProps {
     return {
         login,
         logout,
+        getToken,
     }
 }
 

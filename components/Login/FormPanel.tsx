@@ -1,6 +1,6 @@
 import Link from "next/link";
-import CButton from "../common/CButton";
 import Input from "../common/Input";
+import { CButton } from "../common/CButton";
 
 interface FormPanelProps {
   nik: string;

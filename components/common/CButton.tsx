@@ -5,7 +5,7 @@ interface ButtonProps {
   onClick: () => void;
 }
 
-const CButton = (props: ButtonProps) => {
+export const CButton = (props: ButtonProps) => {
   return (
     <Button
       className="w-full bg-black hover:bg-red h-[50px]"
@@ -18,4 +18,16 @@ const CButton = (props: ButtonProps) => {
   );
 };
 
-export default CButton;
+export const OButton = (props: ButtonProps) => {
+  return (
+    <Button
+      className="w-full h-[50px]"
+      onClick={props.onClick}
+      variant="outlined"
+      color="primary"
+      disabled={props.disable ?? false}
+    >
+      {props.text}
+    </Button>
+  );
+};

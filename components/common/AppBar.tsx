@@ -20,6 +20,7 @@ import {
   MenuItem,
   Tooltip,
 } from "@mui/material";
+import { useRouter } from "next/router";
 
 const settings = ["Profile", "Logout"];
 
@@ -74,18 +75,39 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
   }),
 }));
 
+interface ISIDEBAR_MENU {
+  title: string;
+  url: string;
+}
+
+const SIDEBAR_MENU: ISIDEBAR_MENU[] = [
+  {
+    title: "Dashboard",
+    url: "/",
+  },
+  {
+    title: "TL Board",
+    url: "/board",
+  },
+  {
+    title: "Teknisi Management",
+    url: "/teknisi-management",
+  },
+];
+
 interface AppBarComponentProps {
   children: JSX.Element[] | JSX.Element;
 }
 
 export default function AppBarComponent(props: AppBarComponentProps) {
   const { children } = props;
+  const router = useRouter();
 
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
 
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -107,16 +129,18 @@ export default function AppBarComponent(props: AppBarComponentProps) {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="fixed" color="primary" open={open}>
         <Toolbar>
-          <IconButton
-            onClick={handleDrawerOpen}
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
+          {!open && (
+            <IconButton
+              onClick={handleDrawerOpen}
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="open drawer"
+              sx={{ mr: 2 }}
+            >
+              <MenuIcon />
+            </IconButton>
+          )}
           <Typography
             variant="h6"
             noWrap
@@ -176,10 +200,13 @@ export default function AppBarComponent(props: AppBarComponentProps) {
         </DrawerHeader>
         <Divider />
         <List>
-          {["Dashboard", "Request", "TL Board"].map((text) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemText style={{ fontWeight: "bolder" }} primary={text} />
+          {SIDEBAR_MENU.map((menu) => (
+            <ListItem key={menu.title} disablePadding>
+              <ListItemButton onClick={() => router.push(menu.url)}>
+                <ListItemText
+                  style={{ fontWeight: "bolder" }}
+                  primary={menu.title}
+                />
               </ListItemButton>
             </ListItem>
           ))}
