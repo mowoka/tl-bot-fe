@@ -8,43 +8,15 @@ import {
   TableRow,
 } from "@mui/material";
 import { UserTeknisi } from "../../hooks/teknisi-management/useTeknisiUser";
-
-const dummyData = [
-  {
-    nik: "1231231231",
-    idTelegram: "818238123",
-    name: "Giofanny mowoka",
-    partner: "Telcom Akses",
-    regional: "Jawa Barat",
-    sector: "Baros",
-    witel: "CRM-01",
-  },
-  {
-    nik: "1231231231",
-    idTelegram: "818238123",
-    name: "Giofanny mowoka",
-    partner: "Telcom Akses",
-    regional: "Jawa Barat",
-    sector: "Baros",
-    witel: "CRM-01",
-  },
-  {
-    nik: "1231231231",
-    idTelegram: "818238123",
-    name: "Giofanny mowoka",
-    partner: "Telcom Akses",
-    regional: "Jawa Barat",
-    sector: "Baros",
-    witel: "CRM-01",
-  },
-];
+import LinearProgress from "@mui/material/LinearProgress";
 
 interface DataTableProps {
   data: UserTeknisi[];
+  isLoading: boolean;
 }
 
 export const DataTable = (props: DataTableProps) => {
-  const { data } = props;
+  const { data, isLoading } = props;
   return (
     <div className="py-6">
       <TableContainer component={Paper}>
@@ -78,6 +50,11 @@ export const DataTable = (props: DataTableProps) => {
           </TableBody>
         </Table>
       </TableContainer>
+      {isLoading && (
+        <div className="w-full">
+          <LinearProgress />
+        </div>
+      )}
     </div>
   );
 };

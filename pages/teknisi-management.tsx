@@ -7,13 +7,25 @@ import { useProfile } from "../hooks/common/useProfile";
 
 const TeknisiManagement = () => {
   const { profile } = useProfile();
-  const { params, data, masterFilterOptions } = useTeknisiUser();
+  const {
+    params,
+    data,
+    masterFilterOptions,
+    onChange,
+    resetParams,
+    isLoading,
+  } = useTeknisiUser();
   return (
     <Layout profile={profile}>
       <h2 className="font-semibold text-4xl py-4">Teknisi User Management</h2>
       <Divider />
-      <MenuFilter params={params} masterOptions={masterFilterOptions} />
-      <DataTable data={data} />
+      <MenuFilter
+        params={params}
+        masterOptions={masterFilterOptions}
+        onChange={onChange}
+        resetParams={resetParams}
+      />
+      <DataTable data={data} isLoading={isLoading} />
     </Layout>
   );
 };

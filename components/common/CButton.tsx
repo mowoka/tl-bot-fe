@@ -21,7 +21,7 @@ export const CButton = (props: ButtonProps) => {
 export const OButton = (props: ButtonProps) => {
   return (
     <Button
-      className="w-full h-[50px]"
+      className="w-full h-[56px]"
       onClick={props.onClick}
       variant="outlined"
       color="primary"

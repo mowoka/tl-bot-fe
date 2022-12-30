@@ -5,10 +5,11 @@ interface InputDropdownProps {
   placeholder: string;
   value: string;
   options: { key: string; value: string }[];
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const InputDropdown = (props: InputDropdownProps) => {
-  const { placeholder, label, value, options } = props;
+  const { placeholder, label, options, onChange, value } = props;
   return (
     <>
       <TextField
@@ -17,7 +18,9 @@ const InputDropdown = (props: InputDropdownProps) => {
         label={label}
         size="medium"
         defaultValue={"choose"}
+        value={value ? value : "choose"}
         placeholder={placeholder}
+        onChange={onChange}
       >
         <MenuItem disabled value="choose">
           Choose {label}
