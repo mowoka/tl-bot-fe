@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import { useProfile } from "../common/useProfile";
-import { ApiFetchRaw, reqFetchAPI } from "../../core/clients/apiFetch";
+import { ApiFetchRaw } from "../../core/clients/apiFetch";
 import useUser from "../common/useUser";
 
 
-interface UserTeknisi {
+export interface UserTeknisi {
     id: string;
     nik: string;
     name: string;
@@ -13,6 +12,10 @@ interface UserTeknisi {
     sector: string;
     witel: string;
     regional: string;
+}
+
+interface UserTeknisiResponse {
+    teknisi_user: UserTeknisi[]
 }
 
 interface FilterOptionsProps {
@@ -27,15 +30,22 @@ export interface MasterFilterOptions {
 
 }
 
-interface UseTeknisiUserProps {
-    data: UserTeknisi[]
-    masterFilterOptions: MasterFilterOptions;
-}
-
 interface MasterFiltersResponse {
     partner: string[];
     regional: string[];
     sector: string[];
+}
+
+export interface ParamsProps {
+    partner: string;
+    regional: string;
+    sector: string;
+}
+
+interface UseTeknisiUserProps {
+    params: ParamsProps;
+    data: UserTeknisi[]
+    masterFilterOptions: MasterFilterOptions;
 }
 
 const initialMasterFilter: MasterFilterOptions = {
@@ -45,15 +55,17 @@ const initialMasterFilter: MasterFilterOptions = {
 }
 
 export function useTeknisiUser(): UseTeknisiUserProps {
-    const { getProfile } = useProfile();
     const { getToken } = useUser();
+
     const token = getToken();
     const [data, setData] = useState<UserTeknisi[]>([]);
     const [masterFilterOptions, setMasterFilterOptionsData] = useState<MasterFilterOptions>(initialMasterFilter);
-
-
+    const [params, setParams] = useState<ParamsProps>({
+        partner: '',
+        regional: '',
+        sector: '',
+    })
     const getUserTeknisiFilterMaster = async () => {
-        console.log(token);
         const res = await ApiFetchRaw<MasterFiltersResponse>(process.env.BASE_URL_API + 'teknisi-user/master-filters', {
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -82,13 +94,32 @@ export function useTeknisiUser(): UseTeknisiUserProps {
         }
     }
 
+    const getUserTeknisi = async () => {
+        const URLParams = { ...params }
+        const res = await ApiFetchRaw<UserTeknisiResponse>(process.env.BASE_URL_API + 'teknisi-user?' + new URLSearchParams(URLParams), {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+        })
+
+        if (res.body.statusCode === 200) {
+            setData(res.body.data.teknisi_user);
+        } else {
+            setData([]);
+        }
+    }
+
 
     useEffect(() => {
         getUserTeknisiFilterMaster();
     }, [])
 
+    useEffect(() => {
+        getUserTeknisi();
+    }, [])
 
     return {
+        params,
         data,
         masterFilterOptions
     }

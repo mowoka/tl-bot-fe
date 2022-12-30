@@ -1,14 +1,14 @@
 import { ApiFetchRaw } from "../../core/clients/apiFetch";
 
 export interface UserProfile {
-    nik: string,
-    name: string,
-    idTelegram: string,
-    partner: string,
-    sector: string,
-    witel: string,
-    regional: string,
-    role: string
+    nik: string;
+    name: string;
+    idTelegram: string;
+    partner: string;
+    sector: string;
+    witel: string;
+    regional: string;
+    role: string;
 }
 
 interface LoginResponse {
@@ -45,7 +45,7 @@ function useUser(): UserProps {
         })
         const { body } = resLogin;
         if (body.statusCode == 200) {
-            saveTokenToLocalStorage(body.data.access_token);
+            await saveTokenToLocalStorage(body.data.access_token);
             getMe(body.data.access_token);
             return {
                 statusCode: 200,
@@ -110,7 +110,7 @@ function useUser(): UserProps {
         }
     }
 
-    const saveTokenToLocalStorage = (token: string) => {
+    const saveTokenToLocalStorage = async (token: string) => {
         try {
             const persistStr = window.sessionStorage.getItem(SESSION_KEY);
             const persist = persistStr ? JSON.parse(persistStr) :

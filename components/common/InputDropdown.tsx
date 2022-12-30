@@ -4,23 +4,24 @@ interface InputDropdownProps {
   label: string;
   placeholder: string;
   value: string;
-  ref: RefObject<HTMLDivElement | undefined>;
   options: { key: string; value: string }[];
 }
 
 const InputDropdown = (props: InputDropdownProps) => {
-  const { placeholder, label, value, options, ref } = props;
+  const { placeholder, label, value, options } = props;
   return (
     <>
       <TextField
         className="w-full h-[50px]"
-        id="outlined-select-currency"
         select
         label={label}
-        defaultValue={value}
+        size="medium"
+        defaultValue={"choose"}
         placeholder={placeholder}
-        inputRef={ref}
       >
+        <MenuItem disabled value="choose">
+          Choose {label}
+        </MenuItem>
         {options.map((option) => (
           <MenuItem key={option.value} value={option.value}>
             {option.key}

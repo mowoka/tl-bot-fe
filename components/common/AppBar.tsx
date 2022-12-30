@@ -9,7 +9,6 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import {
-  Avatar,
   Divider,
   Drawer,
   List,
@@ -22,7 +21,7 @@ import {
 } from "@mui/material";
 import { useRouter } from "next/router";
 
-const settings = ["Profile", "Logout"];
+const settings = ["Logout"];
 
 const drawerWidth = 240;
 
@@ -97,10 +96,11 @@ const SIDEBAR_MENU: ISIDEBAR_MENU[] = [
 
 interface AppBarComponentProps {
   children: JSX.Element[] | JSX.Element;
+  name?: string;
 }
 
 export default function AppBarComponent(props: AppBarComponentProps) {
-  const { children } = props;
+  const { children, name } = props;
   const router = useRouter();
 
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
@@ -152,7 +152,9 @@ export default function AppBarComponent(props: AppBarComponentProps) {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Typography className="text-white text-sm">
+                  Selamat datang, {name ?? "Annonimous"}
+                </Typography>
               </IconButton>
             </Tooltip>
             <Menu

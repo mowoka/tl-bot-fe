@@ -4,7 +4,7 @@ import useHome from "../hooks/home/useHome";
 
 export default function Home() {
   useGuard();
-  const { profile } = useHome();
+  // const { profile } = useHome();
 
   return (
     <div className="h-screen w-screen">

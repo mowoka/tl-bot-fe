@@ -1,42 +1,41 @@
-import { useRef } from "react";
 import { OButton } from "../common/CButton";
 import InputDropdown from "../common/InputDropdown";
-import { MasterFilterOptions } from "../../hooks/teknisi-management/useTeknisiUser";
+import {
+  MasterFilterOptions,
+  ParamsProps,
+} from "../../hooks/teknisi-management/useTeknisiUser";
 
 interface MenuFilterProps {
   masterOptions: MasterFilterOptions;
+  params: ParamsProps;
 }
 
 export const MenuFilter = (props: MenuFilterProps) => {
-  const nameTeknisi = useRef();
-  const { masterOptions } = props;
+  const { params, masterOptions } = props;
   return (
     <div className="py-4 flex justify-between items-center">
       <div className="w-full flex justify-start items-center">
         <div className="w-full max-w-[250px] h-[50px] flex items-center">
           <InputDropdown
-            ref={nameTeknisi}
             label="Partner"
             placeholder="pilih teknisi"
-            value=""
+            value={params.partner}
             options={masterOptions.partner}
           />
         </div>
         <div className="w-full px-4 max-w-[250px] h-[50px] flex items-center">
           <InputDropdown
-            ref={nameTeknisi}
             label="Regional"
             placeholder="pilih regional"
-            value=""
+            value={params.regional}
             options={masterOptions.regional}
           />
         </div>
         <div className="w-full max-w-[250px] h-[50px] flex items-center">
           <InputDropdown
-            ref={nameTeknisi}
             label="Sector"
             placeholder="pilih sector"
-            value=""
+            value={params.sector}
             options={masterOptions.sector}
           />
         </div>

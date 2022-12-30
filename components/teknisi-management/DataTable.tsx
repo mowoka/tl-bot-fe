@@ -7,6 +7,7 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import { UserTeknisi } from "../../hooks/teknisi-management/useTeknisiUser";
 
 const dummyData = [
   {
@@ -38,7 +39,12 @@ const dummyData = [
   },
 ];
 
-export const DataTable = () => {
+interface DataTableProps {
+  data: UserTeknisi[];
+}
+
+export const DataTable = (props: DataTableProps) => {
+  const { data } = props;
   return (
     <div className="py-6">
       <TableContainer component={Paper}>
@@ -55,7 +61,7 @@ export const DataTable = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {dummyData.map((data, index) => (
+            {data.map((data, index) => (
               <TableRow
                 key={index}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
