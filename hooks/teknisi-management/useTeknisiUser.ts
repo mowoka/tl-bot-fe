@@ -6,7 +6,7 @@ import { userTeknisiFormValidator } from "../../core/utility/validator";
 
 
 export interface UserTeknisi {
-    id: string;
+    id: number;
     nik: string;
     name: string;
     idTelegram: string;
@@ -26,11 +26,11 @@ export interface FormUserTeknisi {
     regional: string;
 }
 
-interface UserTeknisiResponse {
+export interface UserTeknisiResponse {
     teknisi_user: UserTeknisi[]
 }
 
-interface FilterOptionsProps {
+export interface FilterOptionsProps {
     key: string;
     value: string;
 }
@@ -227,7 +227,6 @@ export function useTeknisiUser(): UseTeknisiUserProps {
                 console.error(e);
                 setSubmitLoading(false)
             }
-            console.log(formUserTeknisi);
         }
 
     }

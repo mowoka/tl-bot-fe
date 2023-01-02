@@ -8,8 +8,10 @@ import ModalElement from "../components/common/Modal";
 import { useModalElement } from "../hooks/common/useModalElement";
 import { FromPanel } from "../components/teknisi-management/FormPanel";
 import SnackbarMessage from "../components/common/Snackbar";
+import { useGuard } from "../hooks/common/userGuard";
 
 const TeknisiManagement = () => {
+  useGuard();
   const { profile } = useProfile();
   const { open, handleOpen, handleClose } = useModalElement();
   const {

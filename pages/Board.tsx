@@ -1,14 +1,43 @@
 import { Divider } from "@mui/material";
 import Layout from "../components/common/Layout";
 import FormPerformansi from "../components/board/Form";
+import { useProfile } from "../hooks/common/useProfile";
+import { useBoard } from "../hooks/board/useBoard";
+import { useGuard } from "../hooks/common/userGuard";
+import SnackbarMessage from "../components/common/Snackbar";
 
 const Board = () => {
+  useGuard();
+  const { profile } = useProfile();
+  const {
+    optionsData,
+    formData,
+    isLoading,
+    errorMessage,
+    onChange,
+    onSubmit,
+    onCloseError,
+  } = useBoard();
   return (
-    <Layout>
-      <h2 className="font-semibold text-4xl py-4">Tl Board</h2>
+    <Layout profile={profile}>
+      <SnackbarMessage
+        show={errorMessage.show}
+        message={errorMessage.message}
+        status={errorMessage.status}
+        onClose={onCloseError}
+      />
+      <div className="flex justify-start items-end py-4">
+        <h2 className="font-semibold text-4xl">TL Board</h2>
+        <span className="text-md">(*Tiket khusus dari team lead)</span>
+      </div>
       <Divider />
-      <h3 className="font-normal text-xl py-4">Input Performasi</h3>
-      <FormPerformansi />
+      <FormPerformansi
+        optionsData={optionsData}
+        formData={formData}
+        onChange={onChange}
+        onSubmit={onSubmit}
+        onLoading={isLoading}
+      />
     </Layout>
   );
 };
