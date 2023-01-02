@@ -14,10 +14,12 @@ interface MenuFilterProps {
   params: ParamsProps;
   onChange: (e: React.ChangeEvent<HTMLInputElement>, name: string) => void;
   resetParams: () => void;
+  handleOpenModal: () => void;
 }
 
 export const MenuFilter = (props: MenuFilterProps) => {
-  const { params, masterOptions, onChange, resetParams } = props;
+  const { params, masterOptions, onChange, resetParams, handleOpenModal } =
+    props;
   return (
     <div className="py-4 flex justify-between items-center">
       <div className="w-full flex justify-start items-center">
@@ -62,7 +64,7 @@ export const MenuFilter = (props: MenuFilterProps) => {
         <OButton
           disable={false}
           text="+ Add Teknisi"
-          onClick={() => console.log("")}
+          onClick={handleOpenModal}
         />
       </div>
     </div>

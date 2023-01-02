@@ -4,22 +4,48 @@ import { DataTable } from "../components/teknisi-management/DataTable";
 import { MenuFilter } from "../components/teknisi-management/MenuFilter";
 import { useTeknisiUser } from "../hooks/teknisi-management/useTeknisiUser";
 import { useProfile } from "../hooks/common/useProfile";
+import ModalElement from "../components/common/Modal";
+import { useModalElement } from "../hooks/common/useModalElement";
+import { FromPanel } from "../components/teknisi-management/FormPanel";
+import SnackbarMessage from "../components/common/Snackbar";
 
 const TeknisiManagement = () => {
   const { profile } = useProfile();
+  const { open, handleOpen, handleClose } = useModalElement();
   const {
     params,
     data,
     masterFilterOptions,
-    onChange,
-    resetParams,
     isLoading,
+    submitLoading,
+    formUserTeknisi,
+    errorMessage,
+    onChange,
+    formOnChange,
+    resetParams,
+    onSubmit,
+    onCloseError,
   } = useTeknisiUser();
   return (
     <Layout profile={profile}>
+      <SnackbarMessage
+        show={errorMessage.show}
+        message={errorMessage.message}
+        status={errorMessage.status}
+        onClose={onCloseError}
+      />
+      <ModalElement open={open} handleClose={handleClose}>
+        <FromPanel
+          formOnChange={formOnChange}
+          onSubmit={onSubmit}
+          formUserTeknisi={formUserTeknisi}
+          onLoading={submitLoading}
+        />
+      </ModalElement>
       <h2 className="font-semibold text-4xl py-4">Teknisi User Management</h2>
       <Divider />
       <MenuFilter
+        handleOpenModal={handleOpen}
         params={params}
         masterOptions={masterFilterOptions}
         onChange={onChange}

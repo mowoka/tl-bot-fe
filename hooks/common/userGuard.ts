@@ -26,5 +26,7 @@ export function useGuard() {
     if (!router.isReady) return;
     if (isAuthenticate === false) {
         router.push("/accounts/login");
+    } else {
+        return
     }
 }
