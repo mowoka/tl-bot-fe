@@ -3,6 +3,7 @@ import { ApiFetchRaw } from "../../core/clients/apiFetch"
 import useUser from "../common/useUser";
 import { FilterOptionsProps, UserTeknisi, UserTeknisiResponse } from "../teknisi-management/useTeknisiUser";
 import { ErrrorMessage } from "../register/useRegister";
+import { formTLBoardValidator } from "../../core/utility/validator";
 
 interface LeadJob {
     id: number,
@@ -73,47 +74,56 @@ export const useBoard = (): UseBoardProps => {
     }
 
     const onSubmit = async () => {
-        setIsLoading(true);
-        try {
-            const data = {
-                teknisi_user_id: parseInt(formData.teknisiUserId),
-                jobId: parseInt(formData.jobId),
-                keterangan: formData.keterangan
-            }
+        const { valid, message } = formTLBoardValidator(formData)
+        if (!valid) {
+            setErrorMessage({
+                show: true,
+                message: message,
+                status: "error"
+            });
+        } else {
+            setIsLoading(true);
+            try {
+                const data = {
+                    teknisi_user_id: parseInt(formData.teknisiUserId),
+                    jobId: parseInt(formData.jobId),
+                    keterangan: formData.keterangan
+                }
 
-            const res = await ApiFetchRaw(process.env.BASE_URL_API + 'tiket-team-lead', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify(data),
-            })
-
-            if (res.body.statusCode === 200) {
-                setErrorMessage({
-                    show: true,
-                    message: res.body.message,
-                    status: "success"
-                });
-                setFormData({
-                    teknisiUserId: '',
-                    jobId: '',
-                    nilai: '',
-                    keterangan: '',
+                const res = await ApiFetchRaw(process.env.BASE_URL_API + 'tiket-team-lead', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(data),
                 })
-            } else {
-                setErrorMessage({
-                    show: true,
-                    message: res.body.message,
-                    status: "error"
-                });
+
+                if (res.body.statusCode === 200) {
+                    setErrorMessage({
+                        show: true,
+                        message: res.body.message,
+                        status: "success"
+                    });
+                    setFormData({
+                        teknisiUserId: '',
+                        jobId: '',
+                        nilai: '',
+                        keterangan: '',
+                    })
+                } else {
+                    setErrorMessage({
+                        show: true,
+                        message: res.body.message,
+                        status: "error"
+                    });
+                }
+                setIsLoading(false)
+            } catch (e) {
+                console.error(e);
+                setIsLoading(false)
             }
-            setIsLoading(false)
-        } catch (e) {
-            console.error(e);
-            setIsLoading(false)
         }
     }
 

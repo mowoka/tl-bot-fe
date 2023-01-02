@@ -1,3 +1,4 @@
+import { FormDataProps } from "../../hooks/board/useBoard";
 import { FormUserTeknisi } from "../../hooks/teknisi-management/useTeknisiUser";
 
 
@@ -10,5 +11,12 @@ export const userTeknisiFormValidator = (form: FormUserTeknisi): { valid: boolea
     if (!form.sector) return { valid: false, message: 'sector tidak boleh kosong' }
     if (!form.regional) return { valid: false, message: 'regional tidak boleh kosong' }
     if (!form.witel) return { valid: false, message: 'witel tidak boleh kosong' }
+    return { valid: true, message: '' }
+}
+
+export const formTLBoardValidator = (form: FormDataProps): { valid: boolean, message: string } => {
+    if (!form.teknisiUserId) return { valid: false, message: 'mohon pilih teknisi' }
+    if (!form.jobId) return { valid: false, message: 'mohon pilih tugas' }
+
     return { valid: true, message: '' }
 }
