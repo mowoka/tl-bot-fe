@@ -4,11 +4,14 @@ import AppBarComponent from "./AppBar";
 interface LayoutProps {
   children: JSX.Element[] | JSX.Element;
   profile?: UserProfile;
+  footer?: boolean;
 }
 
 const Layout = (props: LayoutProps) => {
-  const { children, profile } = props;
-  return <AppBarComponent children={children} name={profile?.name} />;
+  const { children, profile, footer } = props;
+  return (
+    <AppBarComponent children={children} name={profile?.name} footer={footer} />
+  );
 };
 
 export default Layout;

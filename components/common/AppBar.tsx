@@ -97,10 +97,11 @@ const SIDEBAR_MENU: ISIDEBAR_MENU[] = [
 interface AppBarComponentProps {
   children: JSX.Element[] | JSX.Element;
   name?: string;
+  footer?: boolean;
 }
 
 export default function AppBarComponent(props: AppBarComponentProps) {
-  const { children, name } = props;
+  const { children, name, footer } = props;
   const router = useRouter();
 
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
@@ -147,7 +148,7 @@ export default function AppBarComponent(props: AppBarComponentProps) {
             component="div"
             sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
           >
-            ION Dashboard
+            IOAN Dashboard
           </Typography>
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
