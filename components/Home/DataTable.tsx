@@ -78,7 +78,7 @@ export const DataTable = (props: DataTableProps) => {
                 </Tooltip>
               </TableCell>
               <TableCell align="center">
-                <Tooltip title="Survet">
+                <Tooltip title="Survey">
                   <p>T11</p>
                 </Tooltip>
               </TableCell>
@@ -118,7 +118,8 @@ export const DataTable = (props: DataTableProps) => {
                 <TableCell align="center">{data.gamas_type_c.score}</TableCell>
                 <TableCell align="center">{data.survey.score}</TableCell>
                 <TableCell align="center">
-                  - {data.ticket_redundant.score}
+                  {data.ticket_redundant.score > 0 ? "-" : ""}{" "}
+                  {data.ticket_redundant.score}
                 </TableCell>
                 <TableCell align="center">{data.kpi}</TableCell>
               </TableRow>

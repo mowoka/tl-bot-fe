@@ -39,10 +39,9 @@ export interface MasterFilterOptions {
     partner: FilterOptionsProps[];
     regional: FilterOptionsProps[];
     sector: FilterOptionsProps[];
-
 }
 
-interface MasterFiltersResponse {
+export interface MasterFiltersResponse {
     partner: string[];
     regional: string[];
     sector: string[];

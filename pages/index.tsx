@@ -10,7 +10,17 @@ import { MenuFilter } from "../components/Home/MenuFilter";
 export default function Home() {
   useGuard();
   const { profile } = useProfile();
-  const { data, isLoading, errorMessage, onCloseError } = useHome();
+  const {
+    data,
+    isLoading,
+    errorMessage,
+    masterFilterOptions,
+    params,
+    onChange,
+    onChangeDate,
+    onCloseError,
+    resetFilter,
+  } = useHome();
 
   return (
     <Layout profile={profile} footer={true}>
@@ -22,7 +32,13 @@ export default function Home() {
       />
       <h2 className="font-semibold text-4xl py-4">Performansi IOAN</h2>
       <Divider />
-      <MenuFilter />
+      <MenuFilter
+        masterFilterOptions={masterFilterOptions}
+        onChange={onChange}
+        onChangeDate={onChangeDate}
+        params={params}
+        resetFilter={resetFilter}
+      />
       <DataTable isLoading={isLoading} data={data} />
     </Layout>
   );

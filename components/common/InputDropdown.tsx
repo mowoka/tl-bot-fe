@@ -13,7 +13,7 @@ const InputDropdown = (props: InputDropdownProps) => {
   return (
     <>
       <TextField
-        className="w-full h-[50px]"
+        className="w-full h-[56px]"
         select
         label={label}
         size="medium"
