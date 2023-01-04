@@ -1,0 +1,124 @@
+[
+    {
+        "id": 1,
+        "createAt": "2023-01-01T22:56:40.456Z",
+        "updateAt": "2023-01-01T22:56:40.456Z",
+        "nik": "0001112001212322",
+        "name": "Santoz Mokaz",
+        "idTelegram": "1499836287",
+        "partner": "Telkom Akses",
+        "sector": "Baros",
+        "witel": "CRM-01",
+        "regional": "Jawa Barat",
+        "lapor_langsung": {
+            "name": "lapor_langsung",
+            "score": 1
+        },
+        "tutup_odp": {
+            "name": "tutup_odp",
+            "score": 0.25
+        },
+        "ticket_regular": {
+            "name": "tiket_reguler",
+            "score": 1
+        },
+        "ticket_sqm": {
+            "name": "ticket_sqm",
+            "score": 0.5
+        },
+        "proman": {
+            "name": "proman",
+            "score": 0.5
+        },
+        "unspect": {
+            "name": "unspect",
+            "score": 0.7
+        },
+        "valins": {
+            "name": "valins",
+            "score": 0.25
+        },
+        "ticket_redundant": {
+            "name": "ticket_redundant",
+            "score": 4
+        },
+        "gamas_type_a": {
+            "name": "gamas_type_a",
+            "score": 0
+        },
+        "gamas_type_b": {
+            "name": "gamas_type_b",
+            "score": 3
+        },
+        "gamas_type_c": {
+            "name": "gamas_type_c",
+            "score": 8
+        },
+        "survey": {
+            "name": "survey",
+            "score": 0
+        },
+        "kpi": 0.9333333333333332
+    },
+    {
+        "id": 4,
+        "createAt": "2023-01-02T01:43:32.953Z",
+        "updateAt": "2023-01-02T01:43:32.953Z",
+        "nik": "0001112001212324",
+        "name": "Kimmy",
+        "idTelegram": "1499836288",
+        "partner": "Telkom Akses",
+        "sector": "Rajawali",
+        "witel": "CRM-04",
+        "regional": "Jawa Barat",
+        "lapor_langsung": {
+            "name": "lapor_langsung",
+            "score": 0
+        },
+        "tutup_odp": {
+            "name": "tutup_odp",
+            "score": 0
+        },
+        "ticket_regular": {
+            "name": "tiket_reguler",
+            "score": 0
+        },
+        "ticket_sqm": {
+            "name": "ticket_sqm",
+            "score": 0
+        },
+        "proman": {
+            "name": "proman",
+            "score": 0
+        },
+        "unspect": {
+            "name": "unspect",
+            "score": 0
+        },
+        "valins": {
+            "name": "valins",
+            "score": 0
+        },
+        "ticket_redundant": {
+            "name": "ticket_redundant",
+            "score": 0
+        },
+        "gamas_type_a": {
+            "name": "gamas_type_a",
+            "score": 0
+        },
+        "gamas_type_b": {
+            "name": "gamas_type_b",
+            "score": 0
+        },
+        "gamas_type_c": {
+            "name": "gamas_type_c",
+            "score": 0
+        },
+        "survey": {
+            "name": "survey",
+            "score": 0
+        },
+        "kpi": 0
+    }
+]

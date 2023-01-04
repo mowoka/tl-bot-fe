@@ -11,14 +11,17 @@ import {
 
 import LinearProgress from "@mui/material/LinearProgress";
 import { UserReport } from "../../hooks/home/useHome";
+import DataDummy from "./dummy.json";
 
 interface DataTableProps {
   data: UserReport[];
   isLoading: boolean;
+  handleOpenTiketHistory: (title: string, nik: string) => void;
 }
 
 export const DataTable = (props: DataTableProps) => {
-  const { isLoading, data } = props;
+  const { isLoading, data, handleOpenTiketHistory } = props;
+
   return (
     <div className="py-6">
       <TableContainer component={Paper}>
@@ -95,33 +98,123 @@ export const DataTable = (props: DataTableProps) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.map((data, index) => (
+            {DataDummy.map((data, index) => (
               <TableRow
                 key={index}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell align="center">{data.nik}</TableCell>
                 <TableCell align="center">{data.name}</TableCell>
-                <TableCell align="center">
+                <TableCell
+                  align="center"
+                  className="cursor-pointer"
+                  onClick={() =>
+                    handleOpenTiketHistory(data.ticket_regular.name, data.nik)
+                  }
+                >
                   {data.ticket_regular.score}
                 </TableCell>
-                <TableCell align="center">
+                <TableCell
+                  align="center"
+                  className="cursor-pointer"
+                  onClick={() =>
+                    handleOpenTiketHistory(data.lapor_langsung.name, data.nik)
+                  }
+                >
                   {data.lapor_langsung.score}
                 </TableCell>
-                <TableCell align="center">{data.ticket_sqm.score}</TableCell>
-                <TableCell align="center">{data.proman.score}</TableCell>
-                <TableCell align="center">{data.tutup_odp.score}</TableCell>
-                <TableCell align="center">{data.valins.score}</TableCell>
-                <TableCell align="center">{data.unspect.score}</TableCell>
-                <TableCell align="center">{data.gamas_type_a.score}</TableCell>
-                <TableCell align="center">{data.gamas_type_b.score}</TableCell>
-                <TableCell align="center">{data.gamas_type_c.score}</TableCell>
-                <TableCell align="center">{data.survey.score}</TableCell>
-                <TableCell align="center">
+                <TableCell
+                  align="center"
+                  className="cursor-pointer"
+                  onClick={() =>
+                    handleOpenTiketHistory(data.ticket_sqm.name, data.nik)
+                  }
+                >
+                  {data.ticket_sqm.score}
+                </TableCell>
+                <TableCell
+                  align="center"
+                  className="cursor-pointer"
+                  onClick={() =>
+                    handleOpenTiketHistory(data.proman.name, data.nik)
+                  }
+                >
+                  {data.proman.score}
+                </TableCell>
+                <TableCell
+                  align="center"
+                  className="cursor-pointer"
+                  onClick={() =>
+                    handleOpenTiketHistory(data.tutup_odp.name, data.nik)
+                  }
+                >
+                  {data.tutup_odp.score}
+                </TableCell>
+                <TableCell
+                  align="center"
+                  className="cursor-pointer"
+                  onClick={() =>
+                    handleOpenTiketHistory(data.valins.name, data.nik)
+                  }
+                >
+                  {data.valins.score}
+                </TableCell>
+                <TableCell
+                  align="center"
+                  className="cursor-pointer"
+                  onClick={() =>
+                    handleOpenTiketHistory(data.unspect.name, data.nik)
+                  }
+                >
+                  {data.unspect.score}
+                </TableCell>
+                <TableCell
+                  align="center"
+                  className="cursor-pointer"
+                  onClick={() =>
+                    handleOpenTiketHistory(data.gamas_type_a.name, data.nik)
+                  }
+                >
+                  {data.gamas_type_a.score}
+                </TableCell>
+                <TableCell
+                  align="center"
+                  className="cursor-pointer"
+                  onClick={() =>
+                    handleOpenTiketHistory(data.gamas_type_b.name, data.nik)
+                  }
+                >
+                  {data.gamas_type_b.score}
+                </TableCell>
+                <TableCell
+                  align="center"
+                  className="cursor-pointer"
+                  onClick={() =>
+                    handleOpenTiketHistory(data.gamas_type_c.name, data.nik)
+                  }
+                >
+                  {data.gamas_type_c.score}
+                </TableCell>
+                <TableCell
+                  align="center"
+                  className="cursor-pointer"
+                  onClick={() =>
+                    handleOpenTiketHistory(data.survey.name, data.nik)
+                  }
+                >
+                  {data.survey.score}
+                </TableCell>
+                <TableCell
+                  align="center"
+                  className="cursor-pointer"
+                  onClick={() =>
+                    handleOpenTiketHistory(data.ticket_redundant.name, data.nik)
+                  }
+                >
                   {data.ticket_redundant.score > 0 ? "-" : ""}{" "}
                   {data.ticket_redundant.score}
                 </TableCell>
-                <TableCell align="center">{data.kpi}</TableCell>
+                <TableCell align="center">{data.kpi.toFixed(2)}</TableCell>
               </TableRow>
             ))}
           </TableBody>

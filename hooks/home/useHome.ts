@@ -5,6 +5,7 @@ import { ApiFetchRaw } from "../../core/clients/apiFetch";
 import { ErrrorMessage } from "../register/useRegister";
 import { FilterOptionsProps, MasterFilterOptions, MasterFiltersResponse, ParamsProps } from "../teknisi-management/useTeknisiUser";
 import dayjs from "dayjs";
+import { useModalElement } from "../common/useModalElement";
 
 interface HomeProps {
     data: UserReport[];
@@ -12,10 +13,14 @@ interface HomeProps {
     errorMessage: ErrrorMessage;
     masterFilterOptions: MasterFilterOptions;
     params: ParamsUserReport;
+    open: boolean;
+    historyTable: HistoryTable;
     onCloseError: () => void;
     onChange: (e: React.ChangeEvent<HTMLInputElement>, name: string) => void
     onChangeDate: (value: string, name: string) => void;
     resetFilter: () => void;
+    handleClose: () => void;
+    handleOpenTiketHistory: (title: string, nik: string) => void;
 }
 
 
@@ -33,6 +38,7 @@ const lastDay = new Date(date.getFullYear(), date.getMonth(), 30);
 const useHome = (): HomeProps => {
     const { getToken } = useUser();
     const token = getToken();
+    const { open, handleClose, handleOpen } = useModalElement();
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [data, setData] = useState<UserReport[]>([]);
     const [masterFilterOptions, setMasterFilterOptionsData] = useState<MasterFilterOptions>(initialMasterFilter);
@@ -47,6 +53,10 @@ const useHome = (): HomeProps => {
         show: false,
         message: '',
         status: "info"
+    });
+    const [historyTable, setHistoryTable] = useState<HistoryTable>({
+        title: '',
+        nik: '',
     });
     const onCloseError = () => {
         setErrorMessage((prev) => ({ ...prev, show: false }))
@@ -100,6 +110,12 @@ const useHome = (): HomeProps => {
             startDate: dayjs(firstDay).format("YYYY-MM-DD").toString(),
             endDate: dayjs(lastDay).format("YYYY-MM-DD").toString(),
         })
+    }
+
+    const handleOpenTiketHistory = (title: string, nik: string) => {
+        console.log({ title, nik })
+        setHistoryTable({ title: title, nik: nik });
+        handleOpen();
     }
 
     const getUserTeknisiFilterMaster = async () => {
@@ -156,7 +172,7 @@ const useHome = (): HomeProps => {
 
 
     useEffect(() => {
-        getUserTeknisiReport();
+        // getUserTeknisiReport();
     }, [])
 
     useEffect(() => {
@@ -169,12 +185,21 @@ const useHome = (): HomeProps => {
         errorMessage,
         masterFilterOptions,
         params,
+        open,
+        historyTable,
         onCloseError,
         onChange,
         onChangeDate,
-        resetFilter
+        resetFilter,
+        handleClose,
+        handleOpenTiketHistory
     }
 
+}
+
+export interface HistoryTable {
+    title: string;
+    nik: string
 }
 
 export interface ParamsUserReport extends ParamsProps {

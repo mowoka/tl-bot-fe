@@ -6,6 +6,8 @@ import { DataTable } from "../components/Home/DataTable";
 import { useProfile } from "../hooks/common/useProfile";
 import SnackbarMessage from "../components/common/Snackbar";
 import { MenuFilter } from "../components/Home/MenuFilter";
+import ModalElement from "../components/common/Modal";
+import { DataTableHistory } from "../components/Home/DataTableHistory";
 
 export default function Home() {
   useGuard();
@@ -16,10 +18,14 @@ export default function Home() {
     errorMessage,
     masterFilterOptions,
     params,
+    open,
+    historyTable,
     onChange,
     onChangeDate,
     onCloseError,
     resetFilter,
+    handleClose,
+    handleOpenTiketHistory,
   } = useHome();
 
   return (
@@ -30,6 +36,9 @@ export default function Home() {
         status={errorMessage.status}
         onClose={onCloseError}
       />
+      <ModalElement open={open} handleClose={handleClose}>
+        <DataTableHistory historyTable={historyTable} />
+      </ModalElement>
       <h2 className="font-semibold text-4xl py-4">Performansi IOAN</h2>
       <Divider />
       <MenuFilter
@@ -39,7 +48,11 @@ export default function Home() {
         params={params}
         resetFilter={resetFilter}
       />
-      <DataTable isLoading={isLoading} data={data} />
+      <DataTable
+        isLoading={isLoading}
+        data={data}
+        handleOpenTiketHistory={handleOpenTiketHistory}
+      />
     </Layout>
   );
 }
