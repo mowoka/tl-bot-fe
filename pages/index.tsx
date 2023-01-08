@@ -20,6 +20,8 @@ export default function Home() {
     params,
     open,
     historyTable,
+    isHistoryLoading,
+    historyData,
     onChange,
     onChangeDate,
     onCloseError,
@@ -37,7 +39,11 @@ export default function Home() {
         onClose={onCloseError}
       />
       <ModalElement open={open} handleClose={handleClose}>
-        <DataTableHistory historyTable={historyTable} />
+        <DataTableHistory
+          historyTable={historyTable}
+          isLoading={isHistoryLoading}
+          historyData={historyData}
+        />
       </ModalElement>
       <h2 className="font-semibold text-4xl py-4">Performansi IOAN</h2>
       <Divider />

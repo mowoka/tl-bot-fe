@@ -1,4 +1,9 @@
-import { HistoryTable } from "../../hooks/home/useHome";
+import {
+  HistoryTable,
+  MetaData,
+  ResponseUserTeknisiHistory,
+  TiketReguler,
+} from "../../hooks/home/useHome";
 import { LaporLangsungHistory } from "./LaporLangsungHistory";
 import { PromanHistory } from "./PromanHistory";
 import { SQMHistory } from "./SQMHistory";
@@ -9,31 +14,45 @@ import { TutupOdpHistory } from "./TutupOdpHistory";
 import { UnspectHistory } from "./UnspectHistory";
 import { ValinsHistory } from "./ValinsHistory";
 
+export interface TableHistory {
+  isLoading: boolean;
+}
+
 interface DataTableHistoryProps {
   historyTable: HistoryTable;
+  isLoading: boolean;
+  historyData: undefined | ResponseUserTeknisiHistory;
 }
 
 export const DataTableHistory = (props: DataTableHistoryProps) => {
-  const { historyTable } = props;
+  const { historyTable, isLoading, historyData } = props;
 
   switch (historyTable.title) {
     case "tiket_reguler":
-      return <TiketRegulerHistory />;
+      return (
+        <TiketRegulerHistory
+          isLoading={isLoading}
+          datas={historyData?.history as TiketReguler[]}
+          metadata={historyData?.metadata as MetaData}
+        />
+      );
     case "lapor_langsung":
-      return <LaporLangsungHistory />;
+      return <LaporLangsungHistory isLoading={isLoading} />;
     case "ticket_sqm":
-      return <SQMHistory />;
+      return <SQMHistory isLoading={isLoading} />;
     case "proman":
-      return <PromanHistory />;
+      return <PromanHistory isLoading={isLoading} />;
     case "tutup_odp":
-      return <TutupOdpHistory />;
+      return <TutupOdpHistory isLoading={isLoading} />;
     case "valins":
-      return <ValinsHistory />;
+      return <ValinsHistory isLoading={isLoading} />;
     case "unspect":
-      return <UnspectHistory />;
+      return <UnspectHistory isLoading={isLoading} />;
     case "ticket_redundant":
-      return <TiketRedundantHistory />;
+      return <TiketRedundantHistory isLoading={isLoading} />;
     default:
-      return <TeamLeadHistory title={historyTable.title} />;
+      return (
+        <TeamLeadHistory title={historyTable.title} isLoading={isLoading} />
+      );
   }
 };

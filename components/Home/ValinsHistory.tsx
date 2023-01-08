@@ -8,8 +8,12 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import { TableHistory } from "./DataTableHistory";
 
-export function ValinsHistory() {
+interface ValinsHistory extends TableHistory {}
+
+export function ValinsHistory(props: ValinsHistory) {
+  const { isLoading } = props;
   return (
     <div className="bg-secondary w-full max-w-[1200px] min-h-[400px] border-none outline-none rounded-lg p-6">
       <p className="text-xl uppercase font-semibold">Valins</p>
@@ -73,9 +77,11 @@ export function ValinsHistory() {
             </TableBody>
           </Table>
         </TableContainer>
-        {/* {isLoading && ( */}
-        <div className="w-full">{/* <LinearProgress /> */}</div>
-        {/* )} */}
+        {isLoading && (
+          <div className="w-full">
+            <LinearProgress />
+          </div>
+        )}
       </div>
     </div>
   );

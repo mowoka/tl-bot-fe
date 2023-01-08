@@ -8,8 +8,9 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import { TableHistory } from "./DataTableHistory";
 
-interface TeamLeadHistoryProps {
+interface TeamLeadHistoryProps extends TableHistory {
   title: string;
 }
 
@@ -85,9 +86,11 @@ export function TeamLeadHistory(props: TeamLeadHistoryProps) {
             </TableBody>
           </Table>
         </TableContainer>
-        {/* {isLoading && ( */}
-        <div className="w-full">{/* <LinearProgress /> */}</div>
-        {/* )} */}
+        {props.isLoading && (
+          <div className="w-full">
+            <LinearProgress />
+          </div>
+        )}
       </div>
     </div>
   );

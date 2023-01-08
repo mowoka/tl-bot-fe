@@ -8,8 +8,12 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import { TableHistory } from "./DataTableHistory";
 
-export function PromanHistory() {
+interface PromanHistory extends TableHistory {}
+
+export function PromanHistory(props: PromanHistory) {
+  const { isLoading } = props;
   return (
     <div className="bg-secondary w-full max-w-[1200px] min-h-[400px] border-none outline-none rounded-lg p-6">
       <p className="text-xl uppercase font-semibold">Proman</p>
@@ -78,9 +82,11 @@ export function PromanHistory() {
             </TableBody>
           </Table>
         </TableContainer>
-        {/* {isLoading && ( */}
-        <div className="w-full">{/* <LinearProgress /> */}</div>
-        {/* )} */}
+        {isLoading && (
+          <div className="w-full">
+            <LinearProgress />
+          </div>
+        )}
       </div>
     </div>
   );

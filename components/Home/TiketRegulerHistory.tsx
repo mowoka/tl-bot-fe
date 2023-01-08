@@ -8,8 +8,17 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import { TableHistory } from "./DataTableHistory";
+import { MetaData, TiketReguler } from "../../hooks/home/useHome";
+import { dateFomatting } from "../../core/utility/dateFormatting";
 
-export function TiketRegulerHistory() {
+interface TiketRegulerProps extends TableHistory {
+  datas: TiketReguler[];
+  metadata: MetaData;
+}
+
+export function TiketRegulerHistory(props: TiketRegulerProps) {
+  const { isLoading, datas } = props;
   return (
     <div className="bg-secondary w-full max-w-[1200px] min-h-[400px] border-none outline-none rounded-lg p-6">
       <p className="text-xl uppercase font-semibold">Tiket Reguler</p>
@@ -28,58 +37,31 @@ export function TiketRegulerHistory() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {/* {DataDummy.map((data, index) => (
+              {!isLoading &&
+                datas?.map((data, index) => (
                   <TableRow
                     key={index}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
-                    <TableCell align="center">{data.nik}</TableCell>
-                    <TableCell align="center">{data.name}</TableCell>
-                    <TableCell
-                      align="center"
-                      className="cursor-pointer"
-                      onClick={() =>
-                        handleOpenTiketHistory(
-                          data.ticket_regular.name,
-                          data.nik
-                        )
-                      }
-                    >
-                      {data.ticket_regular.score}
+                    <TableCell align="left">
+                      {dateFomatting(data.createAt.toString())}
                     </TableCell>
-                    <TableCell align="center">
-                      {data.lapor_langsung.score}
-                    </TableCell>
-                    <TableCell align="center">
-                      {data.ticket_sqm.score}
-                    </TableCell>
-                    <TableCell align="center">{data.proman.score}</TableCell>
-                    <TableCell align="center">{data.tutup_odp.score}</TableCell>
-                    <TableCell align="center">{data.valins.score}</TableCell>
-                    <TableCell align="center">{data.unspect.score}</TableCell>
-                    <TableCell align="center">
-                      {data.gamas_type_a.score}
-                    </TableCell>
-                    <TableCell align="center">
-                      {data.gamas_type_b.score}
-                    </TableCell>
-                    <TableCell align="center">
-                      {data.gamas_type_c.score}
-                    </TableCell>
-                    <TableCell align="center">{data.survey.score}</TableCell>
-                    <TableCell align="center">
-                      {data.ticket_redundant.score > 0 ? "-" : ""}{" "}
-                      {data.ticket_redundant.score}
-                    </TableCell>
-                    <TableCell align="center">{data.kpi.toFixed(2)}</TableCell>
+                    <TableCell align="left">{data.insiden_number}</TableCell>
+                    <TableCell align="left">{data.speedy_number}</TableCell>
+                    <TableCell align="left">{data.customer_name}</TableCell>
+                    <TableCell align="left">{data.customer_number}</TableCell>
+                    <TableCell align="left">{data.problem}</TableCell>
+                    <TableCell align="left">{data.description}</TableCell>
                   </TableRow>
-                ))} */}
+                ))}
             </TableBody>
           </Table>
         </TableContainer>
-        {/* {isLoading && ( */}
-        <div className="w-full">{/* <LinearProgress /> */}</div>
-        {/* )} */}
+        {isLoading && (
+          <div className="w-full">
+            <LinearProgress />
+          </div>
+        )}
       </div>
     </div>
   );

@@ -15,6 +15,8 @@ interface HomeProps {
     params: ParamsUserReport;
     open: boolean;
     historyTable: HistoryTable;
+    isHistoryLoading: boolean;
+    historyData: undefined | ResponseUserTeknisiHistory;
     onCloseError: () => void;
     onChange: (e: React.ChangeEvent<HTMLInputElement>, name: string) => void
     onChangeDate: (value: string, name: string) => void;
@@ -57,7 +59,10 @@ const useHome = (): HomeProps => {
     const [historyTable, setHistoryTable] = useState<HistoryTable>({
         title: '',
         nik: '',
+        page: '1',
     });
+    const [isHistoryLoading, setIsHitoryLoading] = useState<boolean>(false);
+    const [historyData, setHistoryData] = useState<ResponseUserTeknisiHistory | undefined>();
     const onCloseError = () => {
         setErrorMessage((prev) => ({ ...prev, show: false }))
     }
@@ -113,12 +118,42 @@ const useHome = (): HomeProps => {
     }
 
     const handleOpenTiketHistory = (title: string, nik: string) => {
-        console.log({ title, nik })
-        setHistoryTable({ title: title, nik: nik });
+        setHistoryTable((prev) => ({ ...prev, nik, title }))
         handleOpen();
     }
 
-    const getUserTeknisiFilterMaster = async () => {
+
+    async function getUserTeknisiHistory() {
+        setIsHitoryLoading(true);
+        const URLParams = { nik: historyTable.nik, ticket_title: historyTable.title, page: historyTable.page }
+        const res = await ApiFetchRaw<ResponseUserTeknisiHistory>(process.env.BASE_URL_API + 'teknisi-user/history?' + new URLSearchParams(URLParams), {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+        })
+
+        if (res.body.statusCode === 200) {
+            setHistoryData(res.body.data);
+        } else {
+            setHistoryData({
+                history: [],
+                metadata: {
+                    total: 0,
+                    pagination: 1,
+                    page: 1
+                }
+            })
+            setErrorMessage({
+                show: true,
+                message: res.body.message,
+                status: "error"
+            });
+        }
+        setIsHitoryLoading(false);
+
+    }
+
+    async function getUserTeknisiFilterMaster() {
         const res = await ApiFetchRaw<MasterFiltersResponse>(process.env.BASE_URL_API + 'teknisi-user/master-filters', {
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -147,7 +182,7 @@ const useHome = (): HomeProps => {
         }
     }
 
-    const getUserTeknisiReport = async () => {
+    async function getUserTeknisiReport() {
         setIsLoading(true);
         const URLParams = { ...params }
         const res = await ApiFetchRaw<UserReport[]>(process.env.BASE_URL_API + 'teknisi-user/report?' + new URLSearchParams(URLParams), {
@@ -158,16 +193,15 @@ const useHome = (): HomeProps => {
 
         if (res.body.statusCode === 200) {
             setData(res.body.data);
-            setIsLoading(false);
         } else {
             setData([]);
-            setIsLoading(false);
             setErrorMessage({
                 show: true,
                 message: res.body.message,
                 status: "error"
             });
         }
+        setIsLoading(false);
     }
 
 
@@ -176,8 +210,9 @@ const useHome = (): HomeProps => {
     }, [])
 
     useEffect(() => {
-        getUserTeknisiFilterMaster()
-    }, [])
+        if (!historyTable.nik || !historyTable.title) return
+        getUserTeknisiHistory();
+    }, [historyTable])
 
     return {
         data,
@@ -187,19 +222,145 @@ const useHome = (): HomeProps => {
         params,
         open,
         historyTable,
+        isHistoryLoading,
+        historyData,
         onCloseError,
         onChange,
         onChangeDate,
         resetFilter,
         handleClose,
-        handleOpenTiketHistory
-    }
+        handleOpenTiketHistory,
 
+    }
+}
+
+export interface ResponseUserTeknisiHistory {
+    history: LaporLangsung[] | TutupOdp[] | TiketReguler[] | SQM[] | Proman[] | Unspect[] | Valins[] | TiketRedundant[] | TiketTeamLead[];
+    metadata: MetaData;
+}
+
+export interface TiketTeamLead {
+    id: number;
+    createAt: Date;
+    updateAt: Date;
+    description: string;
+    teknisi_user_id: number;
+    team_lead_job_id: number;
+}
+
+export interface TiketRedundant {
+    id: number;
+    createAt: Date;
+    updateAt: Date;
+    insiden_number: string;
+    speedy_number: string;
+    customer_name: string;
+    customer_number: string;
+    problem: string;
+    description: string;
+    teknisi_job_id: string;
+    idTelegram: string;
+}
+
+export interface Valins {
+    id: number;
+    createAt: Date;
+    updateAt: Date;
+    valins_id: string;
+    odp: string;
+    teknisi_job_id: string;
+    idTelegram: string;
+}
+
+export interface Unspect {
+    id: number;
+    createAt: Date;
+    updateAt: Date;
+    speedy_number: string;
+    odp: string;
+    problem: string;
+    description: string;
+    teknisi_job_id: string;
+    idTelegram: string;
+}
+
+export interface Proman {
+    id: number;
+    createAt: Date;
+    updateAt: Date;
+    odp_name: string;
+    distribusi: string;
+    capacity_port: number;
+    status_port_use: number;
+    status_port_available: number;
+    odp_cradle: number;
+    opm_length: number;
+    teknisi_job_id: string;
+    idTelegram: string;
+}
+
+export interface SQM {
+    id: number;
+    createAt: Date;
+    updateAt: Date;
+    insiden_number: string;
+    speedy_number: string;
+    customer_name: string;
+    customer_number: string;
+    problem: string;
+    description: string;
+    teknisi_job_id: string;
+    idTelegram: string;
+}
+
+export interface TiketReguler {
+    id: number;
+    createAt: Date;
+    updateAt: Date;
+    insiden_number: string;
+    speedy_number: string;
+    customer_name: string;
+    customer_number: string;
+    problem: string;
+    description: string;
+    teknisi_job_id: string;
+    idTelegram: string;
+
+}
+
+export interface TutupOdp {
+    id: number;
+    createAt: Date;
+    updateAt: Date;
+    odp_name: string;
+    odp_address: string;
+    teknisi_job_id: string;
+    idTelegram: string;
+}
+
+export interface LaporLangsung {
+    id: number;
+    createAt: Date;
+    updateAt: Date;
+    speedy_number: string;
+    customer_phone: string;
+    customer_name: string;
+    problem: string;
+    description: string;
+    teknisi_job_id: string;
+    idTelegram: string
+}
+
+export interface MetaData {
+    total: number;
+    page: number;
+    pagination: number;
 }
 
 export interface HistoryTable {
     title: string;
-    nik: string
+    nik: string;
+    page: string;
 }
 
 export interface ParamsUserReport extends ParamsProps {
