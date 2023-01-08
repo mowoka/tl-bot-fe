@@ -135,7 +135,7 @@ export const useBoard = (): UseBoardProps => {
             },
         })
         if (res.body.statusCode === 200) {
-            return res.body.data.teknisi_user;
+            return res.body.data.data;
         }
         return []
     }

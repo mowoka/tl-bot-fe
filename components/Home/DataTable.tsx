@@ -10,11 +10,11 @@ import {
 } from "@mui/material";
 
 import LinearProgress from "@mui/material/LinearProgress";
-import { UserReport } from "../../hooks/home/useHome";
-import DataDummy from "./dummy.json";
+import { UserReportData } from "../../hooks/home/useHome";
+import { PaginationPage } from "../common/PaginationPage";
 
 interface DataTableProps {
-  data: UserReport[];
+  data: UserReportData;
   isLoading: boolean;
   handleOpenTiketHistory: (title: string, nik: string) => void;
 }
@@ -98,7 +98,7 @@ export const DataTable = (props: DataTableProps) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {DataDummy.map((data, index) => (
+            {data.data?.map((data, index) => (
               <TableRow
                 key={index}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -223,6 +223,14 @@ export const DataTable = (props: DataTableProps) => {
       {isLoading && (
         <div className="w-full">
           <LinearProgress />
+        </div>
+      )}
+      {!isLoading && (
+        <div className="w-full py-6 flex justify-end items-end">
+          <PaginationPage
+            pagination={data.metadata?.pagination}
+            activePage={data.metadata?.page}
+          />
         </div>
       )}
     </div>

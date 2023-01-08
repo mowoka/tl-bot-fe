@@ -8,7 +8,7 @@ import dayjs from "dayjs";
 import { useModalElement } from "../common/useModalElement";
 
 interface HomeProps {
-    data: UserReport[];
+    data: UserReportData;
     isLoading: boolean;
     errorMessage: ErrrorMessage;
     masterFilterOptions: MasterFilterOptions;
@@ -33,6 +33,15 @@ const initialMasterFilter: MasterFilterOptions = {
     sector: []
 }
 
+const intialUserReportData: UserReportData = {
+    data: [],
+    metadata: {
+        total: 0,
+        page: 1,
+        pagination: 1,
+    },
+}
+
 const date = new Date();
 const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
 const lastDay = new Date(date.getFullYear(), date.getMonth(), 30);
@@ -42,7 +51,7 @@ const useHome = (): HomeProps => {
     const token = getToken();
     const { open, handleClose, handleOpen } = useModalElement();
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [data, setData] = useState<UserReport[]>([]);
+    const [data, setData] = useState<UserReportData>(intialUserReportData);
     const [masterFilterOptions, setMasterFilterOptionsData] = useState<MasterFilterOptions>(initialMasterFilter);
     const [params, setParams] = useState<ParamsUserReport>({
         partner: '',
@@ -185,7 +194,7 @@ const useHome = (): HomeProps => {
     async function getUserTeknisiReport() {
         setIsLoading(true);
         const URLParams = { ...params }
-        const res = await ApiFetchRaw<UserReport[]>(process.env.BASE_URL_API + 'teknisi-user/report?' + new URLSearchParams(URLParams), {
+        const res = await ApiFetchRaw<UserReportData>(process.env.BASE_URL_API + 'teknisi-user/report?' + new URLSearchParams(URLParams), {
             headers: {
                 'Authorization': `Bearer ${token}`
             },
@@ -194,7 +203,7 @@ const useHome = (): HomeProps => {
         if (res.body.statusCode === 200) {
             setData(res.body.data);
         } else {
-            setData([]);
+            setData(intialUserReportData);
             setErrorMessage({
                 show: true,
                 message: res.body.message,
@@ -205,8 +214,13 @@ const useHome = (): HomeProps => {
     }
 
 
+
     useEffect(() => {
-        // getUserTeknisiReport();
+        getUserTeknisiReport();
+    }, [params])
+
+    useEffect(() => {
+        getUserTeknisiFilterMaster();
     }, [])
 
     useEffect(() => {
@@ -372,6 +386,11 @@ export interface ParamsUserReport extends ParamsProps {
 export interface KpiUser {
     name: string,
     score: number,
+}
+
+export interface UserReportData {
+    data: UserReport[];
+    metadata: MetaData,
 }
 
 export interface UserReport {
