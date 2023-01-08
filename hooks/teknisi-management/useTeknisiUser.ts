@@ -27,12 +27,19 @@ export interface FormUserTeknisi {
 }
 
 export interface UserTeknisiResponse {
-    teknisi_user: UserTeknisi[]
+    data: UserTeknisi[]
+    metadata: MetaData;
 }
 
 export interface FilterOptionsProps {
     key: string;
     value: string;
+}
+
+export interface MetaData {
+    total: number;
+    page: number;
+    pagination: number;
 }
 
 export interface MasterFilterOptions {
@@ -55,7 +62,7 @@ export interface ParamsProps {
 
 interface UseTeknisiUserProps {
     params: ParamsProps;
-    data: UserTeknisi[]
+    data: UserTeknisiResponse;
     masterFilterOptions: MasterFilterOptions;
     isLoading: boolean;
     submitLoading: boolean;
@@ -85,10 +92,19 @@ const initialFormTeknsiUser: FormUserTeknisi = {
     regional: '',
 }
 
+const intialUserTeknisi: UserTeknisiResponse = {
+    data: [],
+    metadata: {
+        page: 1,
+        pagination: 1,
+        total: 0,
+    }
+}
+
 export function useTeknisiUser(): UseTeknisiUserProps {
     const { getToken } = useUser();
     const token = getToken();
-    const [data, setData] = useState<UserTeknisi[]>([]);
+    const [data, setData] = useState<UserTeknisiResponse>(intialUserTeknisi);
     const [masterFilterOptions, setMasterFilterOptionsData] = useState<MasterFilterOptions>(initialMasterFilter);
     const [params, setParams] = useState<ParamsProps>({
         partner: '',
@@ -159,10 +175,10 @@ export function useTeknisiUser(): UseTeknisiUserProps {
         })
 
         if (res.body.statusCode === 200) {
-            setData(res.body.data.teknisi_user);
+            setData(res.body.data);
             setIsLoading(false);
         } else {
-            setData([]);
+            setData(intialUserTeknisi);
             setIsLoading(false);
         }
     }

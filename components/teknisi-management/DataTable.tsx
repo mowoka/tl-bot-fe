@@ -7,11 +7,12 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { UserTeknisi } from "../../hooks/teknisi-management/useTeknisiUser";
+import { UserTeknisiResponse } from "../../hooks/teknisi-management/useTeknisiUser";
 import LinearProgress from "@mui/material/LinearProgress";
+import { PaginationPage } from "../common/PaginationPage";
 
 interface DataTableProps {
-  data: UserTeknisi[];
+  data: UserTeknisiResponse;
   isLoading: boolean;
 }
 
@@ -33,7 +34,7 @@ export const DataTable = (props: DataTableProps) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.map((data, index) => (
+            {data.data.map((data, index) => (
               <TableRow
                 key={index}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -53,6 +54,14 @@ export const DataTable = (props: DataTableProps) => {
       {isLoading && (
         <div className="w-full">
           <LinearProgress />
+        </div>
+      )}
+      {!isLoading && (
+        <div className="w-full flex justify-end items-end py-6">
+          <PaginationPage
+            pagination={data.metadata.pagination}
+            activePage={data.metadata.page}
+          />
         </div>
       )}
     </div>
