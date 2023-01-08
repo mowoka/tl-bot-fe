@@ -6,7 +6,7 @@ import { DataTable } from "../components/Home/DataTable";
 import { useProfile } from "../hooks/common/useProfile";
 import SnackbarMessage from "../components/common/Snackbar";
 import { MenuFilter } from "../components/Home/MenuFilter";
-import ModalElement from "../components/common/Modal";
+import { ModalElement } from "../components/common/Modal";
 import { DataTableHistory } from "../components/Home/DataTableHistory";
 
 export default function Home() {
@@ -31,7 +31,7 @@ export default function Home() {
   } = useHome();
 
   return (
-    <Layout profile={profile} footer={true}>
+    <Layout profile={profile}>
       <SnackbarMessage
         show={errorMessage.show}
         message={errorMessage.message}

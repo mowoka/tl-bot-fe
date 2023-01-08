@@ -4,7 +4,7 @@ import { DataTable } from "../components/teknisi-management/DataTable";
 import { MenuFilter } from "../components/teknisi-management/MenuFilter";
 import { useTeknisiUser } from "../hooks/teknisi-management/useTeknisiUser";
 import { useProfile } from "../hooks/common/useProfile";
-import ModalElement from "../components/common/Modal";
+import { ModalElement } from "../components/common/Modal";
 import { useModalElement } from "../hooks/common/useModalElement";
 import { FromPanel } from "../components/teknisi-management/FormPanel";
 import SnackbarMessage from "../components/common/Snackbar";

@@ -30,7 +30,7 @@ interface UseBoardProps {
     formData: FormDataProps;
     isLoading: boolean;
     errorMessage: ErrrorMessage;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>, name: string) => void;
+    onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, name: string) => void;
     onSubmit: () => void;
     onCloseError: () => void;
 }
@@ -62,7 +62,7 @@ export const useBoard = (): UseBoardProps => {
     }
 
 
-    const onChange = (e: React.ChangeEvent<HTMLInputElement>, name: string) => {
+    const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, name: string) => {
         if (name === 'teknisi') {
             setFormData((prev) => ({ ...prev, teknisiUserId: e.target.value, }))
         } else if (name === 'job') {

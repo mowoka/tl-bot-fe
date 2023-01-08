@@ -1,32 +1,39 @@
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 export function useGuard() {
     const router = useRouter();
 
     const checkAuthenticate = () => {
-        try {
-            const persistStorage = window.sessionStorage.getItem('persist:root');
-            if (!persistStorage) {
-                return false;
-            } else {
-                const persist = JSON.parse(persistStorage);
-                if (!persist.isAuthenticate) {
+        if (typeof window !== undefined) {
+            try {
+                const persistStorage = window.sessionStorage.getItem('persist:root');
+                if (!persistStorage) {
                     return false;
                 } else {
-                    return true;
+                    const persist = JSON.parse(persistStorage);
+                    if (!persist.isAuthenticate) {
+                        return false;
+                    } else {
+                        return true;
+                    }
                 }
+            } catch (error) {
+                console.error(error);
+                return false;
             }
-        } catch (error) {
-            console.error(error);
-            return false;
         }
     }
 
-    const isAuthenticate = checkAuthenticate();
-    if (!router.isReady) return;
-    if (isAuthenticate === false) {
-        router.push("/accounts/login");
-    } else {
-        return
-    }
+    useEffect(() => {
+        if (!router.isReady) return;
+        const isAuthenticate = checkAuthenticate();
+        if (isAuthenticate === false) {
+            router.push("/accounts/login");
+        } else {
+            return
+        }
+    }, [])
+
+
 }

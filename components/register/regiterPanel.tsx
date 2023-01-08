@@ -1,13 +1,13 @@
 import { RegisterTitle } from "./regiterTitle";
 import { ValidateForm } from "./validateForm";
 
-interface RegisterPanel {
+interface RegisterPanelProps {
   nik: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>, desc: string) => void;
   onValidateNik: () => void;
 }
 
-export const RegisterPanel = (props: RegisterPanel) => {
+export const RegisterPanel = (props: RegisterPanelProps) => {
   const { nik, onChange, onValidateNik } = props;
   return (
     <div className="w-full max-w-[450px] bg-secondary min-h-[500px] rounded-lg shadow-2xl flex flex-col justify-start items-center py-6 px-8">

@@ -7,14 +7,14 @@ interface ModalElementProps {
 }
 
 const style = {
-  position: "absolute" as "absolute",
+  position: "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
   boxShadow: 24,
 };
 
-const ModalElement = (props: ModalElementProps) => {
+export const ModalElement = (props: ModalElementProps) => {
   const { open, handleClose, children } = props;
   return (
     <Modal
@@ -27,5 +27,3 @@ const ModalElement = (props: ModalElementProps) => {
     </Modal>
   );
 };
-
-export default ModalElement;

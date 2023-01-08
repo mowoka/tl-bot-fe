@@ -97,11 +97,10 @@ const SIDEBAR_MENU: ISIDEBAR_MENU[] = [
 interface AppBarComponentProps {
   children: JSX.Element[] | JSX.Element;
   name?: string;
-  footer?: boolean;
 }
 
 export default function AppBarComponent(props: AppBarComponentProps) {
-  const { children, name, footer } = props;
+  const { children, name } = props;
   const router = useRouter();
 
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(

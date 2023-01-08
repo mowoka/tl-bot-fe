@@ -3,7 +3,7 @@ import React from "react";
 
 interface TextAreaProps {
   value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }
 
 export const TextArea = (props: TextAreaProps) => {

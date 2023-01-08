@@ -8,7 +8,10 @@ import { TextArea } from "../common/TextArea";
 interface FormPerformansiProps {
   optionsData: OptionsFormData;
   formData: FormDataProps;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>, name: string) => void;
+  onChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    name: string
+  ) => void;
   onSubmit: () => void;
   onLoading?: boolean;
 }
@@ -42,7 +45,7 @@ const FormPerformansi = (props: FormPerformansiProps) => {
             type="text"
             placeholder=""
             value={formData.nilai ? formData.nilai : "-"}
-            onChange={() => {}}
+            onChange={(e) => onChange(e, "score")}
             disabled={true}
           />
         </div>
