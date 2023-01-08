@@ -11,6 +11,7 @@ import {
 import { TableHistory } from "./DataTableHistory";
 import { MetaData, TiketReguler } from "../../hooks/home/useHome";
 import { dateFomatting } from "../../core/utility/dateFormatting";
+import { PaginationPage } from "../common/PaginationPage";
 
 interface TiketRegulerProps extends TableHistory {
   datas: TiketReguler[];
@@ -18,9 +19,9 @@ interface TiketRegulerProps extends TableHistory {
 }
 
 export function TiketRegulerHistory(props: TiketRegulerProps) {
-  const { isLoading, datas } = props;
+  const { isLoading, datas, metadata } = props;
   return (
-    <div className="bg-secondary w-full max-w-[1200px] min-h-[400px] border-none outline-none rounded-lg p-6">
+    <div className="bg-secondary w-full max-w-[1200px] min-h-[400px] max-h-[500px] border-none outline-none rounded-lg p-6">
       <p className="text-xl uppercase font-semibold">Tiket Reguler</p>
       <div className="py-6">
         <TableContainer component={Paper}>
@@ -63,6 +64,14 @@ export function TiketRegulerHistory(props: TiketRegulerProps) {
           </div>
         )}
       </div>
+      {!isLoading && (
+        <div className="w-full flex justify-end items-end">
+          <PaginationPage
+            pagination={metadata?.pagination}
+            activePage={metadata?.page}
+          />
+        </div>
+      )}
     </div>
   );
 }

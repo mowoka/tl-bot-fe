@@ -9,11 +9,17 @@ import {
   TableRow,
 } from "@mui/material";
 import { TableHistory } from "./DataTableHistory";
+import { SQM, MetaData } from "../../hooks/home/useHome";
+import { dateFomatting } from "../../core/utility/dateFormatting";
+import { PaginationPage } from "../common/PaginationPage";
 
-interface SQM extends TableHistory {}
+interface SQMProps extends TableHistory {
+  datas: SQM[];
+  metadata: MetaData;
+}
 
-export function SQMHistory(props: SQM) {
-  const { isLoading } = props;
+export function SQMHistory(props: SQMProps) {
+  const { isLoading, datas, metadata } = props;
   return (
     <div className="bg-secondary w-full max-w-[1200px] min-h-[400px] border-none outline-none rounded-lg p-6">
       <p className="text-xl uppercase font-semibold">Tiket SQM</p>
@@ -32,52 +38,23 @@ export function SQMHistory(props: SQM) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {/* {DataDummy.map((data, index) => (
-              <TableRow
-                key={index}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                <TableCell align="center">{data.nik}</TableCell>
-                <TableCell align="center">{data.name}</TableCell>
-                <TableCell
-                  align="center"
-                  className="cursor-pointer"
-                  onClick={() =>
-                    handleOpenTiketHistory(
-                      data.ticket_regular.name,
-                      data.nik
-                    )
-                  }
-                >
-                  {data.ticket_regular.score}
-                </TableCell>
-                <TableCell align="center">
-                  {data.lapor_langsung.score}
-                </TableCell>
-                <TableCell align="center">
-                  {data.ticket_sqm.score}
-                </TableCell>
-                <TableCell align="center">{data.proman.score}</TableCell>
-                <TableCell align="center">{data.tutup_odp.score}</TableCell>
-                <TableCell align="center">{data.valins.score}</TableCell>
-                <TableCell align="center">{data.unspect.score}</TableCell>
-                <TableCell align="center">
-                  {data.gamas_type_a.score}
-                </TableCell>
-                <TableCell align="center">
-                  {data.gamas_type_b.score}
-                </TableCell>
-                <TableCell align="center">
-                  {data.gamas_type_c.score}
-                </TableCell>
-                <TableCell align="center">{data.survey.score}</TableCell>
-                <TableCell align="center">
-                  {data.ticket_redundant.score > 0 ? "-" : ""}{" "}
-                  {data.ticket_redundant.score}
-                </TableCell>
-                <TableCell align="center">{data.kpi.toFixed(2)}</TableCell>
-              </TableRow>
-            ))} */}
+              {!isLoading &&
+                datas?.map((data, index) => (
+                  <TableRow
+                    key={index}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
+                    <TableCell align="left" style={{ minWidth: 120 }}>
+                      {dateFomatting(data.createAt.toString())}
+                    </TableCell>
+                    <TableCell align="left">{data.insiden_number}</TableCell>
+                    <TableCell align="left">{data.speedy_number}</TableCell>
+                    <TableCell align="left">{data.customer_name}</TableCell>
+                    <TableCell align="left">{data.customer_number}</TableCell>
+                    <TableCell align="left">{data.problem}</TableCell>
+                    <TableCell align="left">{data.description}</TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </TableContainer>
@@ -87,6 +64,14 @@ export function SQMHistory(props: SQM) {
           </div>
         )}
       </div>
+      {!isLoading && (
+        <div className="w-full flex justify-end items-end">
+          <PaginationPage
+            pagination={metadata?.pagination}
+            activePage={metadata?.page}
+          />
+        </div>
+      )}
     </div>
   );
 }

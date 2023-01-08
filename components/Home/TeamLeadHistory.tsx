@@ -9,9 +9,14 @@ import {
   TableRow,
 } from "@mui/material";
 import { TableHistory } from "./DataTableHistory";
+import { MetaData, TiketTeamLead } from "../../hooks/home/useHome";
+import { dateFomatting } from "../../core/utility/dateFormatting";
+import { PaginationPage } from "../common/PaginationPage";
 
 interface TeamLeadHistoryProps extends TableHistory {
   title: string;
+  datas: TiketTeamLead[];
+  metadata: MetaData;
 }
 
 export function TeamLeadHistory(props: TeamLeadHistoryProps) {
@@ -37,52 +42,18 @@ export function TeamLeadHistory(props: TeamLeadHistoryProps) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {/* {DataDummy.map((data, index) => (
-              <TableRow
-                key={index}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                <TableCell align="center">{data.nik}</TableCell>
-                <TableCell align="center">{data.name}</TableCell>
-                <TableCell
-                  align="center"
-                  className="cursor-pointer"
-                  onClick={() =>
-                    handleOpenTiketHistory(
-                      data.ticket_regular.name,
-                      data.nik
-                    )
-                  }
-                >
-                  {data.ticket_regular.score}
-                </TableCell>
-                <TableCell align="center">
-                  {data.lapor_langsung.score}
-                </TableCell>
-                <TableCell align="center">
-                  {data.ticket_sqm.score}
-                </TableCell>
-                <TableCell align="center">{data.proman.score}</TableCell>
-                <TableCell align="center">{data.tutup_odp.score}</TableCell>
-                <TableCell align="center">{data.valins.score}</TableCell>
-                <TableCell align="center">{data.unspect.score}</TableCell>
-                <TableCell align="center">
-                  {data.gamas_type_a.score}
-                </TableCell>
-                <TableCell align="center">
-                  {data.gamas_type_b.score}
-                </TableCell>
-                <TableCell align="center">
-                  {data.gamas_type_c.score}
-                </TableCell>
-                <TableCell align="center">{data.survey.score}</TableCell>
-                <TableCell align="center">
-                  {data.ticket_redundant.score > 0 ? "-" : ""}{" "}
-                  {data.ticket_redundant.score}
-                </TableCell>
-                <TableCell align="center">{data.kpi.toFixed(2)}</TableCell>
-              </TableRow>
-            ))} */}
+              {!props.isLoading &&
+                props.datas?.map((data, index) => (
+                  <TableRow
+                    key={index}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
+                    <TableCell align="left">
+                      {dateFomatting(data.createAt.toString())}
+                    </TableCell>
+                    <TableCell align="left">{data.description}</TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </TableContainer>
@@ -92,6 +63,14 @@ export function TeamLeadHistory(props: TeamLeadHistoryProps) {
           </div>
         )}
       </div>
+      {!props.isLoading && (
+        <div className="w-full flex justify-end items-end">
+          <PaginationPage
+            pagination={props.metadata?.pagination}
+            activePage={props.metadata?.page}
+          />
+        </div>
+      )}
     </div>
   );
 }

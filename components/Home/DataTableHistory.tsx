@@ -1,8 +1,16 @@
 import {
   HistoryTable,
+  LaporLangsung,
   MetaData,
+  Proman,
   ResponseUserTeknisiHistory,
+  SQM,
+  TiketRedundant,
   TiketReguler,
+  TiketTeamLead,
+  TutupOdp,
+  Unspect,
+  Valins,
 } from "../../hooks/home/useHome";
 import { LaporLangsungHistory } from "./LaporLangsungHistory";
 import { PromanHistory } from "./PromanHistory";
@@ -37,22 +45,69 @@ export const DataTableHistory = (props: DataTableHistoryProps) => {
         />
       );
     case "lapor_langsung":
-      return <LaporLangsungHistory isLoading={isLoading} />;
+      return (
+        <LaporLangsungHistory
+          isLoading={isLoading}
+          datas={historyData?.history as LaporLangsung[]}
+          metadata={historyData?.metadata as MetaData}
+        />
+      );
     case "ticket_sqm":
-      return <SQMHistory isLoading={isLoading} />;
+      return (
+        <SQMHistory
+          isLoading={isLoading}
+          datas={historyData?.history as SQM[]}
+          metadata={historyData?.metadata as MetaData}
+        />
+      );
     case "proman":
-      return <PromanHistory isLoading={isLoading} />;
+      return (
+        <PromanHistory
+          isLoading={isLoading}
+          datas={historyData?.history as Proman[]}
+          metadata={historyData?.metadata as MetaData}
+        />
+      );
     case "tutup_odp":
-      return <TutupOdpHistory isLoading={isLoading} />;
+      return (
+        <TutupOdpHistory
+          isLoading={isLoading}
+          datas={historyData?.history as TutupOdp[]}
+          metadata={historyData?.metadata as MetaData}
+        />
+      );
     case "valins":
-      return <ValinsHistory isLoading={isLoading} />;
+      return (
+        <ValinsHistory
+          isLoading={isLoading}
+          datas={historyData?.history as Valins[]}
+          metadata={historyData?.metadata as MetaData}
+        />
+      );
     case "unspect":
-      return <UnspectHistory isLoading={isLoading} />;
+      return (
+        <UnspectHistory
+          isLoading={isLoading}
+          datas={historyData?.history as Unspect[]}
+          metadata={historyData?.metadata as MetaData}
+        />
+      );
     case "ticket_redundant":
-      return <TiketRedundantHistory isLoading={isLoading} />;
+      return (
+        <TiketRedundantHistory
+          isLoading={isLoading}
+          datas={historyData?.history as TiketRedundant[]}
+          metadata={historyData?.metadata as MetaData}
+        />
+      );
     default:
       return (
-        <TeamLeadHistory title={historyTable.title} isLoading={isLoading} />
+        <TeamLeadHistory
+          title={historyTable.title}
+          isLoading={isLoading}
+          datas={historyData?.history as TiketTeamLead[]}
+          metadata={historyData?.metadata as MetaData}
+        />
       );
   }
 };
