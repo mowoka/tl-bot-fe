@@ -1,8 +1,15 @@
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
-export function useGuard() {
+
+interface UseGuardProps {
+    isAuthenticate: boolean;
+}
+
+export function useGuard(): UseGuardProps {
     const router = useRouter();
+
+    const [isAuthenticate, setIsAuthenticate] = useState(false);
 
     const checkAuthenticate = () => {
         if (typeof window !== undefined) {
@@ -27,13 +34,17 @@ export function useGuard() {
 
     useEffect(() => {
         if (!router.isReady) return;
-        const isAuthenticate = checkAuthenticate();
-        if (isAuthenticate === false) {
+        const checkIsAuthenticate = checkAuthenticate();
+        if (checkIsAuthenticate === false) {
+            setIsAuthenticate(false)
             router.push("/accounts/login");
         } else {
+            setIsAuthenticate(true)
             return
         }
     }, [])
 
-
+    return {
+        isAuthenticate
+    }
 }

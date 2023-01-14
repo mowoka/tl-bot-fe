@@ -103,7 +103,6 @@ const intialUserTeknisi: UserTeknisiResponse = {
 
 export function useTeknisiUser(): UseTeknisiUserProps {
     const { getToken } = useUser();
-    const token = getToken();
     const [data, setData] = useState<UserTeknisiResponse>(intialUserTeknisi);
     const [masterFilterOptions, setMasterFilterOptionsData] = useState<MasterFilterOptions>(initialMasterFilter);
     const [params, setParams] = useState<ParamsProps>({
@@ -125,7 +124,7 @@ export function useTeknisiUser(): UseTeknisiUserProps {
     const getUserTeknisiFilterMaster = async () => {
         const res = await ApiFetchRaw<MasterFiltersResponse>(process.env.BASE_URL_API + 'teknisi-user/master-filters', {
             headers: {
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${getToken()}`
             },
         })
         if (res.body.statusCode === 200) {
@@ -170,7 +169,7 @@ export function useTeknisiUser(): UseTeknisiUserProps {
         const URLParams = { ...params }
         const res = await ApiFetchRaw<UserTeknisiResponse>(process.env.BASE_URL_API + 'teknisi-user?' + new URLSearchParams(URLParams), {
             headers: {
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${getToken()}`
             },
         })
 
@@ -221,7 +220,7 @@ export function useTeknisiUser(): UseTeknisiUserProps {
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
+                        'Authorization': `Bearer ${getToken()}`
                     },
                     body: JSON.stringify(data),
                 })

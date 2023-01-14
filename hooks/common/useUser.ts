@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { ApiFetchRaw } from "../../core/clients/apiFetch";
 
 export interface UserProfile {
@@ -85,15 +86,16 @@ function useUser(): UserProps {
         }
     }
 
+
     const getToken = (): string => {
         try {
-            const persistStr = window.sessionStorage.getItem(SESSION_KEY);
+            const persistStr = window.sessionStorage.getItem('persist:root');
             const persists = persistStr ? JSON.parse(persistStr) : ''
             if (persists) return persists.userToken
             return ''
         } catch (e) {
             console.error(e);
-            return ''
+            return '';
         }
     }
 

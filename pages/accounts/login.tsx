@@ -13,7 +13,6 @@ const Login = (props: LoginProps) => {
   const { title, description } = props;
   const { nik, password, onChange, onSubmit, errorMessage, onCloseError } =
     useLogin();
-  console.log(errorMessage);
   return (
     <div className="h-screen w-screen bg-primary flex justify-center items-center font-primary">
       <Head>

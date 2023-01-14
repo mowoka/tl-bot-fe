@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ApiFetchRaw } from "../../core/clients/apiFetch"
 import useUser from "../common/useUser";
-import { FilterOptionsProps, UserTeknisi, UserTeknisiResponse } from "../teknisi-management/useTeknisiUser";
+import { FilterOptionsProps, UserTeknisiResponse } from "../teknisi-management/useTeknisiUser";
 import { ErrrorMessage } from "../register/useRegister";
 import { formTLBoardValidator } from "../../core/utility/validator";
 
@@ -42,7 +42,6 @@ const initialOptionsFormData: OptionsFormData = {
 
 export const useBoard = (): UseBoardProps => {
     const { getToken } = useUser();
-    const token = getToken();
     const [optionsData, setOptionsData] = useState<OptionsFormData>(initialOptionsFormData);
     const [masterJobData, setMasterJobData] = useState<LeadJob[]>([])
     const [formData, setFormData] = useState<FormDataProps>({
@@ -73,6 +72,7 @@ export const useBoard = (): UseBoardProps => {
         }
     }
 
+
     const onSubmit = async () => {
         const { valid, message } = formTLBoardValidator(formData)
         if (!valid) {
@@ -95,7 +95,7 @@ export const useBoard = (): UseBoardProps => {
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
+                        'Authorization': `Bearer ${getToken()}`
                     },
                     body: JSON.stringify(data),
                 })
@@ -131,7 +131,7 @@ export const useBoard = (): UseBoardProps => {
 
         const res = await ApiFetchRaw<UserTeknisiResponse>(process.env.BASE_URL_API + 'teknisi-user', {
             headers: {
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${getToken()}`
             },
         })
         if (res.body.statusCode === 200) {
@@ -143,7 +143,7 @@ export const useBoard = (): UseBoardProps => {
     const getTeamLeadJob = async () => {
         const res = await ApiFetchRaw<LeadJob[]>(process.env.BASE_URL_API + 'team-leader-job', {
             headers: {
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${getToken()}`
             },
         })
         if (res.body.statusCode === 200) {

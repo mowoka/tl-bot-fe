@@ -9,10 +9,12 @@ import { useModalElement } from "../hooks/common/useModalElement";
 import { FromPanel } from "../components/teknisi-management/FormPanel";
 import SnackbarMessage from "../components/common/Snackbar";
 import { useGuard } from "../hooks/common/userGuard";
+import { ScreenLoading } from "../components/common/ScreenLoading";
 
 const TeknisiManagement = () => {
-  useGuard();
+  const { isAuthenticate } = useGuard();
   const { profile } = useProfile();
+
   const { open, handleOpen, handleClose } = useModalElement();
   const {
     params,
@@ -28,6 +30,11 @@ const TeknisiManagement = () => {
     onSubmit,
     onCloseError,
   } = useTeknisiUser();
+
+  if (!isAuthenticate || !profile.name) {
+    return <ScreenLoading />;
+  }
+
   return (
     <Layout profile={profile}>
       <SnackbarMessage

@@ -8,10 +8,12 @@ import SnackbarMessage from "../components/common/Snackbar";
 import { MenuFilter } from "../components/Home/MenuFilter";
 import { ModalElement } from "../components/common/Modal";
 import { DataTableHistory } from "../components/Home/DataTableHistory";
+import { ScreenLoading } from "../components/common/ScreenLoading";
 
 export default function Home() {
-  useGuard();
+  const { isAuthenticate } = useGuard();
   const { profile } = useProfile();
+
   const {
     data,
     isLoading,
@@ -29,6 +31,10 @@ export default function Home() {
     handleClose,
     handleOpenTiketHistory,
   } = useHome();
+
+  if (!isAuthenticate || !profile.name) {
+    return <ScreenLoading />;
+  }
 
   return (
     <Layout profile={profile}>

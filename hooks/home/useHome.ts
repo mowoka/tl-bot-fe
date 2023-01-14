@@ -25,8 +25,6 @@ interface HomeProps {
     handleOpenTiketHistory: (title: string, nik: string) => void;
 }
 
-
-
 const initialMasterFilter: MasterFilterOptions = {
     partner: [],
     regional: [],
@@ -48,7 +46,6 @@ const lastDay = new Date(date.getFullYear(), date.getMonth(), 30);
 
 const useHome = (): HomeProps => {
     const { getToken } = useUser();
-    const token = getToken();
     const { open, handleClose, handleOpen } = useModalElement();
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [data, setData] = useState<UserReportData>(intialUserReportData);
@@ -137,7 +134,7 @@ const useHome = (): HomeProps => {
         const URLParams = { nik: historyTable.nik, ticket_title: historyTable.title, page: historyTable.page }
         const res = await ApiFetchRaw<ResponseUserTeknisiHistory>(process.env.BASE_URL_API + 'teknisi-user/history?' + new URLSearchParams(URLParams), {
             headers: {
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${getToken()}`
             },
         })
 
@@ -165,7 +162,7 @@ const useHome = (): HomeProps => {
     async function getUserTeknisiFilterMaster() {
         const res = await ApiFetchRaw<MasterFiltersResponse>(process.env.BASE_URL_API + 'teknisi-user/master-filters', {
             headers: {
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${getToken()}`
             },
         })
         if (res.body.statusCode === 200) {
@@ -196,7 +193,7 @@ const useHome = (): HomeProps => {
         const URLParams = { ...params }
         const res = await ApiFetchRaw<UserReportData>(process.env.BASE_URL_API + 'teknisi-user/report?' + new URLSearchParams(URLParams), {
             headers: {
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${getToken()}`
             },
         })
 

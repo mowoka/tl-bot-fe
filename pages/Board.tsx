@@ -5,10 +5,14 @@ import { useProfile } from "../hooks/common/useProfile";
 import { useBoard } from "../hooks/board/useBoard";
 import { useGuard } from "../hooks/common/userGuard";
 import SnackbarMessage from "../components/common/Snackbar";
+import { ScreenLoading } from "../components/common/ScreenLoading";
+import { useToken } from "../hooks/common/useToken";
 
 const Board = () => {
-  useGuard();
+  const { isAuthenticate } = useGuard();
+  const { token } = useToken();
   const { profile } = useProfile();
+
   const {
     optionsData,
     formData,
@@ -18,6 +22,11 @@ const Board = () => {
     onSubmit,
     onCloseError,
   } = useBoard();
+
+  if (!isAuthenticate || !profile.name || !token) {
+    return <ScreenLoading />;
+  }
+
   return (
     <Layout profile={profile}>
       <SnackbarMessage
