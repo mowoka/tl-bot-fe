@@ -21,34 +21,39 @@ export function useProfile(): UseProfileProps {
     const [profile, setProfile] = useState<UserProfile>(initialProfile)
 
     const getProfile = (): UserProfile => {
-        try {
-            const persistStorage = window.sessionStorage.getItem('ION-profile');
-            if (!persistStorage) {
-                return initialProfile
-            } else {
-                const persist = JSON.parse(persistStorage);
-                if (!persist.userProfile) {
+        if (typeof window !== undefined) {
+            try {
+                const persistStorage = window.sessionStorage.getItem('ION-profile');
+                if (!persistStorage) {
                     return initialProfile
                 } else {
-                    const userProfile = JSON.parse(persist.userProfile)
-                    const profile: UserProfile = {
-                        nik: userProfile.nik,
-                        name: userProfile.name,
-                        idTelegram: userProfile.idTelegram,
-                        partner: userProfile.partner,
-                        sector: userProfile.sector,
-                        witel: userProfile.witel,
-                        regional: userProfile.regional,
-                        role: userProfile.role
-                    }
+                    const persist = JSON.parse(persistStorage);
+                    if (!persist.userProfile) {
+                        return initialProfile
+                    } else {
+                        const userProfile = JSON.parse(persist.userProfile)
+                        const profile: UserProfile = {
+                            nik: userProfile.nik,
+                            name: userProfile.name,
+                            idTelegram: userProfile.idTelegram,
+                            partner: userProfile.partner,
+                            sector: userProfile.sector,
+                            witel: userProfile.witel,
+                            regional: userProfile.regional,
+                            role: userProfile.role
+                        }
 
-                    return profile
+                        return profile
+                    }
                 }
+            } catch (error) {
+                console.error(error);
+                return initialProfile
             }
-        } catch (error) {
-            console.error(error);
-            return initialProfile
+        } else {
+            return initialProfile;
         }
+
     }
 
     useEffect(() => {

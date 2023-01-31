@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import { ApiFetchRaw } from "../../core/clients/apiFetch";
 
 export interface UserProfile {
@@ -31,6 +31,7 @@ const SESSION_KEY = 'persist:root';
 const SESSION__PROFILE_KEY = 'ION-profile';
 
 function useUser(): UserProps {
+    const router = useRouter();
 
     const login = async (nik: string, password: string): Promise<LoginResponse> => {
         const resLogin = await ApiFetchRaw<LoginApiResponse>(process.env.BASE_URL_API + 'auth/signin', {
@@ -47,7 +48,7 @@ function useUser(): UserProps {
         const { body } = resLogin;
         if (body.statusCode == 200) {
             await saveTokenToLocalStorage(body.data.access_token);
-            getMe(body.data.access_token);
+            await getMe(body.data.access_token);
             return {
                 statusCode: 200,
                 message: body.message,
@@ -78,9 +79,11 @@ function useUser(): UserProps {
         }
     }
 
-    const logout = async () => {
+    const logout = () => {
         try {
             window.sessionStorage.removeItem(SESSION_KEY);
+            window.sessionStorage.removeItem(SESSION__PROFILE_KEY);
+            router.push('/accounts/login');
         } catch (e) {
             console.error(e);
         }

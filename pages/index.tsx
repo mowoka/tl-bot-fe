@@ -9,11 +9,12 @@ import { MenuFilter } from "../components/Home/MenuFilter";
 import { ModalElement } from "../components/common/Modal";
 import { DataTableHistory } from "../components/Home/DataTableHistory";
 import { ScreenLoading } from "../components/common/ScreenLoading";
+import useUser from "../hooks/common/useUser";
 
 export default function Home() {
   const { isAuthenticate } = useGuard();
   const { profile } = useProfile();
-
+  const { logout } = useUser();
   const {
     data,
     isLoading,
@@ -33,11 +34,13 @@ export default function Home() {
   } = useHome();
 
   if (!isAuthenticate || !profile.name) {
+    console.log(profile);
+    console.log(isAuthenticate);
     return <ScreenLoading />;
   }
 
   return (
-    <Layout profile={profile}>
+    <Layout profile={profile} logout={logout}>
       <SnackbarMessage
         show={errorMessage.show}
         message={errorMessage.message}

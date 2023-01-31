@@ -40,7 +40,6 @@ export function useGuard(): UseGuardProps {
             router.push("/accounts/login");
         } else {
             setIsAuthenticate(true)
-            return
         }
     }, [])
 

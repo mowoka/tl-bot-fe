@@ -97,10 +97,11 @@ const SIDEBAR_MENU: ISIDEBAR_MENU[] = [
 interface AppBarComponentProps {
   children: JSX.Element[] | JSX.Element;
   name?: string;
+  logout: () => void;
 }
 
 export default function AppBarComponent(props: AppBarComponentProps) {
-  const { children, name } = props;
+  const { children, name, logout } = props;
   const router = useRouter();
 
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
@@ -174,7 +175,7 @@ export default function AppBarComponent(props: AppBarComponentProps) {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem key={setting} onClick={logout}>
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}
