@@ -12,7 +12,7 @@ interface useLoginProps {
     onCloseError: () => void;
 }
 
-function useLogin(): useLoginProps {
+export function useLogin(): useLoginProps {
     const [nik, setNik] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState<ErrrorMessage>({
@@ -60,5 +60,3 @@ function useLogin(): useLoginProps {
         errorMessage,
     }
 }
-
-export default useLogin;
