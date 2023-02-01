@@ -10,10 +10,12 @@ import { FromPanel } from "../components/teknisi-management/FormPanel";
 import SnackbarMessage from "../components/common/Snackbar";
 import { useGuard } from "../hooks/common/userGuard";
 import { ScreenLoading } from "../components/common/ScreenLoading";
+import useUser from "../hooks/common/useUser";
 
 const TeknisiManagement = () => {
   const { isAuthenticate } = useGuard();
   const { profile } = useProfile();
+  const { logout } = useUser();
 
   const { open, handleOpen, handleClose } = useModalElement();
   const {
@@ -36,7 +38,7 @@ const TeknisiManagement = () => {
   }
 
   return (
-    <Layout profile={profile}>
+    <Layout profile={profile} logout={logout}>
       <SnackbarMessage
         show={errorMessage.show}
         message={errorMessage.message}

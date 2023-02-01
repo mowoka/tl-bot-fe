@@ -7,11 +7,13 @@ import { useGuard } from "../hooks/common/userGuard";
 import SnackbarMessage from "../components/common/Snackbar";
 import { ScreenLoading } from "../components/common/ScreenLoading";
 import { useToken } from "../hooks/common/useToken";
+import useUser from "../hooks/common/useUser";
 
 const Board = () => {
   const { isAuthenticate } = useGuard();
   const { token } = useToken();
   const { profile } = useProfile();
+  const { logout } = useUser();
 
   const {
     optionsData,
@@ -28,7 +30,7 @@ const Board = () => {
   }
 
   return (
-    <Layout profile={profile}>
+    <Layout profile={profile} logout={logout}>
       <SnackbarMessage
         show={errorMessage.show}
         message={errorMessage.message}
