@@ -1,12 +1,12 @@
 import { Divider } from "@mui/material";
-import Layout from "../components/common/Layout";
-import FormPerformansi from "../components/board/Form";
-import { useProfile } from "../hooks/common/useProfile";
-import { useBoard } from "../hooks/board/useBoard";
-import { useGuard } from "../hooks/common/userGuard";
-import SnackbarMessage from "../components/common/Snackbar";
-import { ScreenLoading } from "../components/common/ScreenLoading";
-import useUser from "../hooks/common/useUser";
+import FormPerformansi from "app/components/board/Form";
+import Layout from "app/components/common/Layout";
+import { ScreenLoading } from "app/components/common/ScreenLoading";
+import SnackbarMessage from "app/components/common/Snackbar";
+import { useBoard } from "app/hooks/board/useBoard";
+import { useProfile } from "app/hooks/common/useProfile";
+import useUser from "app/hooks/common/useUser";
+import { useGuard } from "app/hooks/common/userGuard";
 
 const Board = () => {
   const { isAuthenticate } = useGuard();
