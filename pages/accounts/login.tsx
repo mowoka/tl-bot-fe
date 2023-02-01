@@ -1,6 +1,6 @@
 import SnackbarMessage from "@app/components/common/Snackbar";
-import FormPanel from "@app/components/login/FormPanel";
-import TitlePanel from "@app/components/login/TitlePanel";
+import FormPanel from "@app/components/logins/FormPanel";
+import TitlePanel from "@app/components/logins/TitlePanel";
 import { useLogin } from "@app/hooks/login/useLogin";
 import Head from "next/head";
 
