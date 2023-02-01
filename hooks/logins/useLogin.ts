@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ErrrorMessage } from "../register/useRegister";
+import { ErrrorMessage } from "../registers/useRegister";
 import useUser from "../common/useUser";
 import { useRouter } from "next/router";
 

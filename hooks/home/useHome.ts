@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import useUser from "../common/useUser";
 import { ApiFetchRaw } from "../../core/clients/apiFetch";
-import { ErrrorMessage } from "../register/useRegister";
+import { ErrrorMessage } from "../registers/useRegister";
 import { FilterOptionsProps, MasterFilterOptions, MasterFiltersResponse, ParamsProps } from "../teknisi-management/useTeknisiUser";
 import dayjs from "dayjs";
 import { useModalElement } from "../common/useModalElement";

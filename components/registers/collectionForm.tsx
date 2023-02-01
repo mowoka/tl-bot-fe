@@ -1,4 +1,4 @@
-import { RegisterRootProps } from "../../hooks/register/useRegister";
+import { RegisterRootProps } from "../../hooks/registers/useRegister";
 import { CButton } from "../common/CButton";
 
 import Input from "../common/Input";

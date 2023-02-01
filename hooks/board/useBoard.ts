@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ApiFetchRaw } from "../../core/clients/apiFetch"
 import useUser from "../common/useUser";
 import { FilterOptionsProps, UserTeknisiResponse } from "../teknisi-management/useTeknisiUser";
-import { ErrrorMessage } from "../register/useRegister";
+import { ErrrorMessage } from "../registers/useRegister";
 import { formTLBoardValidator } from "../../core/utility/validator";
 
 interface LeadJob {

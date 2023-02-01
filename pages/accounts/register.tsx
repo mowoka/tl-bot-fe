@@ -1,7 +1,7 @@
 import SnackbarMessage from "@app/components/common/Snackbar";
-import { CollectionForm } from "@app/components/register/collectionForm";
-import { RegisterPanel } from "@app/components/register/regiterPanel";
-import useRegister from "@app/hooks/register/useRegister";
+import { CollectionForm } from "@app/components/registers/collectionForm";
+import { RegisterPanel } from "@app/components/registers/regiterPanel";
+import useRegister from "@app/hooks/registers/useRegister";
 import Head from "next/head";
 
 interface RegisterProps {

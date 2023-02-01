@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ApiFetchRaw } from "../../core/clients/apiFetch";
 import useUser from "../common/useUser";
-import { ErrrorMessage } from "../register/useRegister";
+import { ErrrorMessage } from "../registers/useRegister";
 import { userTeknisiFormValidator } from "../../core/utility/validator";
 
 
