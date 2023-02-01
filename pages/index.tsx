@@ -34,8 +34,6 @@ export default function Home() {
   } = useHome();
 
   if (!isAuthenticate || !profile.name) {
-    console.log(profile);
-    console.log(isAuthenticate);
     return <ScreenLoading />;
   }
 
