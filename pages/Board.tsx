@@ -1,12 +1,12 @@
+import FormPerformansi from "@app/components/board/Form";
+import Layout from "@app/components/common/Layout";
+import { ScreenLoading } from "@app/components/common/ScreenLoading";
+import SnackbarMessage from "@app/components/common/Snackbar";
+import { useBoard } from "@app/hooks/board/useBoard";
+import { useProfile } from "@app/hooks/common/useProfile";
+import useUser from "@app/hooks/common/useUser";
+import { useGuard } from "@app/hooks/common/userGuard";
 import { Divider } from "@mui/material";
-import FormPerformansi from "app/components/board/Form";
-import Layout from "app/components/common/Layout";
-import { ScreenLoading } from "app/components/common/ScreenLoading";
-import SnackbarMessage from "app/components/common/Snackbar";
-import { useBoard } from "app/hooks/board/useBoard";
-import { useProfile } from "app/hooks/common/useProfile";
-import useUser from "app/hooks/common/useUser";
-import { useGuard } from "app/hooks/common/userGuard";
 
 const Board = () => {
   const { isAuthenticate } = useGuard();
