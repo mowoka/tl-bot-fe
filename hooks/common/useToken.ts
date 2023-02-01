@@ -1,14 +1,11 @@
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-
 
 interface UseTokenProps {
     token: string;
 }
 
 export function useToken(): UseTokenProps {
-    const router = useRouter();
-    const [token, setToken] = useState<string>('');
+    const [token, setToken] = useState('');
 
     const getToken = (): string => {
         try {
@@ -22,9 +19,13 @@ export function useToken(): UseTokenProps {
         }
     }
 
+    useEffect(() => {
+        const token = getToken();
+        setToken(token);
+    }, [])
 
 
     return {
-        token: getToken(),
+        token: token,
     }
 }

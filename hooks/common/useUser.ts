@@ -81,9 +81,11 @@ function useUser(): UserProps {
 
     const logout = () => {
         try {
-            window.sessionStorage.removeItem(SESSION_KEY);
-            window.sessionStorage.removeItem(SESSION__PROFILE_KEY);
-            router.push('/accounts/login');
+            if (window !== undefined) {
+                window.sessionStorage.removeItem(SESSION_KEY);
+                window.sessionStorage.removeItem(SESSION__PROFILE_KEY);
+                router.push('/accounts/login');
+            }
         } catch (e) {
             console.error(e);
         }
@@ -104,12 +106,14 @@ function useUser(): UserProps {
 
     const saveProfileToLocalStorage = (profile: UserProfile) => {
         try {
-            const persistStr = window.sessionStorage.getItem(SESSION__PROFILE_KEY);
-            const persist = persistStr ? JSON.parse(persistStr) : {
-                userProfile: '{"nik":null,"name":null,"idTelegram":null,"partner":null,"sector":null,"witel":null,"regional":null,"role":null}',
+            if (window !== undefined) {
+                const persistStr = window.sessionStorage.getItem(SESSION__PROFILE_KEY);
+                const persist = persistStr ? JSON.parse(persistStr) : {
+                    userProfile: '{"nik":null,"name":null,"idTelegram":null,"partner":null,"sector":null,"witel":null,"regional":null,"role":null}',
+                }
+                persist.userProfile = JSON.stringify(profile);
+                window.sessionStorage.setItem(SESSION__PROFILE_KEY, JSON.stringify(persist));
             }
-            persist.userProfile = JSON.stringify(profile);
-            window.sessionStorage.setItem(SESSION__PROFILE_KEY, JSON.stringify(persist));
         } catch (e) {
             console.error('error save profile', e)
         }
@@ -117,16 +121,18 @@ function useUser(): UserProps {
 
     const saveTokenToLocalStorage = async (token: string) => {
         try {
-            const persistStr = window.sessionStorage.getItem(SESSION_KEY);
-            const persist = persistStr ? JSON.parse(persistStr) :
-                {
-                    userToken: null,
-                    isAuthenticate: false,
-                    _persist: '{"version":-1,"rehydrated":true}',
-                }
-            persist.userToken = token;
-            persist.isAuthenticate = true;
-            window.sessionStorage.setItem(SESSION_KEY, JSON.stringify(persist));
+            if (window !== undefined) {
+                const persistStr = window.sessionStorage.getItem(SESSION_KEY);
+                const persist = persistStr ? JSON.parse(persistStr) :
+                    {
+                        userToken: null,
+                        isAuthenticate: false,
+                        _persist: '{"version":-1,"rehydrated":true}',
+                    }
+                persist.userToken = token;
+                persist.isAuthenticate = true;
+                window.sessionStorage.setItem(SESSION_KEY, JSON.stringify(persist));
+            }
         } catch (e) {
             console.error(e);
         }
