@@ -86,7 +86,7 @@ const SIDEBAR_MENU: ISIDEBAR_MENU[] = [
   },
   {
     title: "TL Board",
-    url: "/board",
+    url: "/boards",
   },
   {
     title: "Teknisi Management",
