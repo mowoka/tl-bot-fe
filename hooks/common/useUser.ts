@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import { ApiFetchRaw } from "../../core/clients/apiFetch";
 
 export interface UserProfile {
+    id: number;
     nik: string;
     name: string;
     partner: string;
@@ -100,7 +101,7 @@ function useUser(): UserProps {
             if (window !== undefined) {
                 const persistStr = window.sessionStorage.getItem(SESSION__PROFILE_KEY);
                 const persist = persistStr ? JSON.parse(persistStr) : {
-                    userProfile: '{"nik":null,"name":null,"partner":null,"sector":null,"witel":null,"regional":null,"role":null}',
+                    userProfile: '{"nik":null,"name":null,"partner":null,"sector":null,"witel":null,"regional":null,"role":null,user}',
                 }
                 persist.userProfile = JSON.stringify(profile);
                 window.sessionStorage.setItem(SESSION__PROFILE_KEY, JSON.stringify(persist));

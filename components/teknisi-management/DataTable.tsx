@@ -14,10 +14,11 @@ import { PaginationPage } from "../common/PaginationPage";
 interface DataTableProps {
   data: UserTeknisiResponse;
   isLoading: boolean;
+  isAdmin: boolean;
 }
 
 export const DataTable = (props: DataTableProps) => {
-  const { data, isLoading } = props;
+  const { data, isLoading, isAdmin } = props;
   return (
     <div className="py-6">
       <TableContainer component={Paper}>
@@ -31,6 +32,7 @@ export const DataTable = (props: DataTableProps) => {
               <TableCell align="center">Regional</TableCell>
               <TableCell align="center">Sector</TableCell>
               <TableCell align="center">Witel</TableCell>
+              {isAdmin && <TableCell align="center">Team Lead</TableCell>}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -42,10 +44,13 @@ export const DataTable = (props: DataTableProps) => {
                 <TableCell align="center">{data.nik}</TableCell>
                 <TableCell align="center">{data.name}</TableCell>
                 <TableCell align="center">{data.idTelegram}</TableCell>
-                <TableCell align="center">{data.partner}</TableCell>
-                <TableCell align="center">{data.regional}</TableCell>
-                <TableCell align="center">{data.sector}</TableCell>
-                <TableCell align="center">{data.witel}</TableCell>
+                <TableCell align="center">{data.partner.name}</TableCell>
+                <TableCell align="center">{data.regional.name}</TableCell>
+                <TableCell align="center">{data.sector.name}</TableCell>
+                <TableCell align="center">{data.witel.name}</TableCell>
+                {isAdmin && (
+                  <TableCell align="center">{data.user.name}</TableCell>
+                )}
               </TableRow>
             ))}
           </TableBody>

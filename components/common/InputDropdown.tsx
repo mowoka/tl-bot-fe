@@ -4,7 +4,7 @@ interface InputDropdownProps {
   label: string;
   placeholder: string;
   value: string;
-  options: { key: string; value: string }[];
+  options: { id: number; name: string }[];
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -26,8 +26,8 @@ const InputDropdown = (props: InputDropdownProps) => {
           Choose {label}
         </MenuItem>
         {options.map((option) => (
-          <MenuItem key={option.value} value={option.value}>
-            {option.key}
+          <MenuItem key={option.id} value={option.id}>
+            {option.name}
           </MenuItem>
         ))}
       </TextField>

@@ -37,6 +37,8 @@ const TeknisiManagement = () => {
     return <ScreenLoading />;
   }
 
+  const isAdmin = profile.role === "admin";
+
   return (
     <Layout profile={profile} logout={logout}>
       <SnackbarMessage
@@ -61,8 +63,9 @@ const TeknisiManagement = () => {
         masterOptions={masterFilterOptions}
         onChange={onChange}
         resetParams={resetParams}
+        isAdmin={isAdmin}
       />
-      <DataTable data={data} isLoading={isLoading} />
+      <DataTable data={data} isLoading={isLoading} isAdmin={isAdmin} />
     </Layout>
   );
 };

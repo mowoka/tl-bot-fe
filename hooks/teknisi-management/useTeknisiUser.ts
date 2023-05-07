@@ -3,62 +3,11 @@ import { ApiFetchRaw } from "../../core/clients/apiFetch";
 import useUser from "../common/useUser";
 import { ErrrorMessage } from "../registers/useRegister";
 import { userTeknisiFormValidator } from "../../core/utility/validator";
+import useSWR from "swr";
+import { getUserTeknisiFetcher } from "./getUserTeknisiFetcher";
 
 
-export interface UserTeknisi {
-    id: number;
-    nik: string;
-    name: string;
-    idTelegram: string;
-    partner: string;
-    sector: string;
-    witel: string;
-    regional: string;
-}
 
-export interface FormUserTeknisi {
-    nik: string;
-    name: string;
-    idTelegram: string;
-    partner: string;
-    sector: string;
-    witel: string;
-    regional: string;
-}
-
-export interface UserTeknisiResponse {
-    data: UserTeknisi[]
-    metadata: MetaData;
-}
-
-export interface FilterOptionsProps {
-    key: string;
-    value: string;
-}
-
-export interface MetaData {
-    total: number;
-    page: number;
-    pagination: number;
-}
-
-export interface MasterFilterOptions {
-    partner: FilterOptionsProps[];
-    regional: FilterOptionsProps[];
-    sector: FilterOptionsProps[];
-}
-
-export interface MasterFiltersResponse {
-    partner: string[];
-    regional: string[];
-    sector: string[];
-}
-
-export interface ParamsProps {
-    partner: string;
-    regional: string;
-    sector: string;
-}
 
 interface UseTeknisiUserProps {
     params: ParamsProps;
@@ -103,16 +52,15 @@ const intialUserTeknisi: UserTeknisiResponse = {
 
 export function useTeknisiUser(): UseTeknisiUserProps {
     const { getToken } = useUser();
-    const [data, setData] = useState<UserTeknisiResponse>(intialUserTeknisi);
     const [masterFilterOptions, setMasterFilterOptionsData] = useState<MasterFilterOptions>(initialMasterFilter);
     const [params, setParams] = useState<ParamsProps>({
-        partner: '',
-        regional: '',
-        sector: '',
+        partner_id: '',
+        regional_id: '',
+        sector_id: '',
+        teknisi_lead_id: '',
     })
     const [formUserTeknisi, setFormUserTeknisi] = useState<FormUserTeknisi>(initialFormTeknsiUser);
     const [submitLoading, setSubmitLoading] = useState<boolean>(false)
-    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [errorMessage, setErrorMessage] = useState<ErrrorMessage>({
         show: false,
         message: '',
@@ -129,17 +77,17 @@ export function useTeknisiUser(): UseTeknisiUserProps {
         })
         if (res.body.statusCode === 200) {
             const { data } = res.body
-            let tempPartner: FilterOptionsProps[] = []
-            let tempSector: FilterOptionsProps[] = []
-            let tempRegional: FilterOptionsProps[] = []
+            const tempPartner: FilterOptionsProps[] = []
+            const tempSector: FilterOptionsProps[] = []
+            const tempRegional: FilterOptionsProps[] = []
             data.partner.map((p) => {
-                tempPartner.push({ key: p, value: p })
+                tempPartner.push({ id: p.id, name: p.name })
             })
             data.regional.map((p) => {
-                tempRegional.push({ key: p, value: p })
+                tempRegional.push({ id: p.id, name: p.name })
             })
             data.sector.map((p) => {
-                tempSector.push({ key: p, value: p })
+                tempSector.push({ id: p.id, name: p.name })
             })
             const tempData: MasterFilterOptions = {
                 partner: tempPartner,
@@ -161,27 +109,8 @@ export function useTeknisiUser(): UseTeknisiUserProps {
     }
 
     const resetParams = () => {
-        setParams({ sector: '', partner: '', regional: '' });
+        setParams({ sector_id: '', partner_id: '', regional_id: '', teknisi_lead_id: '' });
     }
-
-    const getUserTeknisi = async () => {
-        setIsLoading(true);
-        const URLParams = { ...params }
-        const res = await ApiFetchRaw<UserTeknisiResponse>(process.env.BASE_URL_API + 'teknisi-user?' + new URLSearchParams(URLParams), {
-            headers: {
-                'Authorization': `Bearer ${getToken()}`
-            },
-        })
-
-        if (res.body.statusCode === 200) {
-            setData(res.body.data);
-            setIsLoading(false);
-        } else {
-            setData(intialUserTeknisi);
-            setIsLoading(false);
-        }
-    }
-
 
     const formOnChange = (e: React.ChangeEvent<HTMLInputElement>, name: string) => {
         if (name === 'nik') {
@@ -226,7 +155,6 @@ export function useTeknisiUser(): UseTeknisiUserProps {
                 })
 
                 if (res.body.statusCode === 200) {
-                    getUserTeknisi();
                     getUserTeknisiFilterMaster();
                     setFormUserTeknisi(initialFormTeknsiUser);
                 } else {
@@ -249,15 +177,15 @@ export function useTeknisiUser(): UseTeknisiUserProps {
         getUserTeknisiFilterMaster();
     }, [])
 
-    useEffect(() => {
-        getUserTeknisi();
-    }, [params])
+    const userTeknisiData = useSWR({ url: process.env.BASE_URL_API + 'teknisi-user?', params: params, token: getToken() }, getUserTeknisiFetcher)
+
+    const isLoading = userTeknisiData.isLoading;
 
     return {
         params,
-        data,
+        data: userTeknisiData.data?.data ?? intialUserTeknisi,
         masterFilterOptions,
-        isLoading,
+        isLoading: isLoading,
         submitLoading,
         formUserTeknisi,
         errorMessage,
@@ -267,4 +195,69 @@ export function useTeknisiUser(): UseTeknisiUserProps {
         onSubmit,
         onCloseError
     }
+}
+
+export interface TeamLead {
+    id: number;
+    nik: string;
+    name: string;
+    role: string;
+}
+
+export interface UserTeknisi {
+    id: number;
+    nik: string;
+    name: string;
+    idTelegram: string;
+    partner: FilterOptionsProps;
+    sector: FilterOptionsProps;
+    witel: FilterOptionsProps;
+    regional: FilterOptionsProps;
+    user: TeamLead;
+}
+
+export interface FormUserTeknisi {
+    nik: string;
+    name: string;
+    idTelegram: string;
+    partner: string;
+    sector: string;
+    witel: string;
+    regional: string;
+}
+
+export interface UserTeknisiResponse {
+    data: UserTeknisi[]
+    metadata: MetaData;
+}
+
+export interface FilterOptionsProps {
+    id: number;
+    name: string;
+}
+
+export interface MetaData {
+    total: number;
+    page: number;
+    pagination: number;
+}
+
+export interface MasterFilterOptions {
+    partner: FilterOptionsProps[];
+    regional: FilterOptionsProps[];
+    sector: FilterOptionsProps[];
+}
+
+
+export interface MasterFiltersResponse {
+    partner: FilterOptionsProps[];
+    regional: FilterOptionsProps[];
+    sector: FilterOptionsProps[];
+}
+
+export interface ParamsProps {
+    partner_id: string;
+    regional_id: string;
+    sector_id: string;
+    teknisi_lead_id: string;
 }
