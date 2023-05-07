@@ -41,7 +41,7 @@ export function useGuard(): UseGuardProps {
         } else {
             setIsAuthenticate(true)
         }
-    }, [])
+    }, [router])
 
     return {
         isAuthenticate

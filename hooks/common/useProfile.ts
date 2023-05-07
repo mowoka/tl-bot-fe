@@ -8,12 +8,11 @@ interface UseProfileProps {
 const initialProfile: UserProfile = {
     nik: '',
     name: '',
-    idTelegram: '',
+    role: '',
     partner: '',
     sector: '',
     witel: '',
     regional: '',
-    role: ''
 }
 
 export function useProfile(): UseProfileProps {
@@ -35,12 +34,11 @@ export function useProfile(): UseProfileProps {
                         const profile: UserProfile = {
                             nik: userProfile.nik,
                             name: userProfile.name,
-                            idTelegram: userProfile.idTelegram,
-                            partner: userProfile.partner,
-                            sector: userProfile.sector,
-                            witel: userProfile.witel,
-                            regional: userProfile.regional,
-                            role: userProfile.role
+                            role: userProfile.role,
+                            partner: userProfile.partner.name,
+                            sector: userProfile.sector.name,
+                            witel: userProfile.witel.name,
+                            regional: userProfile.regional.name,
                         }
 
                         return profile

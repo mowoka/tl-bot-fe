@@ -96,7 +96,7 @@ const SIDEBAR_MENU: ISIDEBAR_MENU[] = [
 
 interface AppBarComponentProps {
   children: JSX.Element[] | JSX.Element;
-  name?: string;
+  name: string;
   logout: () => void;
 }
 
