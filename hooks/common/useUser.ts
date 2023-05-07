@@ -54,16 +54,8 @@ function useUser(): UserProps {
                 message: body.message,
             }
         } else {
-            if (body.statusCode == 403) {
-                return {
-                    statusCode: body.statusCode,
-                    message: body.message,
-                }
-            } else {
-                return {
-                    statusCode: body.statusCode,
-                    message: body.message.length ? body.message[0] : '',
-                }
+            return {
+                ...body
             }
         }
     }

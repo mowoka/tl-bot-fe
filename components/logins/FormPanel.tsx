@@ -22,7 +22,7 @@ const FormPanel = (props: FormPanelProps) => {
             value={nik}
             placeholder="Input NIK"
             onChange={(e) => onChange(e, "nik")}
-            error={nik.length > 1 && nik.length < 16}
+            error={nik.length > 1 && nik.length < 13}
             maxLength={16}
           />
         </div>
@@ -33,8 +33,8 @@ const FormPanel = (props: FormPanelProps) => {
             value={password}
             placeholder="Input Email address"
             onChange={(e) => onChange(e, "password")}
-            error={password.length > 1 && password.length < 6}
-            maxLength={10}
+            error={password.length > 1 && password.length < 13}
+            maxLength={15}
           />
         </div>
         <div className="py-4">
