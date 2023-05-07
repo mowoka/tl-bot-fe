@@ -10,7 +10,7 @@ interface LayoutProps {
 const Layout = (props: LayoutProps) => {
   const { children, profile, logout } = props;
   return (
-    <AppBarComponent name={profile.name} logout={logout}>
+    <AppBarComponent name={profile.name} role={profile.role} logout={logout}>
       {children}
     </AppBarComponent>
   );

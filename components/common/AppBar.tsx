@@ -20,6 +20,10 @@ import {
   Tooltip,
 } from "@mui/material";
 import { useRouter } from "next/router";
+import {
+  TEAM_LEAD_SIDEBAR_MENU,
+  ADMIN_SIDEBAR_MENU,
+} from "@app/core/data/data_sidebar_menu";
 
 const settings = ["Logout"];
 
@@ -74,35 +78,18 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
   }),
 }));
 
-interface ISIDEBAR_MENU {
-  title: string;
-  url: string;
-}
-
-const SIDEBAR_MENU: ISIDEBAR_MENU[] = [
-  {
-    title: "Dashboard",
-    url: "/",
-  },
-  {
-    title: "TL Board",
-    url: "/boards",
-  },
-  {
-    title: "Teknisi Management",
-    url: "/teknisi-management",
-  },
-];
-
 interface AppBarComponentProps {
   children: JSX.Element[] | JSX.Element;
   name: string;
+  role: string;
   logout: () => void;
 }
 
 export default function AppBarComponent(props: AppBarComponentProps) {
-  const { children, name, logout } = props;
+  const { children, name, logout, role } = props;
   const router = useRouter();
+
+  const menu = role === "admin" ? ADMIN_SIDEBAR_MENU : TEAM_LEAD_SIDEBAR_MENU;
 
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
@@ -203,7 +190,7 @@ export default function AppBarComponent(props: AppBarComponentProps) {
         </DrawerHeader>
         <Divider />
         <List>
-          {SIDEBAR_MENU.map((menu) => (
+          {menu.map((menu) => (
             <ListItem key={menu.title} disablePadding>
               <ListItemButton onClick={() => router.push(menu.url)}>
                 <ListItemText

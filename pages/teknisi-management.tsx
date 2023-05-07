@@ -36,7 +36,6 @@ const TeknisiManagement = () => {
   if (!isAuthenticate || !profile.name) {
     return <ScreenLoading />;
   }
-  console.log({ profile });
 
   return (
     <Layout profile={profile} logout={logout}>

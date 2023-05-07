@@ -42,7 +42,6 @@ export function useLogin(): useLoginProps {
         if (res.statusCode == 200) {
             router.push('/');
         } else {
-            console.log({ res });
             setErrorMessage((prev) => ({ ...prev, show: true, message: res.message, status: "error" }));
         }
     }
