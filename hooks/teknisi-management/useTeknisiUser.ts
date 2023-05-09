@@ -5,6 +5,7 @@ import { ErrrorMessage } from "../registers/useRegister";
 import { userTeknisiFormValidator } from "../../core/utility/validator";
 import useSWR from "swr";
 import { getUserTeknisiFetcher } from "./getUserTeknisiFetcher";
+import { getUserTeknisiFilterMasterOptionsFetcher } from "./getUserTeknisiFilterMasterOptionsFetcher";
 
 
 
@@ -51,7 +52,7 @@ const intialUserTeknisi: UserTeknisiResponse = {
 }
 
 export function useTeknisiUser(): UseTeknisiUserProps {
-    const { getToken } = useUser();
+    const { getToken, getUserInformation } = useUser();
     const [masterFilterOptions, setMasterFilterOptionsData] = useState<MasterFilterOptions>(initialMasterFilter);
     const [params, setParams] = useState<ParamsProps>({
         partner_id: '',
@@ -68,34 +69,6 @@ export function useTeknisiUser(): UseTeknisiUserProps {
     });
     const onCloseError = () => {
         setErrorMessage((prev) => ({ ...prev, show: false }))
-    }
-    const getUserTeknisiFilterMaster = async () => {
-        const res = await ApiFetchRaw<MasterFiltersResponse>(process.env.BASE_URL_API + 'teknisi-user/master-filters', {
-            headers: {
-                'Authorization': `Bearer ${getToken()}`
-            },
-        })
-        if (res.body.statusCode === 200) {
-            const { data } = res.body
-            const tempPartner: FilterOptionsProps[] = []
-            const tempSector: FilterOptionsProps[] = []
-            const tempRegional: FilterOptionsProps[] = []
-            data.partner.map((p) => {
-                tempPartner.push({ id: p.id, name: p.name })
-            })
-            data.regional.map((p) => {
-                tempRegional.push({ id: p.id, name: p.name })
-            })
-            data.sector.map((p) => {
-                tempSector.push({ id: p.id, name: p.name })
-            })
-            const tempData: MasterFilterOptions = {
-                partner: tempPartner,
-                sector: tempSector,
-                regional: tempRegional
-            }
-            setMasterFilterOptionsData(tempData);
-        }
     }
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>, name: string) => {
@@ -155,7 +128,6 @@ export function useTeknisiUser(): UseTeknisiUserProps {
                 })
 
                 if (res.body.statusCode === 200) {
-                    getUserTeknisiFilterMaster();
                     setFormUserTeknisi(initialFormTeknsiUser);
                 } else {
                     setErrorMessage({
@@ -173,13 +145,36 @@ export function useTeknisiUser(): UseTeknisiUserProps {
 
     }
 
-    useEffect(() => {
-        getUserTeknisiFilterMaster();
-    }, [])
+    const userTeknisiFilterMasterOptions = useSWR({ url: process.env.BASE_URL_API + 'teknisi-user/master-filters?', token: getToken() }, getUserTeknisiFilterMasterOptionsFetcher)
 
-    const userTeknisiData = useSWR({ url: process.env.BASE_URL_API + 'teknisi-user?', params: params, token: getToken() }, getUserTeknisiFetcher)
+    const userTeknisiData = useSWR({ url: process.env.BASE_URL_API + 'teknisi-user?', params: params, token: getToken(), userInformation: getUserInformation() }, getUserTeknisiFetcher)
 
     const isLoading = userTeknisiData.isLoading;
+
+    useEffect(() => {
+        if (!userTeknisiFilterMasterOptions.data) return;
+        const { data } = userTeknisiFilterMasterOptions.data;
+        const tempPartner: FilterOptionsProps[] = []
+        const tempSector: FilterOptionsProps[] = []
+        const tempRegional: FilterOptionsProps[] = []
+        data.partner.map((p) => {
+            tempPartner.push({ id: p.id, name: p.name })
+        })
+        data.regional.map((p) => {
+            tempRegional.push({ id: p.id, name: p.name })
+        })
+        data.sector.map((p) => {
+            tempSector.push({ id: p.id, name: p.name })
+        })
+        const tempData: MasterFilterOptions = {
+            partner: tempPartner,
+            sector: tempSector,
+            regional: tempRegional
+        }
+        setMasterFilterOptionsData(tempData);
+    }, [
+        userTeknisiFilterMasterOptions.data
+    ])
 
     return {
         params,

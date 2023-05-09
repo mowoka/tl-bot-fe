@@ -141,7 +141,8 @@ export default function AppBarComponent(props: AppBarComponentProps) {
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Typography className="text-white text-sm">
-                  Selamat datang, {name ?? "Annonimous"}
+                  Selamat datang, {name} (
+                  {role == "admin" ? "Admin" : "Team Lead"})
                 </Typography>
               </IconButton>
             </Tooltip>

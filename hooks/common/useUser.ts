@@ -25,6 +25,7 @@ export interface UserProps {
     login: (nik: string, password: string) => Promise<LoginResponse>;
     logout: () => void;
     getToken: () => string;
+    getUserInformation: () => { role: string, id: number };
 }
 
 const SESSION_KEY = 'persist:root';
@@ -96,6 +97,20 @@ function useUser(): UserProps {
         }
     }
 
+    const getUserInformation = (): { role: string, id: number } => {
+        try {
+            const persistStr = window.sessionStorage.getItem(SESSION__PROFILE_KEY);
+            const persists = persistStr ? JSON.parse(persistStr) : ''
+            if (!persists) throw new Error('no profile data');
+            const userProfile = JSON.parse(persists.userProfile);
+            if (!userProfile) throw new Error('no user profile data');
+            return { role: userProfile.role, id: userProfile.id }
+        } catch (e) {
+            console.error(e);
+            return { role: '', id: 0 }
+        }
+    }
+
     const saveProfileToLocalStorage = (profile: UserProfile) => {
         try {
             if (window !== undefined) {
@@ -134,6 +149,7 @@ function useUser(): UserProps {
         login,
         logout,
         getToken,
+        getUserInformation,
     }
 }
 
