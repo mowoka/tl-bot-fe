@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ApiFetchRaw } from "../../core/clients/apiFetch";
 import useUser from "../common/useUser";
 import { ErrrorMessage } from "../registers/useRegister";
-import { userTeknisiFormValidator } from "../../core/utility/validator";
+import { userTeknisiFormValidator, validateNikForm } from "../../core/utility/validator";
 import useSWR from "swr";
 import { getUserTeknisiFetcher } from "./getUserTeknisiFetcher";
 import { getUserTeknisiFilterMasterOptionsFetcher } from "./getUserTeknisiFilterMasterOptionsFetcher";
@@ -14,21 +14,25 @@ interface UseTeknisiUserProps {
     params: ParamsProps;
     data: UserTeknisiResponse;
     masterFilterOptions: MasterFilterOptions;
+    masterFilterOpstionsIsloading: boolean;
     isLoading: boolean;
     submitLoading: boolean;
     formUserTeknisi: FormUserTeknisi;
     errorMessage: ErrrorMessage;
+    stepForm: number;
     onChange: (e: React.ChangeEvent<HTMLInputElement>, name: string) => void;
     formOnChange: (e: React.ChangeEvent<HTMLInputElement>, name: string) => void;
     resetParams: () => void;
     onSubmit: () => void;
+    onResetForm: () => void;
     onCloseError: () => void;
 }
 
 const initialMasterFilter: MasterFilterOptions = {
     partner: [],
     regional: [],
-    sector: []
+    sector: [],
+    witel: [],
 }
 
 
@@ -36,10 +40,11 @@ const initialFormTeknsiUser: FormUserTeknisi = {
     nik: '',
     name: '',
     idTelegram: '',
-    partner: '',
-    sector: '',
-    witel: '',
-    regional: '',
+    partner_id: '',
+    sector_id: '',
+    witel_id: '',
+    regional_id: '',
+    user_id: '',
 }
 
 const intialUserTeknisi: UserTeknisiResponse = {
@@ -51,7 +56,9 @@ const intialUserTeknisi: UserTeknisiResponse = {
     }
 }
 
-export function useTeknisiUser(): UseTeknisiUserProps {
+export function useTeknisiUser(
+    handleClose: () => void,
+): UseTeknisiUserProps {
     const { getToken, getUserInformation } = useUser();
     const [masterFilterOptions, setMasterFilterOptionsData] = useState<MasterFilterOptions>(initialMasterFilter);
     const [params, setParams] = useState<ParamsProps>({
@@ -67,6 +74,8 @@ export function useTeknisiUser(): UseTeknisiUserProps {
         message: '',
         status: "info"
     });
+    const [stepForm, setStepForm] = useState<number>(1);
+
     const onCloseError = () => {
         setErrorMessage((prev) => ({ ...prev, show: false }))
     }
@@ -93,17 +102,20 @@ export function useTeknisiUser(): UseTeknisiUserProps {
         } else if (name === 'idTelegram') {
             setFormUserTeknisi((prev) => ({ ...prev, idTelegram: e.target.value }))
         } else if (name === 'partner') {
-            setFormUserTeknisi((prev) => ({ ...prev, partner: e.target.value }))
+            setFormUserTeknisi((prev) => ({ ...prev, partner_id: e.target.value }))
         } else if (name === 'sector') {
-            setFormUserTeknisi((prev) => ({ ...prev, sector: e.target.value }))
+            setFormUserTeknisi((prev) => ({ ...prev, sector_id: e.target.value }))
         } else if (name === 'regional') {
-            setFormUserTeknisi((prev) => ({ ...prev, regional: e.target.value }))
-        } else {
-            setFormUserTeknisi((prev) => ({ ...prev, witel: e.target.value }))
+            setFormUserTeknisi((prev) => ({ ...prev, regional_id: e.target.value }))
+        } else if (name === 'team-lead') {
+            setFormUserTeknisi((prev) => ({ ...prev, user_id: e.target.value }))
+        }
+        else {
+            setFormUserTeknisi((prev) => ({ ...prev, witel_id: e.target.value }))
         }
     }
 
-    const onSubmit = async () => {
+    async function submitTeknisUserForm() {
         const { valid, message } = userTeknisiFormValidator(formUserTeknisi);
         if (!valid) {
             setErrorMessage({
@@ -114,8 +126,16 @@ export function useTeknisiUser(): UseTeknisiUserProps {
         } else {
             // logic input teknisi 
             setSubmitLoading(true);
+            const userInformation = getUserInformation()
             try {
-                const data = { ...formUserTeknisi }
+                const data = {
+                    ...formUserTeknisi,
+                    partner_id: parseInt(formUserTeknisi.partner_id),
+                    sector_id: parseInt(formUserTeknisi.sector_id),
+                    witel__id: parseInt(formUserTeknisi.witel_id),
+                    regional: parseInt(formUserTeknisi.regional_id),
+                    user_id: userInformation.role !== 'admin' ? userInformation.id : parseInt(formUserTeknisi.user_id),
+                }
 
                 const res = await ApiFetchRaw(process.env.BASE_URL_API + 'teknisi-user', {
                     method: 'POST',
@@ -127,8 +147,15 @@ export function useTeknisiUser(): UseTeknisiUserProps {
                     body: JSON.stringify(data),
                 })
 
-                if (res.body.statusCode === 200) {
+                if (res.body.statusCode === 201) {
+                    setErrorMessage({
+                        show: true,
+                        message: res.body.message,
+                        status: "success"
+                    });
+                    setStepForm(1);
                     setFormUserTeknisi(initialFormTeknsiUser);
+                    handleClose();
                 } else {
                     setErrorMessage({
                         show: true,
@@ -142,7 +169,59 @@ export function useTeknisiUser(): UseTeknisiUserProps {
                 setSubmitLoading(false)
             }
         }
+    }
 
+    async function validateNik() {
+        const { valid, message } = validateNikForm(formUserTeknisi.nik);
+        if (!valid) {
+            setErrorMessage({
+                show: true,
+                message: message,
+                status: "error"
+            });
+        } else {
+            const data = {
+                nik: formUserTeknisi.nik
+            }
+
+            const res = await ApiFetchRaw(process.env.BASE_URL_API + 'auth/validate', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${getToken()}`
+                },
+                body: JSON.stringify(data),
+            })
+            if (res.body.statusCode === 201) {
+                setErrorMessage({
+                    show: true,
+                    message: res.body.message,
+                    status: "success"
+                });
+                setStepForm(2);
+            } else {
+                setErrorMessage({
+                    show: true,
+                    message: res.body.message,
+                    status: "error"
+                });
+            }
+        }
+    }
+
+    const onSubmit = async () => {
+        if (stepForm == 1) {
+            validateNik();
+        } else {
+            submitTeknisUserForm();
+        }
+    }
+
+    const onResetForm = () => {
+        setStepForm(1);
+        setFormUserTeknisi(initialFormTeknsiUser);
+        handleClose();
     }
 
     const userTeknisiFilterMasterOptions = useSWR({ url: process.env.BASE_URL_API + 'teknisi-user/master-filters?', token: getToken() }, getUserTeknisiFilterMasterOptionsFetcher)
@@ -154,9 +233,12 @@ export function useTeknisiUser(): UseTeknisiUserProps {
     useEffect(() => {
         if (!userTeknisiFilterMasterOptions.data) return;
         const { data } = userTeknisiFilterMasterOptions.data;
+
         const tempPartner: FilterOptionsProps[] = []
         const tempSector: FilterOptionsProps[] = []
         const tempRegional: FilterOptionsProps[] = []
+        const tempWitel: FilterOptionsProps[] = []
+        console.log(data);
         data.partner.map((p) => {
             tempPartner.push({ id: p.id, name: p.name })
         })
@@ -166,10 +248,14 @@ export function useTeknisiUser(): UseTeknisiUserProps {
         data.sector.map((p) => {
             tempSector.push({ id: p.id, name: p.name })
         })
+        data.witel.map((p) => {
+            tempWitel.push({ id: p.id, name: p.name })
+        })
         const tempData: MasterFilterOptions = {
             partner: tempPartner,
             sector: tempSector,
-            regional: tempRegional
+            regional: tempRegional,
+            witel: tempWitel,
         }
         setMasterFilterOptionsData(tempData);
     }, [
@@ -180,14 +266,17 @@ export function useTeknisiUser(): UseTeknisiUserProps {
         params,
         data: userTeknisiData.data?.data ?? intialUserTeknisi,
         masterFilterOptions,
+        masterFilterOpstionsIsloading: userTeknisiFilterMasterOptions.isLoading,
         isLoading: isLoading,
         submitLoading,
         formUserTeknisi,
         errorMessage,
+        stepForm,
         onChange,
         formOnChange,
         resetParams,
         onSubmit,
+        onResetForm,
         onCloseError
     }
 }
@@ -215,10 +304,11 @@ export interface FormUserTeknisi {
     nik: string;
     name: string;
     idTelegram: string;
-    partner: string;
-    sector: string;
-    witel: string;
-    regional: string;
+    partner_id: string;
+    sector_id: string;
+    witel_id: string;
+    regional_id: string;
+    user_id: string;
 }
 
 export interface UserTeknisiResponse {
@@ -241,6 +331,7 @@ export interface MasterFilterOptions {
     partner: FilterOptionsProps[];
     regional: FilterOptionsProps[];
     sector: FilterOptionsProps[];
+    witel: FilterOptionsProps[];
 }
 
 
@@ -248,6 +339,7 @@ export interface MasterFiltersResponse {
     partner: FilterOptionsProps[];
     regional: FilterOptionsProps[];
     sector: FilterOptionsProps[];
+    witel: FilterOptionsProps[];
 }
 
 export interface ParamsProps {

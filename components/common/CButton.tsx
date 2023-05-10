@@ -9,7 +9,20 @@ interface ButtonProps {
 export const CButton = (props: ButtonProps) => {
   return (
     <Button
-      className="w-full bg-black hover:bg-red h-[50px]"
+      className="w-full bg-black  h-[50px]"
+      onClick={props.onClick}
+      variant="contained"
+      disabled={props.disable ?? false}
+    >
+      {props.text}
+    </Button>
+  );
+};
+
+export const EButton = (props: ButtonProps) => {
+  return (
+    <Button
+      className="w-full bg-red hover:bg-red h-[50px]"
       onClick={props.onClick}
       variant="contained"
       disabled={props.disable ?? false}

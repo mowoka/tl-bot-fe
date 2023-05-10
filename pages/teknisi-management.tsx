@@ -22,18 +22,21 @@ const TeknisiManagement = () => {
     params,
     data,
     masterFilterOptions,
+    masterFilterOpstionsIsloading,
     isLoading,
     submitLoading,
     formUserTeknisi,
     errorMessage,
+    stepForm,
     onChange,
     formOnChange,
     resetParams,
     onSubmit,
+    onResetForm,
     onCloseError,
-  } = useTeknisiUser();
+  } = useTeknisiUser(handleClose);
 
-  if (!isAuthenticate || !profile.name) {
+  if (!isAuthenticate || !profile.name || masterFilterOpstionsIsloading) {
     return <ScreenLoading />;
   }
 
@@ -49,10 +52,14 @@ const TeknisiManagement = () => {
       />
       <ModalElement open={open} handleClose={handleClose}>
         <FromPanel
+          isAdmin={isAdmin}
+          step={stepForm}
           formOnChange={formOnChange}
           onSubmit={onSubmit}
+          onResetForm={onResetForm}
           formUserTeknisi={formUserTeknisi}
           onLoading={submitLoading}
+          masterFitlerOptions={masterFilterOptions}
         />
       </ModalElement>
       <h2 className="font-semibold text-4xl py-4">Teknisi User Management</h2>
