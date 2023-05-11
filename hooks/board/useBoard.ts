@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { ApiFetchRaw } from "../../core/clients/apiFetch"
 import useUser from "../common/useUser";
-import { FilterOptionsProps, UserTeknisiResponse } from "../teknisi-management/useTeknisiUser";
+import { FilterOptionsProps, } from "../teknisi-management/useTeknisiUser";
 import { ErrrorMessage } from "../registers/useRegister";
 import { formTLBoardValidator } from "../../core/utility/validator";
+import useSWR from "swr";
+import { getUserTeknisiFetcher } from "./teknisiUserFetcher";
+import { getTeamLeadJobFetcher } from "./teamLeadJobFetcher";
 
-interface LeadJob {
+export interface LeadJob {
     id: number,
     createAt: string;
     updateAt: string;
@@ -41,7 +44,7 @@ const initialOptionsFormData: OptionsFormData = {
 }
 
 export const useBoard = (): UseBoardProps => {
-    const { getToken } = useUser();
+    const { getToken, getUserInformation } = useUser();
     const [optionsData, setOptionsData] = useState<OptionsFormData>(initialOptionsFormData);
     const [masterJobData, setMasterJobData] = useState<LeadJob[]>([])
     const [formData, setFormData] = useState<FormDataProps>({
@@ -127,63 +130,30 @@ export const useBoard = (): UseBoardProps => {
         }
     }
 
-    const getUserTeknisi = async () => {
 
-        const res = await ApiFetchRaw<UserTeknisiResponse>(process.env.BASE_URL_API + 'teknisi-user', {
-            headers: {
-                'Authorization': `Bearer ${getToken()}`
-            },
-        })
-        if (res.body.statusCode === 200) {
-            return res.body.data.data;
-        }
-        return []
-    }
-
-    const getTeamLeadJob = async () => {
-        const res = await ApiFetchRaw<LeadJob[]>(process.env.BASE_URL_API + 'team-leader-job', {
-            headers: {
-                'Authorization': `Bearer ${getToken()}`
-            },
-        })
-        if (res.body.statusCode === 200) {
-            return res.body.data;
-        }
-        return []
-    }
-
-    const getMasterData = async () => {
-        const [userTeknisi, LeadJob] = await Promise.all([
-            getUserTeknisi(),
-            getTeamLeadJob()
-        ])
-        let tempTeknisi: FilterOptionsProps[] = [];
-        let tempLeadJob: FilterOptionsProps[] = [];
-        userTeknisi.map(teknisi => {
-            tempTeknisi.push({
-                key: `${teknisi.nik} ${teknisi.name}`,
-                value: teknisi.id.toString(),
-            })
-        })
-        LeadJob.map((job) => {
-            tempLeadJob.push({
-                key: `TUGAS TL ${job.name}`,
-                value: job.id.toString(),
-            })
-        })
-        const tempData: OptionsFormData = {
-            teknisi: tempTeknisi,
-            leadJob: tempLeadJob,
-        }
-        setMasterJobData(LeadJob);
-        setOptionsData(tempData);
-    }
-
+    const teknisiUser = useSWR({ url: process.env.BASE_URL_API + 'teknisi-user?', token: getToken(), userInformation: getUserInformation() }, getUserTeknisiFetcher)
+    const teamLeadJob = useSWR({ url: process.env.BASE_URL_API + 'team-leader-job', token: getToken(), }, getTeamLeadJobFetcher)
 
     useEffect(() => {
-        getMasterData();
-    }, [])
+        if (!teknisiUser.data) return;
+        const { data } = teknisiUser.data.data;
+        const tempTeknisi: FilterOptionsProps[] = [];
+        data.map((teknisi) => {
+            tempTeknisi.push({ id: teknisi.id, name: teknisi.name })
+        })
+        setOptionsData((prev) => ({ ...prev, teknisi: tempTeknisi }))
+    }, [teknisiUser.data])
 
+    useEffect(() => {
+        if (!teamLeadJob.data) return;
+        const { data } = teamLeadJob.data;
+        const tempJob: FilterOptionsProps[] = [];
+        data.map((job) => {
+            tempJob.push({ id: job.id, name: job.name })
+        })
+        setOptionsData((prev) => ({ ...prev, leadJob: tempJob }))
+        setMasterJobData(data);
+    }, [teamLeadJob.data])
 
     return {
         optionsData,

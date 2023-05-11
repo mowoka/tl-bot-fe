@@ -19,7 +19,7 @@ interface FormPerformansiProps {
 const FormPerformansi = (props: FormPerformansiProps) => {
   const { optionsData, formData, onChange, onSubmit, onLoading } = props;
   return (
-    <div className="py-4 mt-10 w-full max-w-[600px]">
+    <div className="py-1 mt-10 w-full max-w-[600px]">
       <div className="py-4">
         <InputDropdown
           label="Teknisi"

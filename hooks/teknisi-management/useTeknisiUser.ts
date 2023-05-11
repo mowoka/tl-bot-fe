@@ -231,14 +231,13 @@ export function useTeknisiUser(
     const isLoading = userTeknisiData.isLoading;
 
     useEffect(() => {
-        if (!userTeknisiFilterMasterOptions.data) return;
+        if (!userTeknisiFilterMasterOptions.data?.data) return;
         const { data } = userTeknisiFilterMasterOptions.data;
 
         const tempPartner: FilterOptionsProps[] = []
         const tempSector: FilterOptionsProps[] = []
         const tempRegional: FilterOptionsProps[] = []
         const tempWitel: FilterOptionsProps[] = []
-        console.log(data);
         data.partner.map((p) => {
             tempPartner.push({ id: p.id, name: p.name })
         })

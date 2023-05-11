@@ -1,4 +1,3 @@
-import Link from "next/link";
 import Input from "../common/Input";
 import { CButton } from "../common/CButton";
 
@@ -40,12 +39,13 @@ const FormPanel = (props: FormPanelProps) => {
         <div className="py-4">
           <CButton text="Login" onClick={onSubmit} />
         </div>
-        <p className="py-2 text-center">
+        {/* ToDo : Create another methode for rregister */}
+        {/* <p className="py-2 text-center">
           still have no account ?{" "}
           <Link href={"/accounts/register"} legacyBehavior>
             <a className="underline">here</a>
           </Link>
-        </p>
+        </p> */}
       </div>
     </div>
   );

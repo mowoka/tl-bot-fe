@@ -35,9 +35,11 @@ const Board = () => {
         status={errorMessage.status}
         onClose={onCloseError}
       />
-      <div className="flex justify-start items-end py-4">
+      <div className="py-4">
         <h2 className="font-semibold text-4xl">TL Board</h2>
-        <span className="text-md">(*Tiket khusus dari team lead)</span>
+        <span className="text-md">
+          (* Tiket khusus dari team lead kepada teknisi)
+        </span>
       </div>
       <Divider />
       <FormPerformansi
