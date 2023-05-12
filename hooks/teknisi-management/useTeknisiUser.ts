@@ -82,11 +82,11 @@ export function useTeknisiUser(
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>, name: string) => {
         if (name === 'partner') {
-            setParams((prev) => ({ ...prev, partner: e.target.value }))
+            setParams((prev) => ({ ...prev, partner_id: e.target.value }))
         } else if (name === 'regional') {
-            setParams((prev) => ({ ...prev, regional: e.target.value }))
+            setParams((prev) => ({ ...prev, regional_id: e.target.value }))
         } else {
-            setParams((prev) => ({ ...prev, sector: e.target.value }))
+            setParams((prev) => ({ ...prev, sector_id: e.target.value }))
         }
     }
 
@@ -155,6 +155,7 @@ export function useTeknisiUser(
                     });
                     setStepForm(1);
                     setFormUserTeknisi(initialFormTeknsiUser);
+                    userTeknisiData.mutate();
                     handleClose();
                 } else {
                     setErrorMessage({
