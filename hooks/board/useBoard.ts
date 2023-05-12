@@ -103,7 +103,7 @@ export const useBoard = (): UseBoardProps => {
                     body: JSON.stringify(data),
                 })
 
-                if (res.body.statusCode === 200) {
+                if (res.body.statusCode === 201) {
                     setErrorMessage({
                         show: true,
                         message: res.body.message,
