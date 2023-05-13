@@ -185,7 +185,7 @@ export function useTeknisiUser(
                 nik: formUserTeknisi.nik
             }
 
-            const res = await ApiFetchRaw(process.env.BASE_URL_API + 'auth/validate', {
+            const res = await ApiFetchRaw(process.env.BASE_URL_API + 'auth/validate/teknisi-user', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
