@@ -21,8 +21,11 @@ export default function Options() {
     sector,
     isLoading,
     errorMessage,
+    name,
     handleOpenModal,
     onCloseError,
+    handleOnChange,
+    submit,
   } = useOptions();
 
   if (!isAuthenticate || !profile.name) {
@@ -44,12 +47,15 @@ export default function Options() {
       <Divider />
       <OptionsMenu handleOpenModal={handleOpenModal} />
       <OptionsTableData
+        name={name}
         title={title}
         isLoading={isLoading}
         sector={sector}
         witel={witel}
         regional={regional}
         partner={partner}
+        handleOnChange={handleOnChange}
+        submit={submit}
       />
     </Layout>
   );

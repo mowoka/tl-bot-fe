@@ -12,6 +12,9 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import { EButton, OButton } from "../common/CButton";
+import React, { useState } from "react";
+import Input from "../common/Input";
 
 interface OptionsTableDataProps {
   title: string;
@@ -20,11 +23,14 @@ interface OptionsTableDataProps {
   witel: Witel[];
   partner: Partner[];
   regional: Regional[];
+  name: string;
+  handleOnChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  submit: () => void;
 }
 
 export default function OptionsTableData(props: OptionsTableDataProps) {
-  const { title, isLoading } = props;
-
+  const { title, isLoading, name, handleOnChange, submit } = props;
+  const [showForm, setShowForm] = useState(false);
   if (!title) return <div />;
 
   const handleRenderData = (title: string) => {
@@ -37,7 +43,29 @@ export default function OptionsTableData(props: OptionsTableDataProps) {
 
   return (
     <div className="py-8">
-      <h3 className="font-semibold text-xl">Configure {title}</h3>
+      <h3 className="font-semibold text-xl mb-4">Configure {title}</h3>
+      {!showForm && (
+        <div className="py-3 w-full max-w-[150px]">
+          <OButton text={`Add ${title}`} onClick={() => setShowForm(true)} />
+        </div>
+      )}
+      {showForm && (
+        <div className="max-w-[600px] flex items-center justify-start">
+          <Input
+            type="text"
+            label={`Input ${title} name`}
+            value={name}
+            placeholder={`Input ${title} name`}
+            onChange={(e) => handleOnChange(e)}
+          />
+          <div className="px-4">
+            <OButton onClick={submit} text="Add" />
+          </div>
+          <div className="">
+            <EButton onClick={() => setShowForm(false)} text="Cancel" />
+          </div>
+        </div>
+      )}
       <div className="py-6 w-[600px]">
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 200 }} aria-label="simple table">

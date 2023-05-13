@@ -22,7 +22,7 @@ export const CButton = (props: ButtonProps) => {
 export const EButton = (props: ButtonProps) => {
   return (
     <Button
-      className="w-full bg-red hover:bg-red h-[50px]"
+      className="w-full bg-red hover:bg-red h-[56px]"
       onClick={props.onClick}
       variant="contained"
       disabled={props.disable ?? false}
