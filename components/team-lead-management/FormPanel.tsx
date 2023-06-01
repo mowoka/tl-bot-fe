@@ -1,31 +1,31 @@
-import {
-  FormUserTeknisi,
-  MasterFilterOptions,
-} from "../../hooks/teknisi-management/useTeknisiUser";
-import { CButton, EButton } from "../common/CButton";
+import { CButton, EButton, OButton } from "../common/CButton";
 import Input from "../common/Input";
 import LinearProgress from "@mui/material/LinearProgress";
 import InputDropdown from "../common/InputDropdown";
+import { MasterFilterOptions } from "@app/hooks/teknisi-management/useTeknisiUser";
+import { FormTeamLeadUser } from "@app/hooks/team-lead-management/useTeamLeadManagement";
 
 interface FormPanelProps {
-  formUserTeknisi: FormUserTeknisi;
+  formTeamLeadUser: FormTeamLeadUser;
   formOnChange: (e: React.ChangeEvent<HTMLInputElement>, name: string) => void;
   onSubmit: () => void;
   onResetForm: () => void;
   onLoading?: boolean;
   step: number;
   masterFitlerOptions: MasterFilterOptions;
+  setDefaultPassword: () => void;
 }
 
 export const FromPanel = (props: FormPanelProps) => {
   const {
-    formUserTeknisi,
+    formTeamLeadUser,
     step,
     formOnChange,
     onSubmit,
     onLoading,
     onResetForm,
     masterFitlerOptions,
+    setDefaultPassword,
   } = props;
   return (
     <div className="bg-white  w-full min-w-[500px] max-w-[500px] min-h-[120px] rounded-lg p-4">
@@ -38,11 +38,12 @@ export const FromPanel = (props: FormPanelProps) => {
           <Input
             type="text"
             label="NIK"
-            value={formUserTeknisi.nik}
+            value={formTeamLeadUser.nik}
             placeholder="Input NIK"
             onChange={(e) => formOnChange(e, "nik")}
             error={
-              formUserTeknisi.nik.length > 0 && formUserTeknisi.nik.length < 16
+              formTeamLeadUser.nik.length > 0 &&
+              formTeamLeadUser.nik.length < 16
                 ? true
                 : false
             }
@@ -58,26 +59,31 @@ export const FromPanel = (props: FormPanelProps) => {
               <Input
                 type="text"
                 label="Nama"
-                value={formUserTeknisi.name}
+                value={formTeamLeadUser.name}
                 placeholder="Input Nama"
                 onChange={(e) => formOnChange(e, "name")}
               />
             </div>
-            <div className="w-[100%] px-2 py-2">
+          </div>
+          <div className="flex justify-between items-center w-full flex-wrap">
+            <div className="w-[70%] px-2 py-2">
               <Input
-                type="text"
-                label="ID Telegram"
-                value={formUserTeknisi.idTelegram}
-                placeholder="Input ID Telegram"
-                onChange={(e) => formOnChange(e, "idTelegram")}
+                type="password"
+                label="Password"
+                value={formTeamLeadUser.password}
+                placeholder="Input Password"
+                onChange={(e) => formOnChange(e, "password")}
               />
+            </div>
+            <div className="w-[30%] px-2">
+              <OButton text="Default Password" onClick={setDefaultPassword} />
             </div>
           </div>
           <div className="flex justify-between items-center w-full">
             <div className="w-[50%] px-2 py-2">
               <InputDropdown
                 label="Partner"
-                value={formUserTeknisi.partner_id}
+                value={formTeamLeadUser.partner_id}
                 placeholder="Choose Partner"
                 onChange={(e) => formOnChange(e, "partner")}
                 options={masterFitlerOptions.partner}
@@ -85,28 +91,28 @@ export const FromPanel = (props: FormPanelProps) => {
             </div>
             <div className="w-[50%] px-2 py-2">
               <InputDropdown
-                label="Sector"
-                value={formUserTeknisi.sector_id}
-                placeholder="Choose Sector"
-                onChange={(e) => formOnChange(e, "sector")}
-                options={masterFitlerOptions.sector}
+                label="Regional"
+                value={formTeamLeadUser.regional_id}
+                placeholder="Choose Regional"
+                onChange={(e) => formOnChange(e, "regional")}
+                options={masterFitlerOptions.regional}
               />
             </div>
           </div>
           <div className="flex justify-between items-center w-full">
             <div className="w-[50%] px-2 py-2">
               <InputDropdown
-                label="Regional"
-                value={formUserTeknisi.regional_id}
-                placeholder="Choose Regional"
-                onChange={(e) => formOnChange(e, "regional")}
-                options={masterFitlerOptions.regional}
+                label="Sector"
+                value={formTeamLeadUser.sector_id}
+                placeholder="Choose Sector"
+                onChange={(e) => formOnChange(e, "sector")}
+                options={masterFitlerOptions.sector}
               />
             </div>
             <div className="w-[50%] px-2 py-2">
               <InputDropdown
                 label="Witel"
-                value={formUserTeknisi.witel_id}
+                value={formTeamLeadUser.witel_id}
                 placeholder="Choose Witel"
                 onChange={(e) => formOnChange(e, "witel")}
                 options={masterFitlerOptions.witel}

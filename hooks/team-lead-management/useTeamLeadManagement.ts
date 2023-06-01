@@ -5,6 +5,8 @@ import { ErrrorMessage } from "../registers/useRegister";
 import { getUserTeknisiFilterMasterOptionsFetcher } from "../teknisi-management/getUserTeknisiFilterMasterOptionsFetcher";
 import useSWR from "swr";
 import { getTeamLeadUserFetcher } from "./getTeamLeadUserFetcher";
+import { ApiFetchRaw } from "@app/core/clients/apiFetch";
+import { teamLeadUserFormValidator, validateNikForm } from "@app/core/utility/validator";
 
 
 
@@ -14,9 +16,26 @@ interface TeamLeadManagement {
     masterFilterOptions: MasterFilterOptions;
     errorMessage: ErrrorMessage;
     isLoading: boolean;
+    stepForm: number;
+    submitLoading: boolean;
+    formTeamLeadUser: FormTeamLeadUser;
     onChange: (e: React.ChangeEvent<HTMLInputElement>, name: string) => void;
+    formOnChange: (e: React.ChangeEvent<HTMLInputElement>, name: string) => void;
     resetParams: () => void;
     onCloseError: () => void;
+    onSubmit: () => void;
+    onResetForm: () => void;
+    setDefaultPassword: () => void;
+}
+
+const initialFormTeamLeadUser: FormTeamLeadUser = {
+    nik: '',
+    name: '',
+    partner_id: '',
+    sector_id: '',
+    witel_id: '',
+    regional_id: '',
+    password: '',
 }
 
 const initialMasterFilter: MasterFilterOptions = {
@@ -36,20 +55,26 @@ const initialTeamLeadUser: TeamLeadUserResponse = {
 }
 
 
-export function useTeamLeadManagement(): TeamLeadManagement {
+export function useTeamLeadManagement(
+    handleClose: () => void
+): TeamLeadManagement {
     const { getToken } = useUser();
+
     const [masterFilterOptions, setMasterFilterOptionsData] = useState<MasterFilterOptions>(initialMasterFilter);
     const [params, setParams] = useState<TeamLeadParamsProps>({
         partner_id: '',
         regional_id: '',
         sector_id: '',
     })
-    // const [submitLoading, setSubmitLoading] = useState<boolean>(false)
+    const [submitLoading, setSubmitLoading] = useState<boolean>(false)
     const [errorMessage, setErrorMessage] = useState<ErrrorMessage>({
         show: false,
         message: '',
         status: "info"
     });
+    const [formTeamLeadUser, setFormTeamLeadUser] = useState<FormTeamLeadUser>(initialFormTeamLeadUser);
+    const [stepForm, setStepForm] = useState<number>(1);
+
     const onCloseError = () => {
         setErrorMessage((prev) => ({ ...prev, show: false }))
     }
@@ -66,6 +91,135 @@ export function useTeamLeadManagement(): TeamLeadManagement {
 
     const resetParams = () => {
         setParams({ sector_id: '', partner_id: '', regional_id: '', });
+    }
+
+    const setDefaultPassword = () => {
+        setFormTeamLeadUser((prev) => ({ ...prev, password: 'YakinMokaz123!' }))
+    }
+
+    const formOnChange = (e: React.ChangeEvent<HTMLInputElement>, name: string) => {
+        if (name === 'nik') {
+            setFormTeamLeadUser((prev) => ({ ...prev, nik: e.target.value }))
+        } else if (name === 'name') {
+            setFormTeamLeadUser((prev) => ({ ...prev, name: e.target.value }))
+        } else if (name === 'partner') {
+            setFormTeamLeadUser((prev) => ({ ...prev, partner_id: e.target.value }))
+        } else if (name === 'sector') {
+            setFormTeamLeadUser((prev) => ({ ...prev, sector_id: e.target.value }))
+        } else if (name === 'regional') {
+            setFormTeamLeadUser((prev) => ({ ...prev, regional_id: e.target.value }))
+        } else if (name === 'password') {
+            setFormTeamLeadUser((prev) => ({ ...prev, password: e.target.value }))
+        } else {
+            setFormTeamLeadUser((prev) => ({ ...prev, witel_id: e.target.value }))
+        }
+    }
+
+    const onResetForm = () => {
+        setStepForm(1);
+        setFormTeamLeadUser(initialFormTeamLeadUser);
+        handleClose();
+    }
+
+    async function submitTeamLeadUserForm() {
+        const { valid, message } = teamLeadUserFormValidator(formTeamLeadUser);
+        if (!valid) {
+            setErrorMessage({
+                show: true,
+                message: message,
+                status: "error"
+            });
+            return;
+        }
+        if (submitLoading) return;
+        setSubmitLoading(true);
+        console.log({ formTeamLeadUser });
+        const data = {
+            nik: formTeamLeadUser.nik,
+            name: formTeamLeadUser.name,
+            partner_id: formTeamLeadUser.partner_id,
+            sector_id: formTeamLeadUser.sector_id,
+            witel_id: formTeamLeadUser.witel_id,
+            regional_id: formTeamLeadUser.regional_id,
+            password: formTeamLeadUser.password,
+        }
+
+        const res = await ApiFetchRaw(process.env.BASE_URL_API + 'team-lead-user', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${getToken()}`
+            },
+            body: JSON.stringify(data),
+        })
+        if (res.body.statusCode === 201) {
+            setErrorMessage({
+                show: true,
+                message: res.body.message,
+                status: "success"
+            });
+            setStepForm(1);
+            setFormTeamLeadUser(initialFormTeamLeadUser);
+            handleClose();
+            teamLeadUserData.mutate();
+        } else {
+            setErrorMessage({
+                show: true,
+                message: res.body.message,
+                status: "error"
+            });
+        }
+        setSubmitLoading(false);
+        return;
+    }
+
+    async function validateNik() {
+        const { valid, message } = validateNikForm(formTeamLeadUser.nik);
+        if (!valid) {
+            setErrorMessage({
+                show: true,
+                message: message,
+                status: "error"
+            });
+        } else {
+            const data = {
+                nik: formTeamLeadUser.nik
+            }
+
+            const res = await ApiFetchRaw(process.env.BASE_URL_API + 'auth/validate/team-lead', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${getToken()}`
+                },
+                body: JSON.stringify(data),
+            })
+            if (res.body.statusCode === 201) {
+                setErrorMessage({
+                    show: true,
+                    message: res.body.message,
+                    status: "success"
+                });
+                setStepForm(2);
+            } else {
+                setErrorMessage({
+                    show: true,
+                    message: res.body.message,
+                    status: "error"
+                });
+            }
+        }
+    }
+
+    const onSubmit = () => {
+        if (stepForm === 1) {
+            validateNik()
+        } else {
+            submitTeamLeadUserForm();
+        }
+        return;
     }
 
 
@@ -112,9 +266,16 @@ export function useTeamLeadManagement(): TeamLeadManagement {
         masterFilterOptions,
         errorMessage,
         isLoading,
+        stepForm,
+        submitLoading,
+        formTeamLeadUser,
+        onSubmit,
+        formOnChange,
         onChange,
         resetParams,
-        onCloseError
+        onCloseError,
+        onResetForm,
+        setDefaultPassword
     }
 }
 
@@ -139,4 +300,14 @@ export interface TeamLeadUser {
 export interface TeamLeadUserResponse {
     data: TeamLeadUser[]
     metadata: MetaData;
+}
+
+export interface FormTeamLeadUser {
+    nik: string;
+    name: string;
+    partner_id: string;
+    sector_id: string;
+    witel_id: string;
+    regional_id: string;
+    password: string;
 }

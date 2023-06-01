@@ -3,6 +3,7 @@ import { ModalElement } from "@app/components/common/Modal";
 import { ScreenLoading } from "@app/components/common/ScreenLoading";
 import SnackbarMessage from "@app/components/common/Snackbar";
 import { DataTable } from "@app/components/team-lead-management/DataTable";
+import { FromPanel } from "@app/components/team-lead-management/FormPanel";
 import { MenuFilter } from "@app/components/team-lead-management/MenuFilter";
 import { useModalElement } from "@app/hooks/common/useModalElement";
 import { useProfile } from "@app/hooks/common/useProfile";
@@ -24,10 +25,17 @@ export default function TeamLeadManagementPage() {
     isLoading,
     masterFilterOptions,
     errorMessage,
+    stepForm,
+    submitLoading,
+    formTeamLeadUser,
+    onSubmit,
+    formOnChange,
     onChange,
     resetParams,
     onCloseError,
-  } = useTeamLeadManagement();
+    onResetForm,
+    setDefaultPassword,
+  } = useTeamLeadManagement(handleClose);
 
   if (!isAuthenticate || !profile.name) {
     return <ScreenLoading />;
@@ -42,16 +50,16 @@ export default function TeamLeadManagementPage() {
         onClose={onCloseError}
       />
       <ModalElement open={open} handleClose={handleClose}>
-        {/* <FromPanel
-        isAdmin={isAdmin}
-        step={stepForm}
-        formOnChange={formOnChange}
-        onSubmit={onSubmit}
-        onResetForm={onResetForm}
-        formUserTeknisi={formUserTeknisi}
-        onLoading={submitLoading}
-        masterFitlerOptions={masterFilterOptions}
-      /> */}
+        <FromPanel
+          formTeamLeadUser={formTeamLeadUser}
+          step={stepForm}
+          formOnChange={formOnChange}
+          onSubmit={onSubmit}
+          onResetForm={onResetForm}
+          onLoading={submitLoading}
+          masterFitlerOptions={masterFilterOptions}
+          setDefaultPassword={setDefaultPassword}
+        />
       </ModalElement>
       <h2 className="font-semibold text-4xl py-4">Team Lead User Management</h2>
       <Divider />
