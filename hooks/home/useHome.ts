@@ -1,17 +1,20 @@
 
 import React, { useEffect, useState } from "react";
 import useUser from "../common/useUser";
-import { ApiFetchRaw } from "../../core/clients/apiFetch";
 import { ErrrorMessage } from "../registers/useRegister";
-import { FilterOptionsProps, MasterFilterOptions, MasterFiltersResponse, ParamsProps } from "../teknisi-management/useTeknisiUser";
+import { FilterOptionsProps, MasterFilterOptions, ParamsProps } from "../teknisi-management/useTeknisiUser";
 import dayjs from "dayjs";
 import { useModalElement } from "../common/useModalElement";
+import useSWR from "swr";
+import { getUserTeknisiFilterMasterOptionsFetcher } from "./getMasterOptionsFetcher";
+import { UserReportData, getUserTeknisiReportFetcher } from "./getUserTeknisiReportFetcher";
 
 interface HomeProps {
     data: UserReportData;
     isLoading: boolean;
     errorMessage: ErrrorMessage;
     masterFilterOptions: MasterFilterOptions;
+    masterFilterOptionsLoading: boolean;
     params: ParamsUserReport;
     open: boolean;
     historyTable: HistoryTable;
@@ -28,7 +31,8 @@ interface HomeProps {
 const initialMasterFilter: MasterFilterOptions = {
     partner: [],
     regional: [],
-    sector: []
+    sector: [],
+    witel: [],
 }
 
 const intialUserReportData: UserReportData = {
@@ -47,13 +51,13 @@ const lastDay = new Date(date.getFullYear(), date.getMonth(), 30);
 const useHome = (): HomeProps => {
     const { getToken } = useUser();
     const { open, handleClose, handleOpen } = useModalElement();
-    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [data, setData] = useState<UserReportData>(intialUserReportData);
     const [masterFilterOptions, setMasterFilterOptionsData] = useState<MasterFilterOptions>(initialMasterFilter);
     const [params, setParams] = useState<ParamsUserReport>({
-        partner: '',
-        regional: '',
-        sector: '',
+        teknisi_lead_id: '',
+        partner_id: '',
+        regional_id: '',
+        sector_id: '',
         startDate: dayjs(firstDay).format("YYYY-MM-DD").toString(),
         endDate: dayjs(lastDay).format("YYYY-MM-DD").toString(),
     })
@@ -75,11 +79,11 @@ const useHome = (): HomeProps => {
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>, name: string) => {
         if (name === 'partner') {
-            setParams((prev) => ({ ...prev, partner: e.target.value }))
+            setParams((prev) => ({ ...prev, partner_id: e.target.value }))
         } else if (name === 'regional') {
-            setParams((prev) => ({ ...prev, regional: e.target.value }))
+            setParams((prev) => ({ ...prev, regional_id: e.target.value }))
         } else if (name === 'sector') {
-            setParams((prev) => ({ ...prev, sector: e.target.value }))
+            setParams((prev) => ({ ...prev, sector_id: e.target.value }))
         }
     }
 
@@ -115,9 +119,10 @@ const useHome = (): HomeProps => {
 
     const resetFilter = () => {
         setParams({
-            partner: '',
-            regional: '',
-            sector: '',
+            teknisi_lead_id: '',
+            partner_id: '',
+            regional_id: '',
+            sector_id: '',
             startDate: dayjs(firstDay).format("YYYY-MM-DD").toString(),
             endDate: dayjs(lastDay).format("YYYY-MM-DD").toString(),
         })
@@ -129,107 +134,141 @@ const useHome = (): HomeProps => {
     }
 
 
-    async function getUserTeknisiHistory() {
-        setIsHitoryLoading(true);
-        const URLParams = { nik: historyTable.nik, ticket_title: historyTable.title, page: historyTable.page }
-        const res = await ApiFetchRaw<ResponseUserTeknisiHistory>(process.env.BASE_URL_API + 'teknisi-user/history?' + new URLSearchParams(URLParams), {
-            headers: {
-                'Authorization': `Bearer ${getToken()}`
-            },
-        })
+    const masterFilterOptionsRes = useSWR({
+        url: process.env.BASE_URL_API + 'teknisi-user/master-filters',
+        token: getToken()
+    },
+        getUserTeknisiFilterMasterOptionsFetcher
+    )
 
-        if (res.body.statusCode === 200) {
-            setHistoryData(res.body.data);
-        } else {
-            setHistoryData({
-                history: [],
-                metadata: {
-                    total: 0,
-                    pagination: 1,
-                    page: 1
-                }
-            })
+    const userTeknisiReportRes = useSWR({
+        url: process.env.BASE_URL_API + 'teknisi-user/report',
+        params: params,
+        token: getToken(),
+    },
+        getUserTeknisiReportFetcher,
+    )
+
+    useEffect(() => {
+        if (!userTeknisiReportRes.data) return;
+        setData(userTeknisiReportRes.data);
+    }, [
+        userTeknisiReportRes
+    ])
+
+    useEffect(() => {
+        if (userTeknisiReportRes.error) {
             setErrorMessage({
                 show: true,
-                message: res.body.message,
+                message: userTeknisiReportRes.error.message,
                 status: "error"
             });
         }
-        setIsHitoryLoading(false);
+    }, [userTeknisiReportRes.error])
 
-    }
+    useEffect(() => {
+        if (!masterFilterOptionsRes.data) return;
+        const { data } = masterFilterOptionsRes;
 
-    async function getUserTeknisiFilterMaster() {
-        const res = await ApiFetchRaw<MasterFiltersResponse>(process.env.BASE_URL_API + 'teknisi-user/master-filters', {
-            headers: {
-                'Authorization': `Bearer ${getToken()}`
-            },
+        const tempPartner: FilterOptionsProps[] = []
+        const tempSector: FilterOptionsProps[] = []
+        const tempRegional: FilterOptionsProps[] = []
+        const tempWitel: FilterOptionsProps[] = []
+        data.partner.map((p) => {
+            tempPartner.push({ id: p.id, name: p.name })
         })
-        if (res.body.statusCode === 200) {
-            const { data } = res.body
-            let tempPartner: FilterOptionsProps[] = []
-            let tempSector: FilterOptionsProps[] = []
-            let tempRegional: FilterOptionsProps[] = []
-            data.partner.map((p) => {
-                tempPartner.push({ key: p, value: p })
-            })
-            data.regional.map((p) => {
-                tempRegional.push({ key: p, value: p })
-            })
-            data.sector.map((p) => {
-                tempSector.push({ key: p, value: p })
-            })
-            const tempData: MasterFilterOptions = {
-                partner: tempPartner,
-                sector: tempSector,
-                regional: tempRegional
-            }
-            setMasterFilterOptionsData(tempData);
-        }
-    }
-
-    async function getUserTeknisiReport() {
-        setIsLoading(true);
-        const URLParams = { ...params }
-        const res = await ApiFetchRaw<UserReportData>(process.env.BASE_URL_API + 'teknisi-user/report?' + new URLSearchParams(URLParams), {
-            headers: {
-                'Authorization': `Bearer ${getToken()}`
-            },
+        data.regional.map((p) => {
+            tempRegional.push({ id: p.id, name: p.name })
         })
-
-        if (res.body.statusCode === 200) {
-            setData(res.body.data);
-        } else {
-            setData(intialUserReportData);
-            setErrorMessage({
-                show: true,
-                message: res.body.message,
-                status: "error"
-            });
+        data.sector.map((p) => {
+            tempSector.push({ id: p.id, name: p.name })
+        })
+        data.witel.map((p) => {
+            tempWitel.push({ id: p.id, name: p.name })
+        })
+        const tempData: MasterFilterOptions = {
+            partner: tempPartner,
+            sector: tempSector,
+            regional: tempRegional,
+            witel: tempWitel,
         }
-        setIsLoading(false);
-    }
+        setMasterFilterOptionsData(tempData);
+    }, [masterFilterOptionsRes])
+
+    // async function getUserTeknisiHistory() {
+    //     setIsHitoryLoading(true);
+    //     const URLParams = { nik: historyTable.nik, ticket_title: historyTable.title, page: historyTable.page }
+    //     const res = await ApiFetchRaw<ResponseUserTeknisiHistory>(process.env.BASE_URL_API + 'teknisi-user/history?' + new URLSearchParams(URLParams), {
+    //         headers: {
+    //             'Authorization': `Bearer ${getToken()}`
+    //         },
+    //     })
+
+    //     if (res.body.statusCode === 200) {
+    //         setHistoryData(res.body.data);
+    //     } else {
+    //         setHistoryData({
+    //             history: [],
+    //             metadata: {
+    //                 total: 0,
+    //                 pagination: 1,
+    //                 page: 1
+    //             }
+    //         })
+    //         setErrorMessage({
+    //             show: true,
+    //             message: res.body.message,
+    //             status: "error"
+    //         });
+    //     }
+    //     setIsHitoryLoading(false);
+
+    // }
+
+
+    // async function getUserTeknisiReport() {
+    //     setIsLoading(true);
+    //     const URLParams = { ...params }
+    //     const res = await ApiFetchRaw<UserReportData>(process.env.BASE_URL_API + 'teknisi-user/report?' + new URLSearchParams(URLParams), {
+    //         headers: {
+    //             'Authorization': `Bearer ${getToken()}`
+    //         },
+    //     })
+
+    //     if (res.body.statusCode === 200) {
+    //         setData(res.body.data);
+    //     } else {
+    //         setData(intialUserReportData);
+    //         setErrorMessage({
+    //             show: true,
+    //             message: res.body.message,
+    //             status: "error"
+    //         });
+    //     }
+    //     setIsLoading(false);
+    // }
 
 
 
-    useEffect(() => {
-        getUserTeknisiReport();
-    }, [params])
+    // useEffect(() => {
+    //     getUserTeknisiReport();
+    // }, [params])
 
-    useEffect(() => {
-        getUserTeknisiFilterMaster();
-    }, [])
+    // useEffect(() => {
+    //     getUserTeknisiFilterMaster();
+    // }, [])
 
-    useEffect(() => {
-        if (!historyTable.nik || !historyTable.title) return
-        getUserTeknisiHistory();
-    }, [historyTable])
+    // useEffect(() => {
+    //     if (!historyTable.nik || !historyTable.title) return
+    //     getUserTeknisiHistory();
+    // }, [historyTable])
 
     return {
         data,
-        isLoading,
+        isLoading: userTeknisiReportRes.isLoading,
         errorMessage,
         masterFilterOptions,
+        masterFilterOptionsLoading: masterFilterOptionsRes.isLoading,
         params,
         open,
         historyTable,
@@ -245,8 +284,28 @@ const useHome = (): HomeProps => {
     }
 }
 
+
+
+
+export interface MetaData {
+    total: number;
+    page: number;
+    pagination: number;
+}
+
+export interface HistoryTable {
+    title: string;
+    nik: string;
+    page: string;
+}
+
+export interface ParamsUserReport extends ParamsProps {
+    startDate: string;
+    endDate: string;
+}
+
 export interface ResponseUserTeknisiHistory {
-    history: LaporLangsung[] | TutupOdp[] | TiketReguler[] | SQM[] | Proman[] | Unspect[] | Valins[] | TiketRedundant[] | TiketTeamLead[];
+    history: LaporLangsung[] | TutupOdp[] | TiketReguler[] | SQM[] | Proman[] | Unspect[] | Valins[] | TiketTeamLead[];
     metadata: MetaData;
 }
 
@@ -257,20 +316,6 @@ export interface TiketTeamLead {
     description: string;
     teknisi_user_id: number;
     team_lead_job_id: number;
-}
-
-export interface TiketRedundant {
-    id: number;
-    createAt: Date;
-    updateAt: Date;
-    insiden_number: string;
-    speedy_number: string;
-    customer_name: string;
-    customer_number: string;
-    problem: string;
-    description: string;
-    teknisi_job_id: string;
-    idTelegram: string;
 }
 
 export interface Valins {
@@ -360,60 +405,6 @@ export interface LaporLangsung {
     description: string;
     teknisi_job_id: string;
     idTelegram: string
-}
-
-export interface MetaData {
-    total: number;
-    page: number;
-    pagination: number;
-}
-
-export interface HistoryTable {
-    title: string;
-    nik: string;
-    page: string;
-}
-
-export interface ParamsUserReport extends ParamsProps {
-    startDate: string;
-    endDate: string;
-}
-
-
-export interface KpiUser {
-    name: string,
-    score: number,
-}
-
-export interface UserReportData {
-    data: UserReport[];
-    metadata: MetaData,
-}
-
-export interface UserReport {
-    id: number,
-    createAt: Date;
-    updateAt: Date;
-    nik: string;
-    name: string;
-    idTelegram: string;
-    partner: string;
-    sector: string;
-    witel: string;
-    regional: string;
-    lapor_langsung: KpiUser;
-    tutup_odp: KpiUser;
-    ticket_regular: KpiUser;
-    ticket_sqm: KpiUser;
-    proman: KpiUser;
-    unspect: KpiUser;
-    valins: KpiUser;
-    ticket_redundant: KpiUser;
-    gamas_type_a: KpiUser;
-    gamas_type_b: KpiUser;
-    gamas_type_c: KpiUser;
-    survey: KpiUser;
-    kpi: number;
 }
 
 

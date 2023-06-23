@@ -10,8 +10,8 @@ import {
 } from "@mui/material";
 
 import LinearProgress from "@mui/material/LinearProgress";
-import { UserReportData } from "../../hooks/home/useHome";
 import { PaginationPage } from "../common/PaginationPage";
+import { UserReportData } from "@app/hooks/home/getUserTeknisiReportFetcher";
 
 interface DataTableProps {
   data: UserReportData;
@@ -21,200 +21,335 @@ interface DataTableProps {
 
 export const DataTable = (props: DataTableProps) => {
   const { isLoading, data, handleOpenTiketHistory } = props;
-
+  const reportData = data?.data;
+  const reportMetadata = data?.metadata;
   return (
-    <div className="py-6">
+    <div className="py-6 w-[100%]">
       <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <Table stickyHeader sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell align="center">NIK</TableCell>
-              <TableCell align="center">Nama</TableCell>
-              <TableCell align="center">
-                <Tooltip title="Tiket Reguler">
-                  <p>T1</p>
-                </Tooltip>
+              <TableCell
+                style={{
+                  position: "sticky",
+                  left: 0,
+                  background: "white",
+                  zIndex: 800,
+                }}
+                className="min-w-[150px] font-bold"
+                align="center"
+              >
+                Nama
               </TableCell>
-              <TableCell align="center">
-                <Tooltip title="Lapor Langusng">
-                  <p>T2</p>
-                </Tooltip>
-              </TableCell>
-              <TableCell align="center">
-                <Tooltip title="Tiket SQM">
-                  <p>T3</p>
-                </Tooltip>
-              </TableCell>
-              <TableCell align="center">
-                <Tooltip title="Proman">
-                  <p>T4</p>
-                </Tooltip>
-              </TableCell>
-              <TableCell align="center">
-                <Tooltip title="Tutup ODP">
-                  <p>T5</p>
-                </Tooltip>
-              </TableCell>
-              <TableCell align="center">
-                <Tooltip title="Valins">
-                  <p>T6</p>
-                </Tooltip>
-              </TableCell>
-              <TableCell align="center">
-                <Tooltip title="Tiket Unspect">
-                  <p>T7</p>
-                </Tooltip>
-              </TableCell>
-              <TableCell align="center">
-                <Tooltip title="Gamas Type a">
-                  <p>T8</p>
-                </Tooltip>
-              </TableCell>
-              <TableCell align="center">
-                <Tooltip title="Gamas Type b">
-                  <p>T9</p>
-                </Tooltip>
-              </TableCell>
-              <TableCell align="center">
-                <Tooltip title="Gamas Type C">
-                  <p>T10</p>
-                </Tooltip>
-              </TableCell>
-              <TableCell align="center">
-                <Tooltip title="Survey">
-                  <p>T11</p>
-                </Tooltip>
-              </TableCell>
-              <TableCell align="center">
-                <Tooltip title="Tiket Redundant">
-                  <p>T12</p>
-                </Tooltip>
-              </TableCell>
-              <TableCell align="center">
-                <Tooltip title="Rata rata">
+              <TableCell
+                style={{
+                  position: "sticky",
+                  left: 150,
+                  background: "white",
+                  zIndex: 800,
+                }}
+                className="min-w-[150px] font-bold"
+                align="center"
+              >
+                <Tooltip title="KPI">
                   <p>KPI</p>
+                </Tooltip>
+              </TableCell>
+              <TableCell className="min-w-[150px] font-bold" align="center">
+                <Tooltip title="Tiket Reguler">
+                  <p>Reguler</p>
+                </Tooltip>
+              </TableCell>
+              <TableCell className="min-w-[150px] font-bold" align="center">
+                <Tooltip title="Lapor Langusng">
+                  <p>Lapor Langsung</p>
+                </Tooltip>
+              </TableCell>
+              <TableCell className="min-w-[150px] font-bold" align="center">
+                <Tooltip title="SQM">
+                  <p>SQM</p>
+                </Tooltip>
+              </TableCell>
+              <TableCell className="min-w-[150px] font-bold" align="center">
+                <Tooltip title="Proman">
+                  <p>Proman</p>
+                </Tooltip>
+              </TableCell>
+              <TableCell className="min-w-[150px] font-bold" align="center">
+                <Tooltip title="Tutup ODP">
+                  <p>Tutup ODP</p>
+                </Tooltip>
+              </TableCell>
+              <TableCell className="min-w-[150px] font-bold" align="center">
+                <Tooltip title="Valins">
+                  <p>Valins</p>
+                </Tooltip>
+              </TableCell>
+              <TableCell className="min-w-[150px] font-bold" align="center">
+                <Tooltip title="Unspect">
+                  <p>Unspect</p>
+                </Tooltip>
+              </TableCell>
+              <TableCell className="min-w-[150px] font-bold" align="center">
+                <Tooltip title="Kendala SQM">
+                  <p>Kendala SQM</p>
+                </Tooltip>
+              </TableCell>
+              <TableCell className="min-w-[150px] font-bold" align="center">
+                <Tooltip title="Bantek">
+                  <p>Bantek</p>
+                </Tooltip>
+              </TableCell>
+              <TableCell className="min-w-[150px] font-bold" align="center">
+                <Tooltip title="Infra">
+                  <p>Infra</p>
+                </Tooltip>
+              </TableCell>
+              <TableCell className="min-w-[150px] font-bold" align="center">
+                <Tooltip title="US">
+                  <p>US</p>
+                </Tooltip>
+              </TableCell>
+              <TableCell className="min-w-[150px] font-bold" align="center">
+                <Tooltip title="Gamas Type a">
+                  <p>Gamas Type A</p>
+                </Tooltip>
+              </TableCell>
+              <TableCell className="min-w-[150px] font-bold" align="center">
+                <Tooltip title="Gamas Type b">
+                  <p>Gamas Type B</p>
+                </Tooltip>
+              </TableCell>
+              <TableCell className="min-w-[150px] font-bold" align="center">
+                <Tooltip title="Gamas Type C">
+                  <p>Gamas Type C</p>
+                </Tooltip>
+              </TableCell>
+              <TableCell className="min-w-[150px] font-bold" align="center">
+                <Tooltip title="Survey">
+                  <p>Survey</p>
+                </Tooltip>
+              </TableCell>
+              <TableCell className="min-w-[150px] font-bold" align="center">
+                <Tooltip title="Gaul Reguler">
+                  <p>Gaul Reguler</p>
+                </Tooltip>
+              </TableCell>
+              <TableCell className="min-w-[150px] font-bold" align="center">
+                <Tooltip title="Gaul SQM">
+                  <p>Gaul SQM</p>
+                </Tooltip>
+              </TableCell>
+              <TableCell className="min-w-[150px] font-bold" align="center">
+                <Tooltip title="Gaul US">
+                  <p>Gaul US</p>
                 </Tooltip>
               </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.data?.map((data, index) => (
+            {reportData.map((item, index) => (
               <TableRow
                 key={index}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                className={`${index % 2 === 0 ? "bg-white" : "bg-gray-100"}`}
               >
-                <TableCell align="center">{data.nik}</TableCell>
-                <TableCell align="center">{data.name}</TableCell>
                 <TableCell
+                  className={`${
+                    index % 2 === 0 ? "bg-white" : "bg-gray-100"
+                  } cursor-pointer`}
+                  style={{
+                    position: "sticky",
+                    left: 0,
+                    zIndex: 800,
+                  }}
                   align="center"
-                  className="cursor-pointer"
-                  onClick={() =>
-                    handleOpenTiketHistory(data.ticket_regular.name, data.nik)
-                  }
                 >
-                  {data.ticket_regular.score}
+                  {item.name}
                 </TableCell>
                 <TableCell
+                  className={`${
+                    index % 2 === 0 ? "bg-white" : "bg-gray-100"
+                  } cursor-pointer`}
+                  style={{
+                    position: "sticky",
+                    left: 150,
+                    zIndex: 800,
+                  }}
                   align="center"
-                  className="cursor-pointer"
-                  onClick={() =>
-                    handleOpenTiketHistory(data.lapor_langsung.name, data.nik)
-                  }
                 >
-                  {data.lapor_langsung.score}
+                  {item.kpi.toFixed(2)}
                 </TableCell>
                 <TableCell
-                  align="center"
-                  className="cursor-pointer"
                   onClick={() =>
-                    handleOpenTiketHistory(data.ticket_sqm.name, data.nik)
+                    handleOpenTiketHistory(item.ticket_regular.name, item.nik)
                   }
+                  className="cursor-pointer"
+                  align="center"
                 >
-                  {data.ticket_sqm.score}
+                  {item.ticket_regular.score}
                 </TableCell>
                 <TableCell
-                  align="center"
-                  className="cursor-pointer"
                   onClick={() =>
-                    handleOpenTiketHistory(data.proman.name, data.nik)
+                    handleOpenTiketHistory(
+                      item.ticket_lapor_langsung.name,
+                      item.nik
+                    )
                   }
+                  className="cursor-pointer"
+                  align="center"
                 >
-                  {data.proman.score}
+                  {item.ticket_lapor_langsung.score}
                 </TableCell>
                 <TableCell
-                  align="center"
-                  className="cursor-pointer"
                   onClick={() =>
-                    handleOpenTiketHistory(data.tutup_odp.name, data.nik)
+                    handleOpenTiketHistory(item.ticket_sqm.name, item.nik)
                   }
+                  className="cursor-pointer"
+                  align="center"
                 >
-                  {data.tutup_odp.score}
+                  {item.ticket_sqm.score}
                 </TableCell>
                 <TableCell
-                  align="center"
-                  className="cursor-pointer"
                   onClick={() =>
-                    handleOpenTiketHistory(data.valins.name, data.nik)
+                    handleOpenTiketHistory(item.ticket_proman.name, item.nik)
                   }
+                  className="cursor-pointer"
+                  align="center"
                 >
-                  {data.valins.score}
+                  {item.ticket_proman.score}
                 </TableCell>
                 <TableCell
-                  align="center"
-                  className="cursor-pointer"
                   onClick={() =>
-                    handleOpenTiketHistory(data.unspect.name, data.nik)
+                    handleOpenTiketHistory(item.ticket_tutup_odp.name, item.nik)
                   }
+                  className="cursor-pointer"
+                  align="center"
                 >
-                  {data.unspect.score}
+                  {item.ticket_tutup_odp.score}
                 </TableCell>
                 <TableCell
-                  align="center"
-                  className="cursor-pointer"
                   onClick={() =>
-                    handleOpenTiketHistory(data.gamas_type_a.name, data.nik)
+                    handleOpenTiketHistory(item.ticket_valins.name, item.nik)
                   }
+                  className="cursor-pointer"
+                  align="center"
                 >
-                  {data.gamas_type_a.score}
+                  {item.ticket_valins.score}
                 </TableCell>
                 <TableCell
-                  align="center"
-                  className="cursor-pointer"
                   onClick={() =>
-                    handleOpenTiketHistory(data.gamas_type_b.name, data.nik)
+                    handleOpenTiketHistory(item.ticket_unspect.name, item.nik)
                   }
+                  className="cursor-pointer"
+                  align="center"
                 >
-                  {data.gamas_type_b.score}
+                  {item.ticket_unspect.score}
                 </TableCell>
                 <TableCell
-                  align="center"
-                  className="cursor-pointer"
                   onClick={() =>
-                    handleOpenTiketHistory(data.gamas_type_c.name, data.nik)
+                    handleOpenTiketHistory(
+                      item.ticket_kendala_sqm.name,
+                      item.nik
+                    )
                   }
+                  className="cursor-pointer"
+                  align="center"
                 >
-                  {data.gamas_type_c.score}
+                  {item.ticket_kendala_sqm.score}
                 </TableCell>
                 <TableCell
-                  align="center"
-                  className="cursor-pointer"
                   onClick={() =>
-                    handleOpenTiketHistory(data.survey.name, data.nik)
+                    handleOpenTiketHistory(item.ticket_bantek.name, item.nik)
                   }
+                  className="cursor-pointer"
+                  align="center"
                 >
-                  {data.survey.score}
+                  {item.ticket_bantek.score}
                 </TableCell>
                 <TableCell
-                  align="center"
-                  className="cursor-pointer"
                   onClick={() =>
-                    handleOpenTiketHistory(data.ticket_redundant.name, data.nik)
+                    handleOpenTiketHistory(item.ticket_infra.name, item.nik)
                   }
+                  className="cursor-pointer"
+                  align="center"
                 >
-                  {data.ticket_redundant.score > 0 ? "-" : ""}{" "}
-                  {data.ticket_redundant.score}
+                  {item.ticket_infra.score}
                 </TableCell>
-                <TableCell align="center">{data.kpi.toFixed(2)}</TableCell>
+                <TableCell
+                  onClick={() =>
+                    handleOpenTiketHistory(item.ticket_us.name, item.nik)
+                  }
+                  className="cursor-pointer"
+                  align="center"
+                >
+                  {item.ticket_us.score}
+                </TableCell>
+                <TableCell
+                  onClick={() =>
+                    handleOpenTiketHistory(item.gamas_type_a.name, item.nik)
+                  }
+                  className="cursor-pointer"
+                  align="center"
+                >
+                  {item.gamas_type_a.score}
+                </TableCell>
+                <TableCell
+                  onClick={() =>
+                    handleOpenTiketHistory(item.gamas_type_b.name, item.nik)
+                  }
+                  className="cursor-pointer"
+                  align="center"
+                >
+                  {item.gamas_type_b.score}
+                </TableCell>
+                <TableCell
+                  onClick={() =>
+                    handleOpenTiketHistory(item.gamas_type_c.name, item.nik)
+                  }
+                  className="cursor-pointer"
+                  align="center"
+                >
+                  {item.gamas_type_c.score}
+                </TableCell>
+                <TableCell
+                  onClick={() =>
+                    handleOpenTiketHistory(item.survey.name, item.nik)
+                  }
+                  className="cursor-pointer"
+                  align="center"
+                >
+                  {item.survey.score}
+                </TableCell>
+                <TableCell
+                  onClick={() =>
+                    handleOpenTiketHistory(
+                      item.ticket_gaul_reguler.name,
+                      item.nik
+                    )
+                  }
+                  className="cursor-pointer"
+                  align="center"
+                >
+                  {item.ticket_gaul_reguler.score}
+                </TableCell>
+                <TableCell
+                  onClick={() =>
+                    handleOpenTiketHistory(item.ticket_gaul_sqm.name, item.nik)
+                  }
+                  className="cursor-pointer"
+                  align="center"
+                >
+                  {item.ticket_gaul_sqm.score}
+                </TableCell>
+                <TableCell
+                  onClick={() =>
+                    handleOpenTiketHistory(item.ticket_gaul_us.name, item.nik)
+                  }
+                  className="cursor-pointer"
+                  align="center"
+                >
+                  {item.ticket_gaul_us.score}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -228,8 +363,8 @@ export const DataTable = (props: DataTableProps) => {
       {!isLoading && (
         <div className="w-full py-6 flex justify-end items-end">
           <PaginationPage
-            pagination={data.metadata?.pagination}
-            activePage={data.metadata?.page}
+            pagination={reportMetadata.pagination}
+            activePage={reportMetadata.page}
           />
         </div>
       )}

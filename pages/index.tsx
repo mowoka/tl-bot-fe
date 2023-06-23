@@ -20,6 +20,7 @@ export default function Home() {
     isLoading,
     errorMessage,
     masterFilterOptions,
+    masterFilterOptionsLoading,
     params,
     open,
     historyTable,
@@ -37,6 +38,8 @@ export default function Home() {
     return <ScreenLoading />;
   }
 
+  const isAdmin = profile.role === "admin";
+
   return (
     <Layout profile={profile} logout={logout}>
       <SnackbarMessage
@@ -45,21 +48,28 @@ export default function Home() {
         status={errorMessage.status}
         onClose={onCloseError}
       />
-      <ModalElement open={open} handleClose={handleClose}>
+      {/* <ModalElement open={open} handleClose={handleClose}>
         <DataTableHistory
           historyTable={historyTable}
           isLoading={isHistoryLoading}
           historyData={historyData}
         />
-      </ModalElement>
-      <h2 className="font-semibold text-4xl py-4">Performansi IOAN</h2>
+      </ModalElement> */}
+      <h2 className="font-semibold text-4xl py-4">
+        Performansi Teknisi IOAN{" "}
+        <span className="text-xl">
+          (Integration, Operation, Assurance, Network)
+        </span>
+      </h2>
       <Divider />
       <MenuFilter
         masterFilterOptions={masterFilterOptions}
+        masterFilterOptionsLoading={masterFilterOptionsLoading}
         onChange={onChange}
         onChangeDate={onChangeDate}
         params={params}
         resetFilter={resetFilter}
+        isAdmin={isAdmin}
       />
       <DataTable
         isLoading={isLoading}
