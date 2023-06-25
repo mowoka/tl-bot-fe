@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { SESSION_KEY } from "./useUser";
 
 
 interface UseGuardProps {
@@ -11,36 +12,17 @@ export function useGuard(): UseGuardProps {
 
     const [isAuthenticate, setIsAuthenticate] = useState(false);
 
-    const checkAuthenticate = () => {
-        if (typeof window !== undefined) {
-            try {
-                const persistStorage = window.sessionStorage.getItem('persist:root');
-                if (!persistStorage) {
-                    return false;
-                } else {
-                    const persist = JSON.parse(persistStorage);
-                    if (!persist.isAuthenticate) {
-                        return false;
-                    } else {
-                        return true;
-                    }
-                }
-            } catch (error) {
-                console.error(error);
-                return false;
-            }
-        }
-    }
-
     useEffect(() => {
         if (!router.isReady) return;
-        const checkIsAuthenticate = checkAuthenticate();
-        if (checkIsAuthenticate === false) {
+        const persistStr = localStorage.getItem(SESSION_KEY);
+        const persists = persistStr ? JSON.parse(persistStr) : ''
+        if (persists.isAuthenticate) {
+            setIsAuthenticate(true);
+        } else {
             setIsAuthenticate(false)
             router.push("/accounts/login");
-        } else {
-            setIsAuthenticate(true)
         }
+
     }, [router])
 
     return {

@@ -58,7 +58,7 @@ const initialTeamLeadUser: TeamLeadUserResponse = {
 export function useTeamLeadManagement(
     handleClose: () => void
 ): TeamLeadManagement {
-    const { getToken } = useUser();
+    const { token } = useUser();
 
     const [masterFilterOptions, setMasterFilterOptionsData] = useState<MasterFilterOptions>(initialMasterFilter);
     const [params, setParams] = useState<TeamLeadParamsProps>({
@@ -133,7 +133,7 @@ export function useTeamLeadManagement(
         }
         if (submitLoading) return;
         setSubmitLoading(true);
-        console.log({ formTeamLeadUser });
+
         const data = {
             nik: formTeamLeadUser.nik,
             name: formTeamLeadUser.name,
@@ -149,7 +149,7 @@ export function useTeamLeadManagement(
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${getToken()}`
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(data),
         })
@@ -192,7 +192,7 @@ export function useTeamLeadManagement(
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${getToken()}`
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify(data),
             })
@@ -223,9 +223,9 @@ export function useTeamLeadManagement(
     }
 
 
-    const FilterMasterOptions = useSWR({ url: process.env.BASE_URL_API + 'teknisi-user/master-filters?', token: getToken() }, getUserTeknisiFilterMasterOptionsFetcher)
+    const FilterMasterOptions = useSWR({ url: process.env.BASE_URL_API + 'teknisi-user/master-filters?', token: token }, getUserTeknisiFilterMasterOptionsFetcher)
 
-    const teamLeadUserData = useSWR({ url: process.env.BASE_URL_API + 'team-lead-user?', params: params, token: getToken() }, getTeamLeadUserFetcher)
+    const teamLeadUserData = useSWR({ url: process.env.BASE_URL_API + 'team-lead-user?', params: params, token: token }, getTeamLeadUserFetcher)
 
     useEffect(() => {
         if (!FilterMasterOptions.data?.data) return;

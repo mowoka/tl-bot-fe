@@ -9,6 +9,7 @@ export async function getUserTeknisiFetcher(
             userInformation: { role: string, id: number }
         }
 ) {
+    if (!token) return;
     const URLParams = {
         tekni_lead_id: userInformation.id.toString()
     }

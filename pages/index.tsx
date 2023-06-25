@@ -15,6 +15,7 @@ export default function Home() {
   const { isAuthenticate } = useGuard();
   const { profile } = useProfile();
   const { logout } = useUser();
+
   const {
     data,
     isLoading,

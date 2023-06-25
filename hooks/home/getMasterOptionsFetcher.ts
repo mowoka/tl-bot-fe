@@ -4,6 +4,7 @@ import { MasterFiltersResponse } from "../teknisi-management/useTeknisiUser";
 export async function getUserTeknisiFilterMasterOptionsFetcher(
     { url, token }: { url: string, token: string }
 ) {
+    if (!token) return;
     const res = await ApiFetchRaw<MasterFiltersResponse>(url, {
         headers: {
             'Authorization': `Bearer ${token}`

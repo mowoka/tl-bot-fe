@@ -4,6 +4,7 @@ import { MetaData, ParamsUserReport } from "./useHome";
 export async function getUserTeknisiReportFetcher(
     { url, params, token }: { url: string, params: ParamsUserReport, token: string }
 ) {
+    if (!token) return;
     const URLparams = { ...params }
     const res = await ApiFetchRaw<UserReportData>(url + '?' + new URLSearchParams(URLparams), {
         headers: {

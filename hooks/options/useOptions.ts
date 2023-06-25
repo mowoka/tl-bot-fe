@@ -24,7 +24,7 @@ interface UseOptionsProps {
 }
 
 export function useOptions(): UseOptionsProps {
-    const { getToken, } = useUser();
+    const { token: getToken, } = useUser();
     const [title, setTitle] = useState<string>('');
     const [errorMessage, setErrorMessage] = useState<ErrrorMessage>({
         show: false,

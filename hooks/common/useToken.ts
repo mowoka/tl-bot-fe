@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { SESSION_KEY } from "./useUser";
 
 interface UseTokenProps {
     token: string;
@@ -7,23 +8,29 @@ interface UseTokenProps {
 export function useToken(): UseTokenProps {
     const [token, setToken] = useState('');
 
-    const getToken = (): string => {
-        try {
-            const persistStr = window.sessionStorage.getItem('persist:root');
-            const persists = persistStr ? JSON.parse(persistStr) : ''
-            if (persists) return persists.userToken
-            return ''
-        } catch (e) {
-            console.error(e);
-            return '';
-        }
-    }
+
 
     useEffect(() => {
-        const token = getToken();
-        setToken(token);
-    }, [])
+        const persistStr = localStorage.getItem(SESSION_KEY);
+        const persists = persistStr ? JSON.parse(persistStr) : ''
+        if (persists) {
+            setToken(persists.userToken);
+        } else {
+            setToken('')
+        }
+    }, [token])
 
+
+    useEffect(() => {
+        const persistStr = localStorage.getItem(SESSION_KEY);
+        const persists = persistStr ? JSON.parse(persistStr) : ''
+        if (persists) {
+            setToken(persists.userToken);
+        } else {
+            setToken('')
+        }
+
+    }, [])
 
     return {
         token: token,

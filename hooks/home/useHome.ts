@@ -49,7 +49,7 @@ const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
 const lastDay = new Date(date.getFullYear(), date.getMonth(), 30);
 
 const useHome = (): HomeProps => {
-    const { getToken } = useUser();
+    const { token } = useUser();
     const { open, handleClose, handleOpen } = useModalElement();
     const [data, setData] = useState<UserReportData>(intialUserReportData);
     const [masterFilterOptions, setMasterFilterOptionsData] = useState<MasterFilterOptions>(initialMasterFilter);
@@ -136,7 +136,7 @@ const useHome = (): HomeProps => {
 
     const masterFilterOptionsRes = useSWR({
         url: process.env.BASE_URL_API + 'teknisi-user/master-filters',
-        token: getToken()
+        token: token
     },
         getUserTeknisiFilterMasterOptionsFetcher
     )
@@ -144,7 +144,7 @@ const useHome = (): HomeProps => {
     const userTeknisiReportRes = useSWR({
         url: process.env.BASE_URL_API + 'teknisi-user/report',
         params: params,
-        token: getToken(),
+        token: token,
     },
         getUserTeknisiReportFetcher,
     )

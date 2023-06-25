@@ -44,7 +44,7 @@ const initialOptionsFormData: OptionsFormData = {
 }
 
 export const useBoard = (): UseBoardProps => {
-    const { getToken, getUserInformation } = useUser();
+    const { token, userInformation } = useUser();
     const [optionsData, setOptionsData] = useState<OptionsFormData>(initialOptionsFormData);
     const [masterJobData, setMasterJobData] = useState<LeadJob[]>([])
     const [formData, setFormData] = useState<FormDataProps>({
@@ -98,7 +98,7 @@ export const useBoard = (): UseBoardProps => {
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${getToken()}`
+                        'Authorization': `Bearer ${token}`
                     },
                     body: JSON.stringify(data),
                 })
@@ -131,8 +131,8 @@ export const useBoard = (): UseBoardProps => {
     }
 
 
-    const teknisiUser = useSWR({ url: process.env.BASE_URL_API + 'teknisi-user?', token: getToken(), userInformation: getUserInformation() }, getUserTeknisiFetcher)
-    const teamLeadJob = useSWR({ url: process.env.BASE_URL_API + 'team-leader-job', token: getToken(), }, getTeamLeadJobFetcher)
+    const teknisiUser = useSWR({ url: process.env.BASE_URL_API + 'teknisi-user?', token: token, userInformation: userInformation }, getUserTeknisiFetcher)
+    const teamLeadJob = useSWR({ url: process.env.BASE_URL_API + 'team-leader-job', token: token, }, getTeamLeadJobFetcher)
 
     useEffect(() => {
         if (!teknisiUser.data) return;

@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { UserProfile } from "./useUser";
+import { SESSION__PROFILE_KEY, UserProfile } from "./useUser";
 
 interface UseProfileProps {
     profile: UserProfile
 }
 
 const initialProfile: UserProfile = {
+    id: 0,
     nik: '',
     name: '',
     role: '',
@@ -22,7 +23,7 @@ export function useProfile(): UseProfileProps {
     const getProfile = (): UserProfile => {
         if (typeof window !== undefined) {
             try {
-                const persistStorage = window.sessionStorage.getItem('ION-profile');
+                const persistStorage = localStorage.getItem(SESSION__PROFILE_KEY);
                 if (!persistStorage) {
                     return initialProfile
                 } else {
@@ -32,6 +33,7 @@ export function useProfile(): UseProfileProps {
                     } else {
                         const userProfile = JSON.parse(persist.userProfile)
                         const profile: UserProfile = {
+                            id: userProfile.id,
                             nik: userProfile.nik,
                             name: userProfile.name,
                             role: userProfile.role,

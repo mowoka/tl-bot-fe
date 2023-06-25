@@ -8,7 +8,7 @@ export async function getTeamLeadJobFetcher(
             token: string,
         }
 ) {
-
+    if (!token) return;
     const res = await ApiFetchRaw<LeadJob[]>(url, {
         headers: {
             'Authorization': `Bearer ${token}`

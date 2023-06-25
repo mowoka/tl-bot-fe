@@ -59,7 +59,7 @@ const intialUserTeknisi: UserTeknisiResponse = {
 export function useTeknisiUser(
     handleClose: () => void,
 ): UseTeknisiUserProps {
-    const { getToken, getUserInformation } = useUser();
+    const { token, userInformation } = useUser();
     const [masterFilterOptions, setMasterFilterOptionsData] = useState<MasterFilterOptions>(initialMasterFilter);
     const [params, setParams] = useState<ParamsProps>({
         partner_id: '',
@@ -126,7 +126,6 @@ export function useTeknisiUser(
         } else {
             // logic input teknisi 
             setSubmitLoading(true);
-            const userInformation = getUserInformation()
             try {
                 const data = {
                     ...formUserTeknisi,
@@ -142,7 +141,7 @@ export function useTeknisiUser(
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${getToken()}`
+                        'Authorization': `Bearer ${token}`
                     },
                     body: JSON.stringify(data),
                 })
@@ -190,7 +189,7 @@ export function useTeknisiUser(
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${getToken()}`
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify(data),
             })
@@ -225,9 +224,9 @@ export function useTeknisiUser(
         handleClose();
     }
 
-    const userTeknisiFilterMasterOptions = useSWR({ url: process.env.BASE_URL_API + 'teknisi-user/master-filters?', token: getToken() }, getUserTeknisiFilterMasterOptionsFetcher)
+    const userTeknisiFilterMasterOptions = useSWR({ url: process.env.BASE_URL_API + 'teknisi-user/master-filters?', token: token }, getUserTeknisiFilterMasterOptionsFetcher)
 
-    const userTeknisiData = useSWR({ url: process.env.BASE_URL_API + 'teknisi-user?', params: params, token: getToken(), userInformation: getUserInformation() }, getUserTeknisiFetcher)
+    const userTeknisiData = useSWR({ url: process.env.BASE_URL_API + 'teknisi-user?', params: params, token: token, userInformation: userInformation }, getUserTeknisiFetcher)
 
     const isLoading = userTeknisiData.isLoading;
 
