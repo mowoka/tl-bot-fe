@@ -9,9 +9,10 @@ import {
   TableRow,
 } from "@mui/material";
 import { TableHistory } from "./DataTableHistory";
-import { SQM, MetaData } from "../../hooks/home/useHome";
+import { MetaData } from "../../hooks/home/useHome";
 import { dateFomatting } from "../../core/utility/dateFormatting";
 import { PaginationPage } from "../common/PaginationPage";
+import { SQM } from "@app/hooks/home/getTeknisiHistoryFetcher";
 
 interface SQMProps extends TableHistory {
   datas: SQM[];

@@ -12,26 +12,28 @@ import { TableHistory } from "./DataTableHistory";
 import { MetaData } from "../../hooks/home/useHome";
 import { dateFomatting } from "../../core/utility/dateFormatting";
 import { PaginationPage } from "../common/PaginationPage";
-import { Unspect } from "@app/hooks/home/getTeknisiHistoryFetcher";
+import { KendalaSQM } from "@app/hooks/home/getTeknisiHistoryFetcher";
 
-interface UnspectHistory extends TableHistory {
-  datas: Unspect[];
+interface KendalaSQMProps extends TableHistory {
+  datas: KendalaSQM[];
   metadata: MetaData;
 }
 
-export function UnspectHistory(props: UnspectHistory) {
+export function KendalaSQMHistory(props: KendalaSQMProps) {
   const { isLoading, datas, metadata } = props;
   return (
     <div className="bg-secondary w-full max-w-[1200px] min-h-[400px] border-none outline-none rounded-lg p-6">
-      <p className="text-xl uppercase font-semibold">Unspect</p>
+      <p className="text-xl uppercase font-semibold">Tiket Kendala SQM</p>
       <div className="py-6">
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 1000 }} aria-label="simple table">
             <TableHead>
               <TableRow>
                 <TableCell align="left">Date</TableCell>
+                <TableCell align="left">Insiden Number</TableCell>
                 <TableCell align="left">Speedy Number</TableCell>
-                <TableCell align="left">ODP</TableCell>
+                <TableCell align="left">Customer Name</TableCell>
+                <TableCell align="left">Customer Number</TableCell>
                 <TableCell align="left">Problem</TableCell>
                 <TableCell align="left">Keterangan</TableCell>
               </TableRow>
@@ -43,11 +45,13 @@ export function UnspectHistory(props: UnspectHistory) {
                     key={index}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
-                    <TableCell align="left">
+                    <TableCell align="left" style={{ minWidth: 120 }}>
                       {dateFomatting(data.createAt.toString())}
                     </TableCell>
+                    <TableCell align="left">{data.insiden_number}</TableCell>
                     <TableCell align="left">{data.speedy_number}</TableCell>
-                    <TableCell align="left">{data.odp}</TableCell>
+                    <TableCell align="left">{data.customer_name}</TableCell>
+                    <TableCell align="left">{data.customer_number}</TableCell>
                     <TableCell align="left">{data.problem}</TableCell>
                     <TableCell align="left">{data.description}</TableCell>
                   </TableRow>

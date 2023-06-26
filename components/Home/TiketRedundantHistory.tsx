@@ -9,12 +9,13 @@ import {
   TableRow,
 } from "@mui/material";
 import { TableHistory } from "./DataTableHistory";
-import { MetaData, TiketReguler } from "../../hooks/home/useHome";
+import { MetaData } from "../../hooks/home/useHome";
 import { dateFomatting } from "../../core/utility/dateFormatting";
 import { PaginationPage } from "../common/PaginationPage";
+import { TicketReguler } from "@app/hooks/home/getTeknisiHistoryFetcher";
 
 interface TiketRedundantProps extends TableHistory {
-  datas: TiketReguler[];
+  datas: TicketReguler[];
   metadata: MetaData;
 }
 

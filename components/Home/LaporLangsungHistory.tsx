@@ -9,9 +9,10 @@ import {
   TableRow,
 } from "@mui/material";
 import { TableHistory } from "./DataTableHistory";
-import { LaporLangsung, MetaData } from "../../hooks/home/useHome";
+import { MetaData } from "../../hooks/home/useHome";
 import { dateFomatting } from "../../core/utility/dateFormatting";
 import { PaginationPage } from "../common/PaginationPage";
+import { LaporLangsung } from "@app/hooks/home/getTeknisiHistoryFetcher";
 
 interface LaporLangsungHistory extends TableHistory {
   datas: LaporLangsung[];

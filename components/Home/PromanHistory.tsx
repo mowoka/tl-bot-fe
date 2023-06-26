@@ -9,9 +9,10 @@ import {
   TableRow,
 } from "@mui/material";
 import { TableHistory } from "./DataTableHistory";
-import { MetaData, Proman } from "../../hooks/home/useHome";
+import { MetaData } from "../../hooks/home/useHome";
 import { dateFomatting } from "../../core/utility/dateFormatting";
 import { PaginationPage } from "../common/PaginationPage";
+import { Proman } from "@app/hooks/home/getTeknisiHistoryFetcher";
 
 interface PromanHistory extends TableHistory {
   datas: Proman[];

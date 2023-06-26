@@ -9,9 +9,10 @@ import {
   TableRow,
 } from "@mui/material";
 import { TableHistory } from "./DataTableHistory";
-import { MetaData, TiketTeamLead } from "../../hooks/home/useHome";
+import { MetaData } from "../../hooks/home/useHome";
 import { dateFomatting } from "../../core/utility/dateFormatting";
 import { PaginationPage } from "../common/PaginationPage";
+import { TiketTeamLead } from "@app/hooks/home/getTeknisiHistoryFetcher";
 
 interface TeamLeadHistoryProps extends TableHistory {
   title: string;
@@ -21,9 +22,9 @@ interface TeamLeadHistoryProps extends TableHistory {
 
 export function TeamLeadHistory(props: TeamLeadHistoryProps) {
   const _renderTitle = (title: string): string => {
-    if (title === "gamas_type_a") return "Gamas Type A";
-    if (title === "gamas_type_b") return "Gamas Type B";
-    if (title === "gamas_type_c") return "Gamas Type C";
+    if (title === "gamastipea") return "Gamas Type A";
+    if (title === "gamastipeb") return "Gamas Type B";
+    if (title === "gamastipec") return "Gamas Type C";
     return "Survey";
   };
 

@@ -34,13 +34,13 @@ export interface ResponseUserTeknisiHistory {
     Unspect[] |
     Valins[] |
     TiketTeamLead[] |
-    KendalaSQM |
-    TicketInfra |
-    TicketBantek |
-    TicketUS |
-    TicketGaulReguler |
-    TicketGaulSqm |
-    TicketGaulUs;
+    KendalaSQM[] |
+    TicketInfra[] |
+    TicketBantek[] |
+    TicketUS[] |
+    TicketGaulReguler[] |
+    TicketGaulSqm[] |
+    TicketGaulUs[];
     metadata: MetaData;
 }
 
