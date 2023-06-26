@@ -18,10 +18,16 @@ export function useUserInformation(): UserInformationHooks {
     useEffect(() => {
         const persistStr = localStorage.getItem(SESSION__PROFILE_KEY);
         const persists = persistStr ? JSON.parse(persistStr) : ''
-        if (!persists) setUserInformation({ role: '', id: 0 });
-        const userProfile = JSON.parse(persists.userProfile);
-        if (!userProfile) setUserInformation({ role: '', id: 0 });
-        setUserInformation({ role: userProfile.role, id: userProfile.id });
+        if (!persists) {
+            setUserInformation({ role: '', id: 0 });
+        } else {
+            const userProfile = JSON.parse(persists.userProfile);
+            if (!userProfile) {
+                setUserInformation({ role: '', id: 0 });
+            } else {
+                setUserInformation({ role: userProfile.role, id: userProfile.id });
+            }
+        }
     }, []);
 
     return {

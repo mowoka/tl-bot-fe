@@ -49,13 +49,13 @@ export default function Home() {
         status={errorMessage.status}
         onClose={onCloseError}
       />
-      {/* <ModalElement open={open} handleClose={handleClose}>
+      <ModalElement open={open} handleClose={handleClose}>
         <DataTableHistory
           historyTable={historyTable}
           isLoading={isHistoryLoading}
           historyData={historyData}
         />
-      </ModalElement> */}
+      </ModalElement>
       <h2 className="font-semibold text-4xl py-4">
         Performansi Teknisi IOAN{" "}
         <span className="text-xl">

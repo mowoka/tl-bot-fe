@@ -1,22 +1,19 @@
 import {
-  HistoryTable,
   LaporLangsung,
-  MetaData,
   Proman,
   ResponseUserTeknisiHistory,
   SQM,
-  TiketRedundant,
-  TiketReguler,
+  TicketReguler,
   TiketTeamLead,
   TutupOdp,
   Unspect,
   Valins,
-} from "../../hooks/home/useHome";
+} from "@app/hooks/home/getTeknisiHistoryFetcher";
+import { HistoryTable, MetaData } from "../../hooks/home/useHome";
 import { LaporLangsungHistory } from "./LaporLangsungHistory";
 import { PromanHistory } from "./PromanHistory";
 import { SQMHistory } from "./SQMHistory";
 import { TeamLeadHistory } from "./TeamLeadHistory";
-import { TiketRedundantHistory } from "./TiketRedundantHistory";
 import { TiketRegulerHistory } from "./TiketRegulerHistory";
 import { TutupOdpHistory } from "./TutupOdpHistory";
 import { UnspectHistory } from "./UnspectHistory";
@@ -40,7 +37,7 @@ export const DataTableHistory = (props: DataTableHistoryProps) => {
       return (
         <TiketRegulerHistory
           isLoading={isLoading}
-          datas={historyData?.history as TiketReguler[]}
+          datas={historyData?.history as TicketReguler[]}
           metadata={historyData?.metadata as MetaData}
         />
       );
@@ -89,14 +86,6 @@ export const DataTableHistory = (props: DataTableHistoryProps) => {
         <UnspectHistory
           isLoading={isLoading}
           datas={historyData?.history as Unspect[]}
-          metadata={historyData?.metadata as MetaData}
-        />
-      );
-    case "ticket_redundant":
-      return (
-        <TiketRedundantHistory
-          isLoading={isLoading}
-          datas={historyData?.history as TiketRedundant[]}
           metadata={historyData?.metadata as MetaData}
         />
       );

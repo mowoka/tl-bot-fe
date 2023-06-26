@@ -8,6 +8,7 @@ import { useModalElement } from "../common/useModalElement";
 import useSWR from "swr";
 import { getUserTeknisiFilterMasterOptionsFetcher } from "./getMasterOptionsFetcher";
 import { UserReportData, getUserTeknisiReportFetcher } from "./getUserTeknisiReportFetcher";
+import { ResponseUserTeknisiHistory, getTeknisiHistoryFetcher } from "./getTeknisiHistoryFetcher";
 
 interface HomeProps {
     data: UserReportData;
@@ -25,7 +26,7 @@ interface HomeProps {
     onChangeDate: (value: string, name: string) => void;
     resetFilter: () => void;
     handleClose: () => void;
-    handleOpenTiketHistory: (title: string, nik: string) => void;
+    handleOpenTiketHistory: (title: string, user_id: number) => void;
 }
 
 const initialMasterFilter: MasterFilterOptions = {
@@ -68,10 +69,9 @@ const useHome = (): HomeProps => {
     });
     const [historyTable, setHistoryTable] = useState<HistoryTable>({
         title: '',
-        nik: '',
+        user_id: 0,
         page: '1',
     });
-    const [isHistoryLoading, setIsHitoryLoading] = useState<boolean>(false);
     const [historyData, setHistoryData] = useState<ResponseUserTeknisiHistory | undefined>();
     const onCloseError = () => {
         setErrorMessage((prev) => ({ ...prev, show: false }))
@@ -128,8 +128,8 @@ const useHome = (): HomeProps => {
         })
     }
 
-    const handleOpenTiketHistory = (title: string, nik: string) => {
-        setHistoryTable((prev) => ({ ...prev, nik, title }))
+    const handleOpenTiketHistory = (title: string, user_id: number) => {
+        setHistoryTable(prev => ({ ...prev, title, user_id }));
         handleOpen();
     }
 
@@ -149,12 +149,25 @@ const useHome = (): HomeProps => {
         getUserTeknisiReportFetcher,
     )
 
+    const userTeknisiHistory = useSWR(historyTable.title && {
+        url: process.env.BASE_URL_API + 'teknisi-user/history',
+        params: historyTable,
+        token: token,
+    },
+        getTeknisiHistoryFetcher,
+    )
+
     useEffect(() => {
         if (!userTeknisiReportRes.data) return;
         setData(userTeknisiReportRes.data);
     }, [
         userTeknisiReportRes
     ])
+
+    useEffect(() => {
+        if (!userTeknisiHistory.data) return;
+        setHistoryData(userTeknisiHistory.data);
+    }, [userTeknisiHistory])
 
     useEffect(() => {
         if (userTeknisiReportRes.error) {
@@ -165,6 +178,16 @@ const useHome = (): HomeProps => {
             });
         }
     }, [userTeknisiReportRes.error])
+
+    useEffect(() => {
+        if (userTeknisiHistory.error) {
+            setErrorMessage({
+                show: true,
+                message: userTeknisiHistory.error.message,
+                status: "error"
+            });
+        }
+    }, [userTeknisiHistory.error])
 
     useEffect(() => {
         if (!masterFilterOptionsRes.data) return;
@@ -195,74 +218,6 @@ const useHome = (): HomeProps => {
         setMasterFilterOptionsData(tempData);
     }, [masterFilterOptionsRes])
 
-    // async function getUserTeknisiHistory() {
-    //     setIsHitoryLoading(true);
-    //     const URLParams = { nik: historyTable.nik, ticket_title: historyTable.title, page: historyTable.page }
-    //     const res = await ApiFetchRaw<ResponseUserTeknisiHistory>(process.env.BASE_URL_API + 'teknisi-user/history?' + new URLSearchParams(URLParams), {
-    //         headers: {
-    //             'Authorization': `Bearer ${getToken()}`
-    //         },
-    //     })
-
-    //     if (res.body.statusCode === 200) {
-    //         setHistoryData(res.body.data);
-    //     } else {
-    //         setHistoryData({
-    //             history: [],
-    //             metadata: {
-    //                 total: 0,
-    //                 pagination: 1,
-    //                 page: 1
-    //             }
-    //         })
-    //         setErrorMessage({
-    //             show: true,
-    //             message: res.body.message,
-    //             status: "error"
-    //         });
-    //     }
-    //     setIsHitoryLoading(false);
-
-    // }
-
-
-    // async function getUserTeknisiReport() {
-    //     setIsLoading(true);
-    //     const URLParams = { ...params }
-    //     const res = await ApiFetchRaw<UserReportData>(process.env.BASE_URL_API + 'teknisi-user/report?' + new URLSearchParams(URLParams), {
-    //         headers: {
-    //             'Authorization': `Bearer ${getToken()}`
-    //         },
-    //     })
-
-    //     if (res.body.statusCode === 200) {
-    //         setData(res.body.data);
-    //     } else {
-    //         setData(intialUserReportData);
-    //         setErrorMessage({
-    //             show: true,
-    //             message: res.body.message,
-    //             status: "error"
-    //         });
-    //     }
-    //     setIsLoading(false);
-    // }
-
-
-
-    // useEffect(() => {
-    //     getUserTeknisiReport();
-    // }, [params])
-
-    // useEffect(() => {
-    //     getUserTeknisiFilterMaster();
-    // }, [])
-
-    // useEffect(() => {
-    //     if (!historyTable.nik || !historyTable.title) return
-    //     getUserTeknisiHistory();
-    // }, [historyTable])
-
     return {
         data,
         isLoading: userTeknisiReportRes.isLoading,
@@ -272,7 +227,7 @@ const useHome = (): HomeProps => {
         params,
         open,
         historyTable,
-        isHistoryLoading,
+        isHistoryLoading: userTeknisiHistory.isLoading,
         historyData,
         onCloseError,
         onChange,
@@ -280,12 +235,8 @@ const useHome = (): HomeProps => {
         resetFilter,
         handleClose,
         handleOpenTiketHistory,
-
     }
 }
-
-
-
 
 export interface MetaData {
     total: number;
@@ -295,7 +246,7 @@ export interface MetaData {
 
 export interface HistoryTable {
     title: string;
-    nik: string;
+    user_id: number;
     page: string;
 }
 
@@ -303,109 +254,5 @@ export interface ParamsUserReport extends ParamsProps {
     startDate: string;
     endDate: string;
 }
-
-export interface ResponseUserTeknisiHistory {
-    history: LaporLangsung[] | TutupOdp[] | TiketReguler[] | SQM[] | Proman[] | Unspect[] | Valins[] | TiketTeamLead[];
-    metadata: MetaData;
-}
-
-export interface TiketTeamLead {
-    id: number;
-    createAt: Date;
-    updateAt: Date;
-    description: string;
-    teknisi_user_id: number;
-    team_lead_job_id: number;
-}
-
-export interface Valins {
-    id: number;
-    createAt: Date;
-    updateAt: Date;
-    valins_id: string;
-    odp: string;
-    teknisi_job_id: string;
-    idTelegram: string;
-}
-
-export interface Unspect {
-    id: number;
-    createAt: Date;
-    updateAt: Date;
-    speedy_number: string;
-    odp: string;
-    problem: string;
-    description: string;
-    teknisi_job_id: string;
-    idTelegram: string;
-}
-
-export interface Proman {
-    id: number;
-    createAt: Date;
-    updateAt: Date;
-    odp_name: string;
-    distribusi: string;
-    capacity_port: number;
-    status_port_use: number;
-    status_port_available: number;
-    odp_cradle: number;
-    opm_length: number;
-    teknisi_job_id: string;
-    idTelegram: string;
-}
-
-export interface SQM {
-    id: number;
-    createAt: Date;
-    updateAt: Date;
-    insiden_number: string;
-    speedy_number: string;
-    customer_name: string;
-    customer_number: string;
-    problem: string;
-    description: string;
-    teknisi_job_id: string;
-    idTelegram: string;
-}
-
-export interface TiketReguler {
-    id: number;
-    createAt: Date;
-    updateAt: Date;
-    insiden_number: string;
-    speedy_number: string;
-    customer_name: string;
-    customer_number: string;
-    problem: string;
-    description: string;
-    teknisi_job_id: string;
-    idTelegram: string;
-
-}
-
-export interface TutupOdp {
-    id: number;
-    createAt: Date;
-    updateAt: Date;
-    odp_name: string;
-    odp_address: string;
-    teknisi_job_id: string;
-    idTelegram: string;
-}
-
-export interface LaporLangsung {
-    id: number;
-    createAt: Date;
-    updateAt: Date;
-    speedy_number: string;
-    customer_phone: string;
-    customer_name: string;
-    problem: string;
-    description: string;
-    teknisi_job_id: string;
-    idTelegram: string
-}
-
 
 export default useHome;

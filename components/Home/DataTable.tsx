@@ -16,7 +16,7 @@ import { UserReportData } from "@app/hooks/home/getUserTeknisiReportFetcher";
 interface DataTableProps {
   data: UserReportData;
   isLoading: boolean;
-  handleOpenTiketHistory: (title: string, nik: string) => void;
+  handleOpenTiketHistory: (title: string, user_id: number) => void;
 }
 
 export const DataTable = (props: DataTableProps) => {
@@ -181,7 +181,7 @@ export const DataTable = (props: DataTableProps) => {
                 </TableCell>
                 <TableCell
                   onClick={() =>
-                    handleOpenTiketHistory(item.ticket_regular.name, item.nik)
+                    handleOpenTiketHistory(item.ticket_regular.name, item.id)
                   }
                   className="cursor-pointer"
                   align="center"
@@ -190,10 +190,7 @@ export const DataTable = (props: DataTableProps) => {
                 </TableCell>
                 <TableCell
                   onClick={() =>
-                    handleOpenTiketHistory(
-                      item.ticket_lapor_langsung.name,
-                      item.nik
-                    )
+                    handleOpenTiketHistory(item.ticket_bantek.name, item.id)
                   }
                   className="cursor-pointer"
                   align="center"
@@ -202,7 +199,7 @@ export const DataTable = (props: DataTableProps) => {
                 </TableCell>
                 <TableCell
                   onClick={() =>
-                    handleOpenTiketHistory(item.ticket_sqm.name, item.nik)
+                    handleOpenTiketHistory(item.ticket_sqm.name, item.id)
                   }
                   className="cursor-pointer"
                   align="center"
@@ -211,7 +208,7 @@ export const DataTable = (props: DataTableProps) => {
                 </TableCell>
                 <TableCell
                   onClick={() =>
-                    handleOpenTiketHistory(item.ticket_proman.name, item.nik)
+                    handleOpenTiketHistory(item.ticket_proman.name, item.id)
                   }
                   className="cursor-pointer"
                   align="center"
@@ -220,7 +217,7 @@ export const DataTable = (props: DataTableProps) => {
                 </TableCell>
                 <TableCell
                   onClick={() =>
-                    handleOpenTiketHistory(item.ticket_tutup_odp.name, item.nik)
+                    handleOpenTiketHistory(item.ticket_tutup_odp.name, item.id)
                   }
                   className="cursor-pointer"
                   align="center"
@@ -229,7 +226,7 @@ export const DataTable = (props: DataTableProps) => {
                 </TableCell>
                 <TableCell
                   onClick={() =>
-                    handleOpenTiketHistory(item.ticket_valins.name, item.nik)
+                    handleOpenTiketHistory(item.ticket_valins.name, item.id)
                   }
                   className="cursor-pointer"
                   align="center"
@@ -238,7 +235,7 @@ export const DataTable = (props: DataTableProps) => {
                 </TableCell>
                 <TableCell
                   onClick={() =>
-                    handleOpenTiketHistory(item.ticket_unspect.name, item.nik)
+                    handleOpenTiketHistory(item.ticket_unspect.name, item.id)
                   }
                   className="cursor-pointer"
                   align="center"
@@ -249,7 +246,7 @@ export const DataTable = (props: DataTableProps) => {
                   onClick={() =>
                     handleOpenTiketHistory(
                       item.ticket_kendala_sqm.name,
-                      item.nik
+                      item.id
                     )
                   }
                   className="cursor-pointer"
@@ -259,7 +256,7 @@ export const DataTable = (props: DataTableProps) => {
                 </TableCell>
                 <TableCell
                   onClick={() =>
-                    handleOpenTiketHistory(item.ticket_bantek.name, item.nik)
+                    handleOpenTiketHistory(item.ticket_bantek.name, item.id)
                   }
                   className="cursor-pointer"
                   align="center"
@@ -268,7 +265,7 @@ export const DataTable = (props: DataTableProps) => {
                 </TableCell>
                 <TableCell
                   onClick={() =>
-                    handleOpenTiketHistory(item.ticket_infra.name, item.nik)
+                    handleOpenTiketHistory(item.ticket_infra.name, item.id)
                   }
                   className="cursor-pointer"
                   align="center"
@@ -277,7 +274,7 @@ export const DataTable = (props: DataTableProps) => {
                 </TableCell>
                 <TableCell
                   onClick={() =>
-                    handleOpenTiketHistory(item.ticket_us.name, item.nik)
+                    handleOpenTiketHistory(item.ticket_us.name, item.id)
                   }
                   className="cursor-pointer"
                   align="center"
@@ -286,7 +283,7 @@ export const DataTable = (props: DataTableProps) => {
                 </TableCell>
                 <TableCell
                   onClick={() =>
-                    handleOpenTiketHistory(item.gamas_type_a.name, item.nik)
+                    handleOpenTiketHistory(item.gamas_type_a.name, item.id)
                   }
                   className="cursor-pointer"
                   align="center"
@@ -295,7 +292,7 @@ export const DataTable = (props: DataTableProps) => {
                 </TableCell>
                 <TableCell
                   onClick={() =>
-                    handleOpenTiketHistory(item.gamas_type_b.name, item.nik)
+                    handleOpenTiketHistory(item.gamas_type_b.name, item.id)
                   }
                   className="cursor-pointer"
                   align="center"
@@ -304,7 +301,7 @@ export const DataTable = (props: DataTableProps) => {
                 </TableCell>
                 <TableCell
                   onClick={() =>
-                    handleOpenTiketHistory(item.gamas_type_c.name, item.nik)
+                    handleOpenTiketHistory(item.gamas_type_c.name, item.id)
                   }
                   className="cursor-pointer"
                   align="center"
@@ -313,7 +310,7 @@ export const DataTable = (props: DataTableProps) => {
                 </TableCell>
                 <TableCell
                   onClick={() =>
-                    handleOpenTiketHistory(item.survey.name, item.nik)
+                    handleOpenTiketHistory(item.survey.name, item.id)
                   }
                   className="cursor-pointer"
                   align="center"
@@ -324,7 +321,7 @@ export const DataTable = (props: DataTableProps) => {
                   onClick={() =>
                     handleOpenTiketHistory(
                       item.ticket_gaul_reguler.name,
-                      item.nik
+                      item.id
                     )
                   }
                   className="cursor-pointer"
@@ -334,7 +331,7 @@ export const DataTable = (props: DataTableProps) => {
                 </TableCell>
                 <TableCell
                   onClick={() =>
-                    handleOpenTiketHistory(item.ticket_gaul_sqm.name, item.nik)
+                    handleOpenTiketHistory(item.ticket_gaul_sqm.name, item.id)
                   }
                   className="cursor-pointer"
                   align="center"
@@ -343,7 +340,7 @@ export const DataTable = (props: DataTableProps) => {
                 </TableCell>
                 <TableCell
                   onClick={() =>
-                    handleOpenTiketHistory(item.ticket_gaul_us.name, item.nik)
+                    handleOpenTiketHistory(item.ticket_gaul_us.name, item.id)
                   }
                   className="cursor-pointer"
                   align="center"
