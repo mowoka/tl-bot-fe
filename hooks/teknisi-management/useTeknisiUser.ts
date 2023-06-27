@@ -6,8 +6,7 @@ import { userTeknisiFormValidator, validateNikForm } from "../../core/utility/va
 import useSWR from "swr";
 import { getUserTeknisiFetcher } from "./getUserTeknisiFetcher";
 import { getUserTeknisiFilterMasterOptionsFetcher } from "./getUserTeknisiFilterMasterOptionsFetcher";
-
-
+import { useRouter } from "next/router";
 
 
 interface UseTeknisiUserProps {
@@ -28,7 +27,7 @@ interface UseTeknisiUserProps {
     onCloseError: () => void;
 }
 
-const initialMasterFilter: MasterFilterOptions = {
+const initialMasterFilterOptions: MasterFilterOptions = {
     partner: [],
     regional: [],
     sector: [],
@@ -59,8 +58,8 @@ const intialUserTeknisi: UserTeknisiResponse = {
 export function useTeknisiUser(
     handleClose: () => void,
 ): UseTeknisiUserProps {
+    const router = useRouter();
     const { token, userInformation } = useUser();
-    const [masterFilterOptions, setMasterFilterOptionsData] = useState<MasterFilterOptions>(initialMasterFilter);
     const [params, setParams] = useState<ParamsProps>({
         partner_id: '',
         regional_id: '',
@@ -224,49 +223,55 @@ export function useTeknisiUser(
         handleClose();
     }
 
-    const userTeknisiFilterMasterOptions = useSWR({ url: process.env.BASE_URL_API + 'teknisi-user/master-filters?', token: token }, getUserTeknisiFilterMasterOptionsFetcher)
+    const userTeknisiFilterMasterOptions = useSWR(router.isReady &&
+    {
+        url: process.env.BASE_URL_API + 'teknisi-user/master-filters?',
+        token: token
+    },
+        getUserTeknisiFilterMasterOptionsFetcher,
+        {
+            revalidateOnFocus: false,
+        }
+    )
 
-    const userTeknisiData = useSWR({ url: process.env.BASE_URL_API + 'teknisi-user?', params: params, token: token, userInformation: userInformation }, getUserTeknisiFetcher)
-
-    const isLoading = userTeknisiData.isLoading;
+    const userTeknisiData = useSWR(router.isReady &&
+    {
+        url: process.env.BASE_URL_API + 'teknisi-user?',
+        params: params,
+        token: token,
+        userInformation: userInformation
+    },
+        getUserTeknisiFetcher,
+        {
+            revalidateOnFocus: false
+        }
+    )
 
     useEffect(() => {
-        if (!userTeknisiFilterMasterOptions.data?.data) return;
-        const { data } = userTeknisiFilterMasterOptions.data;
+        if (!userTeknisiFilterMasterOptions.error) return
+        setErrorMessage({
+            show: true,
+            message: userTeknisiFilterMasterOptions.error.message,
+            status: "error"
+        });
+    }, [userTeknisiFilterMasterOptions.error])
 
-        const tempPartner: FilterOptionsProps[] = []
-        const tempSector: FilterOptionsProps[] = []
-        const tempRegional: FilterOptionsProps[] = []
-        const tempWitel: FilterOptionsProps[] = []
-        data.partner.map((p) => {
-            tempPartner.push({ id: p.id, name: p.name })
-        })
-        data.regional.map((p) => {
-            tempRegional.push({ id: p.id, name: p.name })
-        })
-        data.sector.map((p) => {
-            tempSector.push({ id: p.id, name: p.name })
-        })
-        data.witel.map((p) => {
-            tempWitel.push({ id: p.id, name: p.name })
-        })
-        const tempData: MasterFilterOptions = {
-            partner: tempPartner,
-            sector: tempSector,
-            regional: tempRegional,
-            witel: tempWitel,
-        }
-        setMasterFilterOptionsData(tempData);
-    }, [
-        userTeknisiFilterMasterOptions.data
-    ])
+    useEffect(() => {
+        if (!userTeknisiData.error) return
+        setErrorMessage({
+            show: true,
+            message: userTeknisiData.error.message,
+            status: "error"
+        });
+    }, [userTeknisiData.error])
+
 
     return {
         params,
         data: userTeknisiData.data?.data ?? intialUserTeknisi,
-        masterFilterOptions,
+        masterFilterOptions: userTeknisiFilterMasterOptions.data ?? initialMasterFilterOptions,
         masterFilterOpstionsIsloading: userTeknisiFilterMasterOptions.isLoading,
-        isLoading: isLoading,
+        isLoading: userTeknisiData.isLoading,
         submitLoading,
         formUserTeknisi,
         errorMessage,

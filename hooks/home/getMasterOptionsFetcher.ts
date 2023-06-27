@@ -1,5 +1,5 @@
 import { ApiFetchRaw } from "@app/core/clients/apiFetch";
-import { FilterOptionsProps, MasterFiltersResponse } from "../teknisi-management/useTeknisiUser";
+import { FilterOptionsProps, MasterFilterOptions, MasterFiltersResponse } from "../teknisi-management/useTeknisiUser";
 
 export async function getUserTeknisiFilterMasterOptionsFetcher(
     { url, token }: { url: string, token: string }
@@ -38,5 +38,12 @@ export async function getUserTeknisiFilterMasterOptionsFetcher(
         tempWitel.push({ id: p.id, name: p.name })
     })
 
-    return res.body.data;
+    const masterOptionsData: MasterFilterOptions = {
+        partner: tempPartner,
+        sector: tempSector,
+        regional: tempRegional,
+        witel: tempWitel,
+    }
+
+    return masterOptionsData;
 }

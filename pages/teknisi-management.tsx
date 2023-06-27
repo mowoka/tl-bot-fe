@@ -36,7 +36,7 @@ const TeknisiManagement = () => {
     onCloseError,
   } = useTeknisiUser(handleClose);
 
-  if (!isAuthenticate || !profile.name || masterFilterOpstionsIsloading) {
+  if (!isAuthenticate || !profile.name) {
     return <ScreenLoading />;
   }
 
@@ -68,6 +68,7 @@ const TeknisiManagement = () => {
         handleOpenModal={handleOpen}
         params={params}
         masterOptions={masterFilterOptions}
+        masterFilterOptionsLoading={masterFilterOpstionsIsloading}
         onChange={onChange}
         resetParams={resetParams}
         isAdmin={isAdmin}

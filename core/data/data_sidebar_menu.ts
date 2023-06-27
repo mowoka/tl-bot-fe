@@ -16,10 +16,6 @@ export const TEAM_LEAD_SIDEBAR_MENU: ISIDEBAR_MENU[] = [
         title: "Teknisi Management",
         url: "/teknisi-management",
     },
-    {
-        title: "Binding",
-        url: "/binding",
-    },
 ]
 
 export const ADMIN_SIDEBAR_MENU: ISIDEBAR_MENU[] = [
