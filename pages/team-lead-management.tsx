@@ -24,6 +24,7 @@ export default function TeamLeadManagementPage() {
     data,
     isLoading,
     masterFilterOptions,
+    masterFilterOptionsLoading,
     errorMessage,
     stepForm,
     submitLoading,
@@ -67,6 +68,7 @@ export default function TeamLeadManagementPage() {
         handleOpenModal={handleOpen}
         params={params}
         masterOptions={masterFilterOptions}
+        masterFilterOptionsLoading={masterFilterOptionsLoading}
         onChange={onChange}
         resetParams={resetParams}
       />

@@ -7,6 +7,7 @@ import useSWR from "swr";
 import { getTeamLeadUserFetcher } from "./getTeamLeadUserFetcher";
 import { ApiFetchRaw } from "@app/core/clients/apiFetch";
 import { teamLeadUserFormValidator, validateNikForm } from "@app/core/utility/validator";
+import { useRouter } from "next/router";
 
 
 
@@ -14,6 +15,7 @@ interface TeamLeadManagement {
     params: TeamLeadParamsProps;
     data: TeamLeadUserResponse;
     masterFilterOptions: MasterFilterOptions;
+    masterFilterOptionsLoading: boolean;
     errorMessage: ErrrorMessage;
     isLoading: boolean;
     stepForm: number;
@@ -38,7 +40,7 @@ const initialFormTeamLeadUser: FormTeamLeadUser = {
     password: '',
 }
 
-const initialMasterFilter: MasterFilterOptions = {
+const initialMasterFilterOptions: MasterFilterOptions = {
     partner: [],
     regional: [],
     sector: [],
@@ -58,9 +60,8 @@ const initialTeamLeadUser: TeamLeadUserResponse = {
 export function useTeamLeadManagement(
     handleClose: () => void
 ): TeamLeadManagement {
+    const router = useRouter();
     const { token } = useUser();
-
-    const [masterFilterOptions, setMasterFilterOptionsData] = useState<MasterFilterOptions>(initialMasterFilter);
     const [params, setParams] = useState<TeamLeadParamsProps>({
         partner_id: '',
         regional_id: '',
@@ -223,47 +224,57 @@ export function useTeamLeadManagement(
     }
 
 
-    const FilterMasterOptions = useSWR({ url: process.env.BASE_URL_API + 'teknisi-user/master-filters?', token: token }, getUserTeknisiFilterMasterOptionsFetcher)
+    const FilterMasterOptions = useSWR(router.isReady &&
+    {
+        url: process.env.BASE_URL_API + 'teknisi-user/master-filters?',
+        token: token
+    },
+        getUserTeknisiFilterMasterOptionsFetcher,
+        {
+            revalidateOnFocus: false,
+        }
+    )
 
-    const teamLeadUserData = useSWR({ url: process.env.BASE_URL_API + 'team-lead-user?', params: params, token: token }, getTeamLeadUserFetcher)
+    const teamLeadUserData = useSWR(router.isReady &&
+    {
+        url: process.env.BASE_URL_API + 'team-lead-user?',
+        params: params,
+        token: token
+    },
+        getTeamLeadUserFetcher,
+        {
+            revalidateOnFocus: false,
+        }
+    )
 
     useEffect(() => {
-        if (!FilterMasterOptions.data?.data) return;
-        const { data } = FilterMasterOptions.data;
+        if (!FilterMasterOptions.error) return;
+        setErrorMessage({
+            show: true,
+            message: FilterMasterOptions.error.message,
+            status: "error"
+        });
+    }, [FilterMasterOptions.error])
 
-        const tempPartner: FilterOptionsProps[] = []
-        const tempSector: FilterOptionsProps[] = []
-        const tempRegional: FilterOptionsProps[] = []
-        const tempWitel: FilterOptionsProps[] = []
-        data.partner.map((p) => {
-            tempPartner.push({ id: p.id, name: p.name })
-        })
-        data.regional.map((p) => {
-            tempRegional.push({ id: p.id, name: p.name })
-        })
-        data.sector.map((p) => {
-            tempSector.push({ id: p.id, name: p.name })
-        })
-        data.witel.map((p) => {
-            tempWitel.push({ id: p.id, name: p.name })
-        })
-        const tempData: MasterFilterOptions = {
-            partner: tempPartner,
-            sector: tempSector,
-            regional: tempRegional,
-            witel: tempWitel,
-        }
-        setMasterFilterOptionsData(tempData);
-    }, [
-        FilterMasterOptions.data
-    ])
+    useEffect(() => {
+        if (!teamLeadUserData.error) return;
+        setErrorMessage({
+            show: true,
+            message: teamLeadUserData.error.message,
+            status: "error"
+        });
+    }, [teamLeadUserData.error])
+
+
+
 
     const isLoading = teamLeadUserData.isLoading;
 
     return {
         params,
         data: teamLeadUserData.data?.data ?? initialTeamLeadUser,
-        masterFilterOptions,
+        masterFilterOptions: FilterMasterOptions.data ?? initialMasterFilterOptions,
+        masterFilterOptionsLoading: FilterMasterOptions.isLoading,
         errorMessage,
         isLoading,
         stepForm,
