@@ -28,6 +28,7 @@ const TeknisiManagement = () => {
     formUserTeknisi,
     errorMessage,
     stepForm,
+    teamLeadUser,
     onChange,
     formOnChange,
     resetParams,
@@ -60,6 +61,7 @@ const TeknisiManagement = () => {
           formUserTeknisi={formUserTeknisi}
           onLoading={submitLoading}
           masterFitlerOptions={masterFilterOptions}
+          teamLeadUser={teamLeadUser}
         />
       </ModalElement>
       <h2 className="font-semibold text-4xl py-4">Teknisi User Management</h2>

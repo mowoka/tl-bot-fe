@@ -1,4 +1,5 @@
 import {
+  FilterOptionsProps,
   FormUserTeknisi,
   MasterFilterOptions,
 } from "../../hooks/teknisi-management/useTeknisiUser";
@@ -9,6 +10,7 @@ import InputDropdown from "../common/InputDropdown";
 
 interface FormPanelProps {
   formUserTeknisi: FormUserTeknisi;
+  teamLeadUser: FilterOptionsProps[];
   formOnChange: (e: React.ChangeEvent<HTMLInputElement>, name: string) => void;
   onSubmit: () => void;
   onResetForm: () => void;
@@ -22,6 +24,7 @@ export const FromPanel = (props: FormPanelProps) => {
   const {
     formUserTeknisi,
     step,
+    teamLeadUser,
     formOnChange,
     onSubmit,
     onLoading,
@@ -29,6 +32,7 @@ export const FromPanel = (props: FormPanelProps) => {
     onResetForm,
     masterFitlerOptions,
   } = props;
+
   return (
     <div className="bg-white  w-full min-w-[500px] max-w-[500px] min-h-[120px] rounded-lg p-4">
       <div className="px-2 py-2">
@@ -85,7 +89,7 @@ export const FromPanel = (props: FormPanelProps) => {
                   value={formUserTeknisi.user_id}
                   placeholder="Choose Partner"
                   onChange={(e) => formOnChange(e, "team-lead")}
-                  options={[]}
+                  options={teamLeadUser}
                 />
               </div>
             )}

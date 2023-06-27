@@ -7,6 +7,7 @@ import useSWR from "swr";
 import { getUserTeknisiFetcher } from "./getUserTeknisiFetcher";
 import { getUserTeknisiFilterMasterOptionsFetcher } from "./getUserTeknisiFilterMasterOptionsFetcher";
 import { useRouter } from "next/router";
+import { TeamLeadUserResponse } from "../team-lead-management/useTeamLeadManagement";
 
 
 interface UseTeknisiUserProps {
@@ -19,6 +20,7 @@ interface UseTeknisiUserProps {
     formUserTeknisi: FormUserTeknisi;
     errorMessage: ErrrorMessage;
     stepForm: number;
+    teamLeadUser: FilterOptionsProps[];
     onChange: (e: React.ChangeEvent<HTMLInputElement>, name: string) => void;
     formOnChange: (e: React.ChangeEvent<HTMLInputElement>, name: string) => void;
     resetParams: () => void;
@@ -74,7 +76,7 @@ export function useTeknisiUser(
         status: "info"
     });
     const [stepForm, setStepForm] = useState<number>(1);
-
+    const [teamLeadUser, setTeamLeadUser] = useState<FilterOptionsProps[]>([]);
     const onCloseError = () => {
         setErrorMessage((prev) => ({ ...prev, show: false }))
     }
@@ -123,7 +125,6 @@ export function useTeknisiUser(
                 status: "error"
             });
         } else {
-            // logic input teknisi 
             setSubmitLoading(true);
             try {
                 const data = {
@@ -198,6 +199,7 @@ export function useTeknisiUser(
                     message: res.body.message,
                     status: "success"
                 });
+                await getTeamLeadUser();
                 setStepForm(2);
             } else {
                 setErrorMessage({
@@ -206,6 +208,31 @@ export function useTeknisiUser(
                     status: "error"
                 });
             }
+        }
+    }
+
+    async function getTeamLeadUser() {
+        const res = await ApiFetchRaw<TeamLeadUserResponse>(process.env.BASE_URL_API + 'team-lead-user', {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        })
+
+        if (res.body.statusCode === 200) {
+            const data = res.body.data;
+            const tempTeamLeadUserOptions: FilterOptionsProps[] = []
+            data.data.map((i) => {
+                tempTeamLeadUserOptions.push({ id: i.id, name: i.name })
+            })
+            setTeamLeadUser(tempTeamLeadUserOptions);
+        } else {
+            setErrorMessage({
+                show: true,
+                message: res.body.message,
+                status: "error"
+            });
         }
     }
 
@@ -276,6 +303,7 @@ export function useTeknisiUser(
         formUserTeknisi,
         errorMessage,
         stepForm,
+        teamLeadUser,
         onChange,
         formOnChange,
         resetParams,
