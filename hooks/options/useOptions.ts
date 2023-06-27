@@ -24,7 +24,7 @@ interface UseOptionsProps {
 }
 
 export function useOptions(): UseOptionsProps {
-    const { token: getToken, } = useUser();
+    const { token } = useUser();
     const [title, setTitle] = useState<string>('');
     const [errorMessage, setErrorMessage] = useState<ErrrorMessage>({
         show: false,
@@ -55,7 +55,7 @@ export function useOptions(): UseOptionsProps {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${getToken()}`
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(data),
         })
@@ -86,7 +86,7 @@ export function useOptions(): UseOptionsProps {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${getToken()}`
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(data),
         })
@@ -117,7 +117,7 @@ export function useOptions(): UseOptionsProps {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${getToken()}`
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(data),
         })
@@ -148,7 +148,7 @@ export function useOptions(): UseOptionsProps {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${getToken()}`
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(data),
         })
@@ -201,10 +201,10 @@ export function useOptions(): UseOptionsProps {
 
     }
 
-    const sector = useSWR(title === 'Sector' && { url: process.env.BASE_URL_API + 'sector', token: getToken() }, getSectorFetcher);
-    const witel = useSWR(title === 'Witel' && { url: process.env.BASE_URL_API + 'witel', token: getToken() }, getWitelFetcher);
-    const partner = useSWR(title === 'Partner' && { url: process.env.BASE_URL_API + 'partner', token: getToken() }, getPartnerFetcher);
-    const regional = useSWR(title === 'Regional' && { url: process.env.BASE_URL_API + 'regional', token: getToken() }, getRegionalFetcher);
+    const sector = useSWR(title === 'Sector' && { url: process.env.BASE_URL_API + 'sector', token: token }, getSectorFetcher);
+    const witel = useSWR(title === 'Witel' && { url: process.env.BASE_URL_API + 'witel', token: token }, getWitelFetcher);
+    const partner = useSWR(title === 'Partner' && { url: process.env.BASE_URL_API + 'partner', token: token }, getPartnerFetcher);
+    const regional = useSWR(title === 'Regional' && { url: process.env.BASE_URL_API + 'regional', token: token }, getRegionalFetcher);
 
     return {
         sector: sector.data as Sector[],
