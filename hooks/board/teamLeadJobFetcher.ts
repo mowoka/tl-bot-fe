@@ -1,5 +1,5 @@
 import { ApiFetchRaw } from "@app/core/clients/apiFetch"
-import { LeadJob } from "./useBoard";
+import { LeadJob, LeadJobOptions } from "./useBoard";
 
 export async function getTeamLeadJobFetcher(
     { url, token }:
@@ -15,5 +15,15 @@ export async function getTeamLeadJobFetcher(
         },
     })
 
-    return res.body;
+    if (res.body.statusCode !== 200) return [];
+
+    const data = res.body.data;
+
+    const teamLeadJobOptions: LeadJobOptions[] = [];
+
+    data.map((job) => {
+        teamLeadJobOptions.push({ id: job.id, name: job.name, point: job.point })
+    })
+
+    return teamLeadJobOptions;
 }

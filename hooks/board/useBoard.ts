@@ -7,6 +7,7 @@ import { formTLBoardValidator } from "../../core/utility/validator";
 import useSWR from "swr";
 import { getUserTeknisiFetcher } from "./teknisiUserFetcher";
 import { getTeamLeadJobFetcher } from "./teamLeadJobFetcher";
+import { useRouter } from "next/router";
 
 export interface LeadJob {
     id: number,
@@ -22,14 +23,17 @@ export interface FormDataProps {
     nilai: string;
     keterangan: string;
 }
-
-export interface OptionsFormData {
-    teknisi: FilterOptionsProps[];
-    leadJob: FilterOptionsProps[];
+export interface LeadJobOptions extends FilterOptionsProps {
+    point: number
 }
 
+
+
 interface UseBoardProps {
-    optionsData: OptionsFormData;
+    teknisiUserOptions: FilterOptionsProps[];
+    teknisiUserOptionsLoading: boolean;
+    teamLeadJobOptions: FilterOptionsProps[];
+    teamLeadJobOptionsLoading: boolean;
     formData: FormDataProps;
     isLoading: boolean;
     errorMessage: ErrrorMessage;
@@ -38,15 +42,10 @@ interface UseBoardProps {
     onCloseError: () => void;
 }
 
-const initialOptionsFormData: OptionsFormData = {
-    teknisi: [],
-    leadJob: []
-}
 
 export const useBoard = (): UseBoardProps => {
     const { token, userInformation } = useUser();
-    const [optionsData, setOptionsData] = useState<OptionsFormData>(initialOptionsFormData);
-    const [masterJobData, setMasterJobData] = useState<LeadJob[]>([])
+    const router = useRouter();
     const [formData, setFormData] = useState<FormDataProps>({
         teknisiUserId: '',
         jobId: '',
@@ -68,8 +67,8 @@ export const useBoard = (): UseBoardProps => {
         if (name === 'teknisi') {
             setFormData((prev) => ({ ...prev, teknisiUserId: e.target.value, }))
         } else if (name === 'job') {
-            const findJob = masterJobData.filter((job) => job.id == parseInt(e.target.value));
-            setFormData((prev) => ({ ...prev, jobId: e.target.value, nilai: findJob[0].point.toString(), }))
+            const findJob = teamLeadJobRes ? teamLeadJobRes.data?.filter((job) => job.id == parseInt(e.target.value)) : [];
+            setFormData((prev) => ({ ...prev, jobId: e.target.value, nilai: findJob ? findJob[0].point.toString() : '0', }))
         } else {
             setFormData((prev) => ({ ...prev, keterangan: e.target.value }))
         }
@@ -131,32 +130,51 @@ export const useBoard = (): UseBoardProps => {
     }
 
 
-    const teknisiUser = useSWR({ url: process.env.BASE_URL_API + 'teknisi-user?', token: token, userInformation: userInformation }, getUserTeknisiFetcher)
-    const teamLeadJob = useSWR({ url: process.env.BASE_URL_API + 'team-leader-job', token: token, }, getTeamLeadJobFetcher)
+    const teknisiUserRes = useSWR(router.isReady && {
+        url: process.env.BASE_URL_API + 'teknisi-user?',
+        token: token,
+        userInformation: userInformation
+    },
+        getUserTeknisiFetcher,
+        {
+            revalidateOnFocus: false,
+        }
+    )
+
+    const teamLeadJobRes = useSWR({
+        url: process.env.BASE_URL_API + 'team-leader-job',
+        token: token,
+    },
+        getTeamLeadJobFetcher,
+        {
+            revalidateOnFocus: false,
+        }
+    )
 
     useEffect(() => {
-        if (!teknisiUser.data) return;
-        const { data } = teknisiUser.data.data;
-        const tempTeknisi: FilterOptionsProps[] = [];
-        data.map((teknisi) => {
-            tempTeknisi.push({ id: teknisi.id, name: teknisi.name })
-        })
-        setOptionsData((prev) => ({ ...prev, teknisi: tempTeknisi }))
-    }, [teknisiUser.data])
+        if (!teknisiUserRes.error) return;
+        setErrorMessage({
+            show: true,
+            message: teknisiUserRes.error.message,
+            status: "error"
+        });
+    }, [teknisiUserRes.error])
 
     useEffect(() => {
-        if (!teamLeadJob.data) return;
-        const { data } = teamLeadJob.data;
-        const tempJob: FilterOptionsProps[] = [];
-        data.map((job) => {
-            tempJob.push({ id: job.id, name: job.name })
-        })
-        setOptionsData((prev) => ({ ...prev, leadJob: tempJob }))
-        setMasterJobData(data);
-    }, [teamLeadJob.data])
+        if (!teamLeadJobRes.error) return;
+        setErrorMessage({
+            show: true,
+            message: teamLeadJobRes.error.message,
+            status: "error"
+        });
+    }, [teamLeadJobRes.error])
+
 
     return {
-        optionsData,
+        teknisiUserOptions: teknisiUserRes.data ?? [],
+        teknisiUserOptionsLoading: teknisiUserRes.isLoading,
+        teamLeadJobOptions: teamLeadJobRes.data ?? [],
+        teamLeadJobOptionsLoading: teamLeadJobRes.isLoading,
         formData,
         isLoading,
         errorMessage,
