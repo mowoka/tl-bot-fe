@@ -102,6 +102,7 @@ export const FromPanel = (props: FormPanelProps) => {
                 placeholder="Choose Partner"
                 onChange={(e) => formOnChange(e, "partner")}
                 options={masterFitlerOptions.partner}
+                disabled={!isAdmin}
               />
             </div>
             <div className="w-[50%] px-2 py-2">
@@ -111,6 +112,7 @@ export const FromPanel = (props: FormPanelProps) => {
                 placeholder="Choose Sector"
                 onChange={(e) => formOnChange(e, "sector")}
                 options={masterFitlerOptions.sector}
+                disabled={!isAdmin}
               />
             </div>
           </div>
@@ -122,6 +124,7 @@ export const FromPanel = (props: FormPanelProps) => {
                 placeholder="Choose Regional"
                 onChange={(e) => formOnChange(e, "regional")}
                 options={masterFitlerOptions.regional}
+                disabled={!isAdmin}
               />
             </div>
             <div className="w-[50%] px-2 py-2">
@@ -131,6 +134,7 @@ export const FromPanel = (props: FormPanelProps) => {
                 placeholder="Choose Witel"
                 onChange={(e) => formOnChange(e, "witel")}
                 options={masterFitlerOptions.witel}
+                disabled={!isAdmin}
               />
             </div>
           </div>

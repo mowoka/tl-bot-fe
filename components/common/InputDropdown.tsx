@@ -6,10 +6,11 @@ interface InputDropdownProps {
   value: string;
   options: { id: number; name: string }[];
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  disabled?: boolean;
 }
 
 const InputDropdown = (props: InputDropdownProps) => {
-  const { placeholder, label, options, onChange, value } = props;
+  const { placeholder, label, options, onChange, value, disabled } = props;
   return (
     <>
       <TextField
@@ -21,6 +22,7 @@ const InputDropdown = (props: InputDropdownProps) => {
         value={value ? value : "choose"}
         placeholder={placeholder}
         onChange={onChange}
+        disabled={disabled}
       >
         <MenuItem disabled value="choose">
           Choose {label}

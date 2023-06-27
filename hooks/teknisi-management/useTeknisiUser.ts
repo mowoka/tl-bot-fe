@@ -8,6 +8,7 @@ import { getUserTeknisiFetcher } from "./getUserTeknisiFetcher";
 import { getUserTeknisiFilterMasterOptionsFetcher } from "./getUserTeknisiFilterMasterOptionsFetcher";
 import { useRouter } from "next/router";
 import { TeamLeadUserResponse } from "../team-lead-management/useTeamLeadManagement";
+import { useProfile } from "../common/useProfile";
 
 
 interface UseTeknisiUserProps {
@@ -62,6 +63,7 @@ export function useTeknisiUser(
 ): UseTeknisiUserProps {
     const router = useRouter();
     const { token, userInformation } = useUser();
+    const { profile } = useProfile();
     const [params, setParams] = useState<ParamsProps>({
         partner_id: '',
         regional_id: '',
@@ -199,7 +201,16 @@ export function useTeknisiUser(
                     message: res.body.message,
                     status: "success"
                 });
-                await getTeamLeadUser();
+                if (userInformation.role !== 'admin') {
+                    const options = userTeknisiFilterMasterOptions.data;
+                    const partner_id = options?.partner.find((i) => i.name === profile.partner);
+                    const sector_id = options?.sector.find((i) => i.name === profile.sector);
+                    const regional_id = options?.regional.find((i) => i.name === profile.regional);
+                    const witel_id = options?.witel.find((i) => i.name === profile.witel);
+                    setFormUserTeknisi((prev) => ({ ...prev, partner_id: partner_id?.id.toString() || '', sector_id: sector_id?.id.toString() || '', regional_id: regional_id?.id.toString() || '', witel_id: witel_id?.id.toString() || '' }));
+                } else {
+                    await getTeamLeadUser();
+                }
                 setStepForm(2);
             } else {
                 setErrorMessage({
