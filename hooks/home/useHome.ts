@@ -2,13 +2,14 @@
 import React, { useEffect, useState } from "react";
 import useUser from "../common/useUser";
 import { ErrrorMessage } from "../registers/useRegister";
-import { FilterOptionsProps, MasterFilterOptions, ParamsProps } from "../teknisi-management/useTeknisiUser";
+import { MasterFilterOptions, ParamsProps } from "../teknisi-management/useTeknisiUser";
 import dayjs from "dayjs";
 import { useModalElement } from "../common/useModalElement";
 import useSWR from "swr";
 import { getUserTeknisiFilterMasterOptionsFetcher } from "./getMasterOptionsFetcher";
 import { UserReportData, getUserTeknisiReportFetcher } from "./getUserTeknisiReportFetcher";
 import { ResponseUserTeknisiHistory, getTeknisiHistoryFetcher } from "./getTeknisiHistoryFetcher";
+import { useRouter } from "next/router";
 
 interface HomeProps {
     data: UserReportData;
@@ -45,15 +46,23 @@ const intialUserReportData: UserReportData = {
     },
 }
 
+const initialHistoryData: ResponseUserTeknisiHistory = {
+    history: [],
+    metadata: {
+        total: 0,
+        page: 1,
+        pagination: 1,
+    }
+}
+
 const date = new Date();
 const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
 const lastDay = new Date(date.getFullYear(), date.getMonth(), 30);
 
 const useHome = (): HomeProps => {
     const { token } = useUser();
+    const router = useRouter();
     const { open, handleClose, handleOpen } = useModalElement();
-    const [data, setData] = useState<UserReportData>(intialUserReportData);
-    const [masterFilterOptions, setMasterFilterOptionsData] = useState<MasterFilterOptions>(initialMasterFilter);
     const [params, setParams] = useState<ParamsUserReport>({
         teknisi_lead_id: '',
         partner_id: '',
@@ -72,7 +81,7 @@ const useHome = (): HomeProps => {
         user_id: 0,
         page: '1',
     });
-    const [historyData, setHistoryData] = useState<ResponseUserTeknisiHistory | undefined>();
+
     const onCloseError = () => {
         setErrorMessage((prev) => ({ ...prev, show: false }))
     }
@@ -134,49 +143,55 @@ const useHome = (): HomeProps => {
     }
 
 
-    const masterFilterOptionsRes = useSWR({
+    const masterFilterOptionsRes = useSWR(router.isReady && {
         url: process.env.BASE_URL_API + 'teknisi-user/master-filters',
         token: token
     },
-        getUserTeknisiFilterMasterOptionsFetcher
+        getUserTeknisiFilterMasterOptionsFetcher,
+        {
+            revalidateOnFocus: false,
+        }
     )
 
-    const userTeknisiReportRes = useSWR({
+    const userTeknisiReportRes = useSWR(router.isReady && {
         url: process.env.BASE_URL_API + 'teknisi-user/report',
         params: params,
         token: token,
     },
         getUserTeknisiReportFetcher,
+        {
+            revalidateOnFocus: false,
+        }
     )
 
-    const userTeknisiHistory = useSWR(historyTable.title && {
+    const userTeknisiHistory = useSWR(router.isReady && historyTable.title && {
         url: process.env.BASE_URL_API + 'teknisi-user/history',
         params: historyTable,
         token: token,
     },
         getTeknisiHistoryFetcher,
+        {
+            revalidateOnFocus: false
+        }
     )
 
     useEffect(() => {
-        if (!userTeknisiReportRes.data) return;
-        setData(userTeknisiReportRes.data);
-    }, [
-        userTeknisiReportRes
-    ])
+        if (!masterFilterOptionsRes.error) return;
+        setErrorMessage({
+            show: true,
+            message: masterFilterOptionsRes.error.message,
+            status: "error"
+        });
+    }, [masterFilterOptionsRes.error])
 
     useEffect(() => {
-        if (!userTeknisiHistory.data) return;
-        setHistoryData(userTeknisiHistory.data);
-    }, [userTeknisiHistory])
+        if (!userTeknisiReportRes.error) return;
 
-    useEffect(() => {
-        if (userTeknisiReportRes.error) {
-            setErrorMessage({
-                show: true,
-                message: userTeknisiReportRes.error.message,
-                status: "error"
-            });
-        }
+        setErrorMessage({
+            show: true,
+            message: userTeknisiReportRes.error.message,
+            status: "error"
+        });
     }, [userTeknisiReportRes.error])
 
     useEffect(() => {
@@ -189,46 +204,17 @@ const useHome = (): HomeProps => {
         }
     }, [userTeknisiHistory.error])
 
-    useEffect(() => {
-        if (!masterFilterOptionsRes.data) return;
-        const { data } = masterFilterOptionsRes;
-
-        const tempPartner: FilterOptionsProps[] = []
-        const tempSector: FilterOptionsProps[] = []
-        const tempRegional: FilterOptionsProps[] = []
-        const tempWitel: FilterOptionsProps[] = []
-        data.partner.map((p) => {
-            tempPartner.push({ id: p.id, name: p.name })
-        })
-        data.regional.map((p) => {
-            tempRegional.push({ id: p.id, name: p.name })
-        })
-        data.sector.map((p) => {
-            tempSector.push({ id: p.id, name: p.name })
-        })
-        data.witel.map((p) => {
-            tempWitel.push({ id: p.id, name: p.name })
-        })
-        const tempData: MasterFilterOptions = {
-            partner: tempPartner,
-            sector: tempSector,
-            regional: tempRegional,
-            witel: tempWitel,
-        }
-        setMasterFilterOptionsData(tempData);
-    }, [masterFilterOptionsRes])
-
     return {
-        data,
+        data: userTeknisiReportRes.data ?? intialUserReportData,
         isLoading: userTeknisiReportRes.isLoading,
         errorMessage,
-        masterFilterOptions,
-        masterFilterOptionsLoading: masterFilterOptionsRes.isLoading,
+        masterFilterOptions: masterFilterOptionsRes.data ?? initialMasterFilter,
+        masterFilterOptionsLoading: masterFilterOptionsRes.isLoading || !masterFilterOptionsRes.data,
         params,
         open,
         historyTable,
         isHistoryLoading: userTeknisiHistory.isLoading,
-        historyData,
+        historyData: userTeknisiHistory.data ?? initialHistoryData,
         onCloseError,
         onChange,
         onChangeDate,

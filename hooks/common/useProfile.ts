@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { SESSION__PROFILE_KEY, UserProfile } from "./useUser";
+import { useRouter } from "next/router";
 
 interface UseProfileProps {
     profile: UserProfile
@@ -17,6 +18,8 @@ const initialProfile: UserProfile = {
 }
 
 export function useProfile(): UseProfileProps {
+
+    const router = useRouter();
 
     const [profile, setProfile] = useState<UserProfile>(initialProfile)
 
@@ -57,9 +60,10 @@ export function useProfile(): UseProfileProps {
     }
 
     useEffect(() => {
+        if (!router.isReady) return;
         const profileValue = getProfile();
         setProfile(profileValue);
-    }, [])
+    }, [router])
 
 
     return {

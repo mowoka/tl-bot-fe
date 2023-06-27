@@ -1,5 +1,5 @@
 import { ApiFetchRaw } from "@app/core/clients/apiFetch";
-import { MasterFiltersResponse } from "../teknisi-management/useTeknisiUser";
+import { FilterOptionsProps, MasterFiltersResponse } from "../teknisi-management/useTeknisiUser";
 
 export async function getUserTeknisiFilterMasterOptionsFetcher(
     { url, token }: { url: string, token: string }
@@ -11,12 +11,32 @@ export async function getUserTeknisiFilterMasterOptionsFetcher(
         },
     })
 
-    if (res.body.statusCode === 200) return res.body.data;
-
-    return {
+    if (res.body.statusCode !== 200) return {
         partner: [],
         regional: [],
         sector: [],
         witel: [],
     }
+
+    const data = res.body.data;
+
+    const tempPartner: FilterOptionsProps[] = []
+    const tempSector: FilterOptionsProps[] = []
+    const tempRegional: FilterOptionsProps[] = []
+    const tempWitel: FilterOptionsProps[] = []
+
+    data.partner.map((p) => {
+        tempPartner.push({ id: p.id, name: p.name })
+    })
+    data.regional.map((p) => {
+        tempRegional.push({ id: p.id, name: p.name })
+    })
+    data.sector.map((p) => {
+        tempSector.push({ id: p.id, name: p.name })
+    })
+    data.witel.map((p) => {
+        tempWitel.push({ id: p.id, name: p.name })
+    })
+
+    return res.body.data;
 }

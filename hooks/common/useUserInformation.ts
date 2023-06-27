@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { SESSION__PROFILE_KEY } from "./useUser";
+import { useRouter } from "next/router";
 
 
 export interface UserInformation {
@@ -12,10 +13,11 @@ export interface UserInformationHooks {
 }
 
 export function useUserInformation(): UserInformationHooks {
+    const router = useRouter();
     const [userInformation, setUserInformation] = useState<UserInformation>({ role: '', id: 0 });
 
-
     useEffect(() => {
+        if (!router.isReady) return;
         const persistStr = localStorage.getItem(SESSION__PROFILE_KEY);
         const persists = persistStr ? JSON.parse(persistStr) : ''
         if (!persists) {
@@ -28,7 +30,7 @@ export function useUserInformation(): UserInformationHooks {
                 setUserInformation({ role: userProfile.role, id: userProfile.id });
             }
         }
-    }, []);
+    }, [router]);
 
     return {
         userInformation: userInformation
