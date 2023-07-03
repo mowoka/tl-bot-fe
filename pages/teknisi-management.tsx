@@ -35,6 +35,7 @@ const TeknisiManagement = () => {
     onSubmit,
     onResetForm,
     onCloseError,
+    deleteTeknisiUser,
   } = useTeknisiUser(handleClose);
 
   if (!isAuthenticate || !profile.name) {
@@ -75,7 +76,12 @@ const TeknisiManagement = () => {
         resetParams={resetParams}
         isAdmin={isAdmin}
       />
-      <DataTable data={data} isLoading={isLoading} isAdmin={isAdmin} />
+      <DataTable
+        data={data}
+        isLoading={isLoading}
+        isAdmin={isAdmin}
+        deleteTeknisiUser={deleteTeknisiUser}
+      />
     </Layout>
   );
 };

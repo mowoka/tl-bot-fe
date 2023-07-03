@@ -28,6 +28,7 @@ interface UseTeknisiUserProps {
     onSubmit: () => void;
     onResetForm: () => void;
     onCloseError: () => void;
+    deleteTeknisiUser: (teknisiUserId: number) => void;
 }
 
 const initialMasterFilterOptions: MasterFilterOptions = {
@@ -261,6 +262,36 @@ export function useTeknisiUser(
         }
     }
 
+    async function deleteTeknisiUser(teknisiUserId: number) {
+        const data = {
+            teknisi_user_id: teknisiUserId
+        }
+        const res = await ApiFetchRaw(process.env.BASE_URL_API + 'teknisi-user', {
+            method: "DELETE",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(data)
+        })
+        if (res.body.statusCode === 200) {
+            setErrorMessage({
+                show: true,
+                message: res.body.message,
+                status: "success"
+            });
+            userTeknisiData.mutate();
+        } else {
+            setErrorMessage({
+                show: true,
+                message: res.body.message,
+                status: "error"
+            });
+        }
+
+    }
+
     const onSubmit = async () => {
         if (stepForm == 1) {
             validateNik();
@@ -334,7 +365,8 @@ export function useTeknisiUser(
         resetParams,
         onSubmit,
         onResetForm,
-        onCloseError
+        onCloseError,
+        deleteTeknisiUser,
     }
 }
 
