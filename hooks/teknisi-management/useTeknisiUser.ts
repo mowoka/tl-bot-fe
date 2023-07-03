@@ -7,7 +7,7 @@ import useSWR from "swr";
 import { getUserTeknisiFetcher } from "./getUserTeknisiFetcher";
 import { getUserTeknisiFilterMasterOptionsFetcher } from "./getUserTeknisiFilterMasterOptionsFetcher";
 import { useRouter } from "next/router";
-import { TeamLeadUserResponse } from "../team-lead-management/useTeamLeadManagement";
+import { TeamLeadUser, TeamLeadUserResponse } from "../team-lead-management/useTeamLeadManagement";
 import { useProfile } from "../common/useProfile";
 
 
@@ -78,7 +78,8 @@ export function useTeknisiUser(
         status: "info"
     });
     const [stepForm, setStepForm] = useState<number>(1);
-    const [teamLeadUser, setTeamLeadUser] = useState<FilterOptionsProps[]>([]);
+    const [teamLeadUserOptions, setTeamLeadUserOptions] = useState<FilterOptionsProps[]>([]);
+    const [teamLeadUser, setTeamLeadUser] = useState<TeamLeadUser[]>([]);
     const onCloseError = () => {
         setErrorMessage((prev) => ({ ...prev, show: false }))
     }
@@ -112,6 +113,18 @@ export function useTeknisiUser(
             setFormUserTeknisi((prev) => ({ ...prev, regional_id: e.target.value }))
         } else if (name === 'team-lead') {
             setFormUserTeknisi((prev) => ({ ...prev, user_id: e.target.value }))
+            if (userInformation.role !== 'admin') return;
+
+            const teamLead = teamLeadUser.find((item) => item.id === parseInt(e.target.value));
+            setFormUserTeknisi((prev) =>
+            ({
+                ...prev,
+                partner_id: teamLead?.partner?.id.toString() ?? '',
+                sector_id: teamLead?.sector?.id.toString() ?? '',
+                regional_id: teamLead?.regional?.id.toString() ?? '',
+                witel_id: teamLead?.witel?.id.toString() ?? '',
+            }))
+
         }
         else {
             setFormUserTeknisi((prev) => ({ ...prev, witel_id: e.target.value }))
@@ -237,7 +250,8 @@ export function useTeknisiUser(
             data.data.map((i) => {
                 tempTeamLeadUserOptions.push({ id: i.id, name: i.name })
             })
-            setTeamLeadUser(tempTeamLeadUserOptions);
+            setTeamLeadUser(res.body.data.data);
+            setTeamLeadUserOptions(tempTeamLeadUserOptions);
         } else {
             setErrorMessage({
                 show: true,
@@ -314,7 +328,7 @@ export function useTeknisiUser(
         formUserTeknisi,
         errorMessage,
         stepForm,
-        teamLeadUser,
+        teamLeadUser: teamLeadUserOptions,
         onChange,
         formOnChange,
         resetParams,
