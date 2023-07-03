@@ -15,7 +15,6 @@ import {
 import LinearProgress from "@mui/material/LinearProgress";
 import { PaginationPage } from "../common/PaginationPage";
 import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
 import { ModalElement } from "../common/Modal";
 import { DeleteConfirmation } from "./DeleteConfirmation";
 import { useState } from "react";
@@ -102,11 +101,12 @@ export const DataTable = (props: DataTableProps) => {
                           <DeleteIcon color="error" />
                         </Tooltip>
                       </div>
-                      <div className="cursor-pointer">
+                      {/* Todo : Not Majority but nice to have if we can edit this user */}
+                      {/* <div className="cursor-pointer">
                         <Tooltip title="Edit">
                           <EditIcon color="action" />
                         </Tooltip>
-                      </div>
+                      </div> */}
                     </div>
                   </TableCell>
                 )}
