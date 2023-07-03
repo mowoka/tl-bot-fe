@@ -1,11 +1,16 @@
 import { ApiFetchRaw } from "@app/core/clients/apiFetch";
 import { MetaData, ParamsUserReport } from "./useHome";
+import { UserInformation } from "../common/useUserInformation";
 
 export async function getUserTeknisiReportFetcher(
-    { url, params, token }: { url: string, params: ParamsUserReport, token: string }
+    { url, params, token, userInformation }: { url: string, params: ParamsUserReport, token: string, userInformation: UserInformation }
 ) {
     if (!token) return;
     const URLparams = { ...params }
+    console.log(userInformation);
+    if (userInformation.role === 'team-lead') {
+        URLparams.teknisi_lead_id = userInformation.id.toString();
+    }
     const res = await ApiFetchRaw<UserReportData>(url + '?' + new URLSearchParams(URLparams), {
         headers: {
             'Authorization': `Bearer ${token}`
@@ -16,6 +21,9 @@ export async function getUserTeknisiReportFetcher(
 
     return {
         data: [],
+        strategic: {
+            meanKpi: 0,
+        },
         metadata: {
             total: 0,
             page: 1,
@@ -24,8 +32,13 @@ export async function getUserTeknisiReportFetcher(
     }
 }
 
+export interface Strategic {
+    meanKpi: number,
+}
+
 export interface UserReportData {
     data: UserReport[];
+    strategic: Strategic,
     metadata: MetaData,
 }
 

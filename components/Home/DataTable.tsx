@@ -12,7 +12,6 @@ import {
 import LinearProgress from "@mui/material/LinearProgress";
 import { PaginationPage } from "../common/PaginationPage";
 import { UserReportData } from "@app/hooks/home/getUserTeknisiReportFetcher";
-import { countMeanKpi } from "@app/core/utility/count";
 
 interface DataTableProps {
   data: UserReportData;
@@ -24,7 +23,7 @@ export const DataTable = (props: DataTableProps) => {
   const { isLoading, data, handleOpenTiketHistory } = props;
   const reportData = data?.data;
   const reportMetadata = data?.metadata;
-  const meanKpi = countMeanKpi(reportData);
+  const meanKpi = data?.strategic?.meanKpi;
   return (
     <div className="py-6 w-[100%]">
       <TableContainer component={Paper}>
@@ -351,30 +350,32 @@ export const DataTable = (props: DataTableProps) => {
                 </TableCell>
               </TableRow>
             ))}
-            <TableRow>
-              <TableCell
-                className="bg-white cursor-pointer"
-                style={{
-                  position: "sticky",
-                  left: 0,
-                  zIndex: 800,
-                }}
-                align="center"
-              >
-                F. Rata - rata
-              </TableCell>
-              <TableCell
-                className="bg-white cursor-pointer"
-                style={{
-                  position: "sticky",
-                  left: 150,
-                  zIndex: 800,
-                }}
-                align="center"
-              >
-                {meanKpi.toFixed(3)}
-              </TableCell>
-            </TableRow>
+            {meanKpi && (
+              <TableRow>
+                <TableCell
+                  className="bg-white cursor-pointer"
+                  style={{
+                    position: "sticky",
+                    left: 0,
+                    zIndex: 800,
+                  }}
+                  align="center"
+                >
+                  F. Rata - rata
+                </TableCell>
+                <TableCell
+                  className="bg-white cursor-pointer"
+                  style={{
+                    position: "sticky",
+                    left: 150,
+                    zIndex: 800,
+                  }}
+                  align="center"
+                >
+                  {meanKpi.toFixed(3)}
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </TableContainer>

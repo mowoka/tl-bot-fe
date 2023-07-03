@@ -46,7 +46,7 @@ export function USHistory(props: USProps) {
                     </TableCell>
                     <TableCell align="left">{data.odp}</TableCell>
                     <TableCell align="left">{data.description}</TableCell>
-                    <TableCell align="left">{data.date}</TableCell>
+                    <TableCell align="left">{data.tanggal}</TableCell>
                   </TableRow>
                 ))}
             </TableBody>

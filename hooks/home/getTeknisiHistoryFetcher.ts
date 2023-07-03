@@ -162,7 +162,7 @@ export interface TicketUS {
     speedy_number: string;
     odp: string;
     description: string;
-    date: string
+    tanggal: string
 }
 
 export type TicketGaulReguler = TicketReguler;

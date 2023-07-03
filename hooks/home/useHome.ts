@@ -39,6 +39,9 @@ const initialMasterFilter: MasterFilterOptions = {
 
 const intialUserReportData: UserReportData = {
     data: [],
+    strategic: {
+        meanKpi: 0,
+    },
     metadata: {
         total: 0,
         page: 1,
@@ -60,8 +63,9 @@ const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
 const lastDay = new Date(date.getFullYear(), date.getMonth(), 30);
 
 const useHome = (): HomeProps => {
-    const { token } = useUser();
+    const { token, userInformation } = useUser();
     const router = useRouter();
+
     const { open, handleClose, handleOpen } = useModalElement();
     const [params, setParams] = useState<ParamsUserReport>({
         teknisi_lead_id: '',
@@ -157,6 +161,7 @@ const useHome = (): HomeProps => {
         url: process.env.BASE_URL_API + 'teknisi-user/report',
         params: params,
         token: token,
+        userInformation: userInformation,
     },
         getUserTeknisiReportFetcher,
         {

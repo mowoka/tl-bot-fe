@@ -52,7 +52,9 @@ export function TeamLeadHistory(props: TeamLeadHistoryProps) {
                     <TableCell align="left">
                       {dateFomatting(data.createAt.toString())}
                     </TableCell>
-                    <TableCell align="left">{data.description}</TableCell>
+                    <TableCell align="left">
+                      {data.description != "" ? data.description : "-"}
+                    </TableCell>
                   </TableRow>
                 ))}
             </TableBody>
