@@ -146,8 +146,8 @@ export function useTeknisiUser(
                     ...formUserTeknisi,
                     partner_id: parseInt(formUserTeknisi.partner_id),
                     sector_id: parseInt(formUserTeknisi.sector_id),
-                    witel__id: parseInt(formUserTeknisi.witel_id),
-                    regional: parseInt(formUserTeknisi.regional_id),
+                    witel_id: parseInt(formUserTeknisi.witel_id),
+                    regional_id: parseInt(formUserTeknisi.regional_id),
                     user_id: userInformation.role !== 'admin' ? userInformation.id : parseInt(formUserTeknisi.user_id),
                 }
 
