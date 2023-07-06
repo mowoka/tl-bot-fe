@@ -6,18 +6,18 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Tooltip,
+  // Tooltip,
 } from "@mui/material";
 import {
-  UserTeknisi,
+  // UserTeknisi,
   UserTeknisiResponse,
 } from "../../hooks/teknisi-management/useTeknisiUser";
 import LinearProgress from "@mui/material/LinearProgress";
 import { PaginationPage } from "../common/PaginationPage";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { ModalElement } from "../common/Modal";
-import { DeleteConfirmation } from "./DeleteConfirmation";
-import { useState } from "react";
+// import DeleteIcon from "@mui/icons-material/Delete";
+// import { ModalElement } from "../common/Modal";
+// import { DeleteConfirmation } from "./DeleteConfirmation";
+// import { useState } from "react";
 
 interface DataTableProps {
   data: UserTeknisiResponse;
@@ -27,28 +27,28 @@ interface DataTableProps {
 }
 
 export const DataTable = (props: DataTableProps) => {
-  const { data, isLoading, isAdmin, deleteTeknisiUser } = props;
+  const { data, isLoading, isAdmin } = props;
 
-  const [userTeknisi, setUserTeknisi] = useState<UserTeknisi>();
-  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
-  const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
+  // const [userTeknisi, setUserTeknisi] = useState<UserTeknisi>();
+  // const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+  // const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
 
-  const handleModalDeleteUser = (user: UserTeknisi) => {
-    setUserTeknisi(user);
-    setShowDeleteModal(true);
-  };
+  // const handleModalDeleteUser = (user: UserTeknisi) => {
+  //   setUserTeknisi(user);
+  //   setShowDeleteModal(true);
+  // };
 
-  const handleDeleteTeknisiUser = async () => {
-    if (userTeknisi === undefined) return;
-    setDeleteLoading(true);
-    await deleteTeknisiUser(userTeknisi.id);
-    setShowDeleteModal(false);
-    setDeleteLoading(false);
-  };
+  // const handleDeleteTeknisiUser = async () => {
+  //   if (userTeknisi === undefined) return;
+  //   setDeleteLoading(true);
+  //   await deleteTeknisiUser(userTeknisi.id);
+  //   setShowDeleteModal(false);
+  //   setDeleteLoading(false);
+  // };
 
   return (
     <div className="py-6">
-      <ModalElement
+      {/* <ModalElement
         open={showDeleteModal}
         handleClose={() => setShowDeleteModal(false)}
       >
@@ -58,7 +58,7 @@ export const DataTable = (props: DataTableProps) => {
           handleDeleteTeknisiUser={handleDeleteTeknisiUser}
           deleteLoading={deleteLoading}
         />
-      </ModalElement>
+      </ModalElement> */}
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -90,7 +90,7 @@ export const DataTable = (props: DataTableProps) => {
                 {isAdmin && (
                   <TableCell align="center">{data.user.name}</TableCell>
                 )}
-                {isAdmin && (
+                {/* {isAdmin && (
                   <TableCell align="center">
                     <div className="flex justify-around items-center">
                       <div
@@ -101,15 +101,15 @@ export const DataTable = (props: DataTableProps) => {
                           <DeleteIcon color="error" />
                         </Tooltip>
                       </div>
-                      {/* Todo : Not Majority but nice to have if we can edit this user */}
-                      {/* <div className="cursor-pointer">
+                      Todo : Not Majority but nice to have if we can edit this user
+                      <div className="cursor-pointer">
                         <Tooltip title="Edit">
                           <EditIcon color="action" />
                         </Tooltip>
-                      </div> */}
+                      </div>
                     </div>
                   </TableCell>
-                )}
+                )} */}
               </TableRow>
             ))}
           </TableBody>

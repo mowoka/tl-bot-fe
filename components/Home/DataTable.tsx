@@ -187,7 +187,7 @@ export const DataTable = (props: DataTableProps) => {
                   className="cursor-pointer"
                   align="center"
                 >
-                  {item.ticket_regular.score}
+                  {item.ticket_regular.score.toFixed(2)}
                 </TableCell>
                 <TableCell
                   onClick={() =>
@@ -196,7 +196,7 @@ export const DataTable = (props: DataTableProps) => {
                   className="cursor-pointer"
                   align="center"
                 >
-                  {item.ticket_lapor_langsung.score}
+                  {item.ticket_lapor_langsung.score.toFixed(2)}
                 </TableCell>
                 <TableCell
                   onClick={() =>
@@ -205,7 +205,7 @@ export const DataTable = (props: DataTableProps) => {
                   className="cursor-pointer"
                   align="center"
                 >
-                  {item.ticket_sqm.score}
+                  {item.ticket_sqm.score.toFixed(2)}
                 </TableCell>
                 <TableCell
                   onClick={() =>
@@ -214,7 +214,7 @@ export const DataTable = (props: DataTableProps) => {
                   className="cursor-pointer"
                   align="center"
                 >
-                  {item.ticket_proman.score}
+                  {item.ticket_proman.score.toFixed(2)}
                 </TableCell>
                 <TableCell
                   onClick={() =>
@@ -223,7 +223,7 @@ export const DataTable = (props: DataTableProps) => {
                   className="cursor-pointer"
                   align="center"
                 >
-                  {item.ticket_tutup_odp.score}
+                  {item.ticket_tutup_odp.score.toFixed(2)}
                 </TableCell>
                 <TableCell
                   onClick={() =>
@@ -232,7 +232,7 @@ export const DataTable = (props: DataTableProps) => {
                   className="cursor-pointer"
                   align="center"
                 >
-                  {item.ticket_valins.score}
+                  {item.ticket_valins.score.toFixed(2)}
                 </TableCell>
                 <TableCell
                   onClick={() =>
@@ -241,7 +241,7 @@ export const DataTable = (props: DataTableProps) => {
                   className="cursor-pointer"
                   align="center"
                 >
-                  {item.ticket_unspect.score}
+                  {item.ticket_unspect.score.toFixed(2)}
                 </TableCell>
                 <TableCell
                   onClick={() =>
@@ -253,7 +253,7 @@ export const DataTable = (props: DataTableProps) => {
                   className="cursor-pointer"
                   align="center"
                 >
-                  {item.ticket_kendala_sqm.score}
+                  {item.ticket_kendala_sqm.score.toFixed(2)}
                 </TableCell>
                 <TableCell
                   onClick={() =>
@@ -262,7 +262,7 @@ export const DataTable = (props: DataTableProps) => {
                   className="cursor-pointer"
                   align="center"
                 >
-                  {item.ticket_bantek.score}
+                  {item.ticket_bantek.score.toFixed(2)}
                 </TableCell>
                 <TableCell
                   onClick={() =>
@@ -271,7 +271,7 @@ export const DataTable = (props: DataTableProps) => {
                   className="cursor-pointer"
                   align="center"
                 >
-                  {item.ticket_infra.score}
+                  {item.ticket_infra.score.toFixed(2)}
                 </TableCell>
                 <TableCell
                   onClick={() =>
@@ -280,7 +280,7 @@ export const DataTable = (props: DataTableProps) => {
                   className="cursor-pointer"
                   align="center"
                 >
-                  {item.ticket_us.score}
+                  {item.ticket_us.score.toFixed(2)}
                 </TableCell>
                 <TableCell
                   onClick={() =>
@@ -289,7 +289,7 @@ export const DataTable = (props: DataTableProps) => {
                   className="cursor-pointer"
                   align="center"
                 >
-                  {item.gamas_type_a.score}
+                  {item.gamas_type_a.score.toFixed(2)}
                 </TableCell>
                 <TableCell
                   onClick={() =>
@@ -298,7 +298,7 @@ export const DataTable = (props: DataTableProps) => {
                   className="cursor-pointer"
                   align="center"
                 >
-                  {item.gamas_type_b.score}
+                  {item.gamas_type_b.score.toFixed(2)}
                 </TableCell>
                 <TableCell
                   onClick={() =>
@@ -307,7 +307,7 @@ export const DataTable = (props: DataTableProps) => {
                   className="cursor-pointer"
                   align="center"
                 >
-                  {item.gamas_type_c.score}
+                  {item.gamas_type_c.score.toFixed(2)}
                 </TableCell>
                 <TableCell
                   onClick={() =>
@@ -316,7 +316,7 @@ export const DataTable = (props: DataTableProps) => {
                   className="cursor-pointer"
                   align="center"
                 >
-                  {item.survey.score}
+                  {item.survey.score.toFixed(2)}
                 </TableCell>
                 <TableCell
                   onClick={() =>
@@ -328,7 +328,7 @@ export const DataTable = (props: DataTableProps) => {
                   className="cursor-pointer"
                   align="center"
                 >
-                  {item.ticket_gaul_reguler.score}
+                  {item.ticket_gaul_reguler.score.toFixed(2)}
                 </TableCell>
                 <TableCell
                   onClick={() =>
@@ -337,7 +337,7 @@ export const DataTable = (props: DataTableProps) => {
                   className="cursor-pointer"
                   align="center"
                 >
-                  {item.ticket_gaul_sqm.score}
+                  {item.ticket_gaul_sqm.score.toFixed(2)}
                 </TableCell>
                 <TableCell
                   onClick={() =>
@@ -346,7 +346,7 @@ export const DataTable = (props: DataTableProps) => {
                   className="cursor-pointer"
                   align="center"
                 >
-                  {item.ticket_gaul_us.score}
+                  {item.ticket_gaul_us.score.toFixed(2)}
                 </TableCell>
               </TableRow>
             ))}

@@ -2,7 +2,7 @@ import { ApiFetchRaw } from "@app/core/clients/apiFetch"
 import { FilterOptionsProps, UserTeknisiResponse } from "../teknisi-management/useTeknisiUser"
 
 export async function getUserTeknisiFetcher(
-    { url, token, userInformation, }:
+    { url, token, userInformation }:
         {
             url: string,
             token: string,
@@ -11,7 +11,7 @@ export async function getUserTeknisiFetcher(
 ) {
     if (!token) return;
     const URLParams = {
-        tekni_lead_id: userInformation.id.toString()
+        teknisi_lead_id: userInformation.id.toString()
     }
 
     const res = await ApiFetchRaw<UserTeknisiResponse>(url + new URLSearchParams(URLParams), {
