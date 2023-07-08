@@ -7,7 +7,6 @@ export async function getUserTeknisiReportFetcher(
 ) {
     if (!token) return;
     const URLparams = { ...params }
-    console.log(userInformation);
     if (userInformation.role === 'team-lead') {
         URLparams.teknisi_lead_id = userInformation.id.toString();
     }

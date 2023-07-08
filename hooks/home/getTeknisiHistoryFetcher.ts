@@ -5,7 +5,7 @@ export async function getTeknisiHistoryFetcher(
     { url, params, token }: { url: string, params: HistoryTable, token: string }
 ) {
     if (!token) return;
-    const URLParams = { user_id: params.user_id.toString(), job_title: params.title, page: params.page }
+    const URLParams = { user_id: params.user_id.toString(), job_title: params.title, page: params.page, startDate: params.startDate, endDate: params.endDate }
     const res = await ApiFetchRaw<ResponseUserTeknisiHistory>(url + '?' + new URLSearchParams(URLParams), {
         headers: {
             'Authorization': `Bearer ${token}`

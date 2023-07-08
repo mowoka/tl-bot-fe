@@ -84,6 +84,8 @@ const useHome = (): HomeProps => {
         title: '',
         user_id: 0,
         page: '1',
+        startDate: dayjs(firstDay).format("YYYY-MM-DD").toString(),
+        endDate: dayjs(lastDay).format("YYYY-MM-DD").toString(),
     });
 
     const onCloseError = () => {
@@ -142,7 +144,7 @@ const useHome = (): HomeProps => {
     }
 
     const handleOpenTiketHistory = (title: string, user_id: number) => {
-        setHistoryTable(prev => ({ ...prev, title, user_id }));
+        setHistoryTable(prev => ({ ...prev, title, user_id, startDate: params.startDate, endDate: params.endDate }));
         handleOpen();
     }
 
@@ -239,6 +241,8 @@ export interface HistoryTable {
     title: string;
     user_id: number;
     page: string;
+    startDate: string;
+    endDate: string;
 }
 
 export interface ParamsUserReport extends ParamsProps {
