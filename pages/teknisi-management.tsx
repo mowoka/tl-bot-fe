@@ -26,16 +26,20 @@ const TeknisiManagement = () => {
     isLoading,
     submitLoading,
     formUserTeknisi,
+    formEditUserTeknisi,
     errorMessage,
     stepForm,
     teamLeadUser,
     onChange,
     formOnChange,
+    formEditOnChange,
     resetParams,
     onSubmit,
+    submitEditTeknisiForm,
     onResetForm,
     onCloseError,
     deleteTeknisiUser,
+    handleEditForm,
   } = useTeknisiUser(handleClose);
 
   if (!isAuthenticate || !profile.name) {
@@ -81,6 +85,12 @@ const TeknisiManagement = () => {
         isLoading={isLoading}
         isAdmin={isAdmin}
         deleteTeknisiUser={deleteTeknisiUser}
+        masterFitlerOptions={masterFilterOptions}
+        teamLeadUser={teamLeadUser}
+        handleEditForm={handleEditForm}
+        formEditOnChange={formEditOnChange}
+        formEditUserTeknisi={formEditUserTeknisi}
+        submitEditTeknisiForm={submitEditTeknisiForm}
       />
     </Layout>
   );

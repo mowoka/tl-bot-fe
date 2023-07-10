@@ -376,6 +376,13 @@ export const DataTable = (props: DataTableProps) => {
                 </TableCell>
               </TableRow>
             )}
+            {data.data.length < 1 && (
+              <TableRow>
+                <TableCell align="center" colSpan={15}>
+                  Data Teknisi Tidak ada
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </TableContainer>

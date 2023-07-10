@@ -6,59 +6,93 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  // Tooltip,
+  Tooltip,
 } from "@mui/material";
 import {
-  // UserTeknisi,
+  FilterOptionsProps,
+  FormUserTeknisi,
+  MasterFilterOptions,
+  UserTeknisi,
   UserTeknisiResponse,
 } from "../../hooks/teknisi-management/useTeknisiUser";
 import LinearProgress from "@mui/material/LinearProgress";
 import { PaginationPage } from "../common/PaginationPage";
-// import DeleteIcon from "@mui/icons-material/Delete";
-// import { ModalElement } from "../common/Modal";
-// import { DeleteConfirmation } from "./DeleteConfirmation";
-// import { useState } from "react";
+import EditIcon from "@mui/icons-material/Edit";
+import { ModalElement } from "../common/Modal";
+import { useState } from "react";
+import FormEditPanel from "./FormEditPanel";
+import EditConfirmation from "./EditConfirmation";
 
 interface DataTableProps {
   data: UserTeknisiResponse;
   isLoading: boolean;
   isAdmin: boolean;
   deleteTeknisiUser: (teknisiUserId: number) => void;
+  formEditOnChange: (
+    e: React.ChangeEvent<HTMLInputElement>,
+    name: string
+  ) => void;
+  teamLeadUser: FilterOptionsProps[];
+  masterFitlerOptions: MasterFilterOptions;
+  handleEditForm: (teknisiUser: UserTeknisi) => void;
+  formEditUserTeknisi: FormUserTeknisi;
+  submitEditTeknisiForm: () => Promise<void>;
 }
 
 export const DataTable = (props: DataTableProps) => {
-  const { data, isLoading, isAdmin } = props;
+  const {
+    data,
+    isLoading,
+    isAdmin,
+    teamLeadUser,
+    masterFitlerOptions,
+    formEditUserTeknisi,
+    formEditOnChange,
+    handleEditForm,
+    submitEditTeknisiForm,
+  } = props;
 
-  // const [userTeknisi, setUserTeknisi] = useState<UserTeknisi>();
-  // const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
-  // const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
+  const [showEditModal, setShowEditModal] = useState<boolean>(false);
+  const [editLoading, setEditLoading] = useState<boolean>(false);
 
-  // const handleModalDeleteUser = (user: UserTeknisi) => {
-  //   setUserTeknisi(user);
-  //   setShowDeleteModal(true);
-  // };
+  const handleModalEditUser = (user: UserTeknisi) => {
+    handleEditForm(user);
+    setShowEditModal(true);
+  };
 
-  // const handleDeleteTeknisiUser = async () => {
-  //   if (userTeknisi === undefined) return;
-  //   setDeleteLoading(true);
-  //   await deleteTeknisiUser(userTeknisi.id);
-  //   setShowDeleteModal(false);
-  //   setDeleteLoading(false);
-  // };
+  const submitEditForm = async () => {
+    setEditLoading(true);
+    await submitEditTeknisiForm();
+    setShowEditModal(false);
+    setEditLoading(false);
+  };
 
   return (
     <div className="py-6">
-      {/* <ModalElement
-        open={showDeleteModal}
-        handleClose={() => setShowDeleteModal(false)}
+      <ModalElement
+        open={showEditModal}
+        handleClose={() => setShowEditModal(false)}
       >
-        <DeleteConfirmation
-          userTeknisi={userTeknisi}
-          handleClose={() => setShowDeleteModal(false)}
-          handleDeleteTeknisiUser={handleDeleteTeknisiUser}
-          deleteLoading={deleteLoading}
-        />
-      </ModalElement> */}
+        {isAdmin ? (
+          <FormEditPanel
+            teamLeadUser={teamLeadUser}
+            masterFitlerOptions={masterFitlerOptions}
+            formOnChange={formEditOnChange}
+            formUserTeknisi={formEditUserTeknisi}
+            onLoading={editLoading}
+            onCancel={() => setShowEditModal(false)}
+            onSubmit={submitEditForm}
+          />
+        ) : (
+          <EditConfirmation
+            teknisiName={formEditUserTeknisi.name}
+            teknisiStatus={formEditUserTeknisi.isActive}
+            isLoading={editLoading}
+            handleClose={() => setShowEditModal(false)}
+            handleSubmit={submitEditForm}
+          />
+        )}
+      </ModalElement>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -70,8 +104,9 @@ export const DataTable = (props: DataTableProps) => {
               <TableCell align="center">Regional</TableCell>
               <TableCell align="center">Sector</TableCell>
               <TableCell align="center">Witel</TableCell>
+              <TableCell align="center">Status</TableCell>
               {isAdmin && <TableCell align="center">Team Lead</TableCell>}
-              {isAdmin && <TableCell align="center">Action</TableCell>}
+              <TableCell align="center">Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -87,29 +122,30 @@ export const DataTable = (props: DataTableProps) => {
                 <TableCell align="center">{data.regional.name}</TableCell>
                 <TableCell align="center">{data.sector.name}</TableCell>
                 <TableCell align="center">{data.witel.name}</TableCell>
+                <TableCell align="center">
+                  <p
+                    className={`${
+                      data.isActive === 1 ? "text-green-400" : "text-gray-400"
+                    }`}
+                  >
+                    {data.isActive === 1 ? "Active" : "Tidak Active"}
+                  </p>
+                </TableCell>
                 {isAdmin && (
                   <TableCell align="center">{data.user.name}</TableCell>
                 )}
-                {/* {isAdmin && (
-                  <TableCell align="center">
-                    <div className="flex justify-around items-center">
-                      <div
-                        onClick={() => handleModalDeleteUser(data)}
-                        className="cursor-pointer"
-                      >
-                        <Tooltip title="Delete">
-                          <DeleteIcon color="error" />
-                        </Tooltip>
-                      </div>
-                      Todo : Not Majority but nice to have if we can edit this user
-                      <div className="cursor-pointer">
-                        <Tooltip title="Edit">
-                          <EditIcon color="action" />
-                        </Tooltip>
-                      </div>
+                <TableCell align="center">
+                  <div className="flex justify-around items-center">
+                    <div
+                      onClick={() => handleModalEditUser(data)}
+                      className="cursor-pointer"
+                    >
+                      <Tooltip title="Edit">
+                        <EditIcon color="action" />
+                      </Tooltip>
                     </div>
-                  </TableCell>
-                )} */}
+                  </div>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

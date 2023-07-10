@@ -19,16 +19,20 @@ interface UseTeknisiUserProps {
     isLoading: boolean;
     submitLoading: boolean;
     formUserTeknisi: FormUserTeknisi;
+    formEditUserTeknisi: FormUserTeknisi;
     errorMessage: ErrrorMessage;
     stepForm: number;
     teamLeadUser: FilterOptionsProps[];
     onChange: (e: React.ChangeEvent<HTMLInputElement>, name: string) => void;
     formOnChange: (e: React.ChangeEvent<HTMLInputElement>, name: string) => void;
+    formEditOnChange: (e: React.ChangeEvent<HTMLInputElement>, name: string) => void;
     resetParams: () => void;
     onSubmit: () => void;
+    submitEditTeknisiForm: () => Promise<void>;
     onResetForm: () => void;
     onCloseError: () => void;
     deleteTeknisiUser: (teknisiUserId: number) => void;
+    handleEditForm: (data: UserTeknisi) => void;
 }
 
 const initialMasterFilterOptions: MasterFilterOptions = {
@@ -48,6 +52,7 @@ const initialFormTeknsiUser: FormUserTeknisi = {
     witel_id: '',
     regional_id: '',
     user_id: '',
+    isActive: 1,
 }
 
 const intialUserTeknisi: UserTeknisiResponse = {
@@ -72,6 +77,7 @@ export function useTeknisiUser(
         teknisi_lead_id: '',
     })
     const [formUserTeknisi, setFormUserTeknisi] = useState<FormUserTeknisi>(initialFormTeknsiUser);
+    const [formEditUserTeknisi, setFormEditUserTeknisi] = useState<FormUserTeknisi>(initialFormTeknsiUser);
     const [submitLoading, setSubmitLoading] = useState<boolean>(false)
     const [errorMessage, setErrorMessage] = useState<ErrrorMessage>({
         show: false,
@@ -132,6 +138,125 @@ export function useTeknisiUser(
         }
     }
 
+    const formEditOnChange = (e: React.ChangeEvent<HTMLInputElement>, name: string) => {
+        if (name === 'nik') {
+            setFormEditUserTeknisi((prev) => ({ ...prev, nik: e.target.value }))
+        } else if (name === 'name') {
+            setFormEditUserTeknisi((prev) => ({ ...prev, name: e.target.value }))
+        } else if (name === 'idTelegram') {
+            setFormEditUserTeknisi((prev) => ({ ...prev, idTelegram: e.target.value }))
+        } else if (name === 'partner') {
+            setFormEditUserTeknisi((prev) => ({ ...prev, partner_id: e.target.value }))
+        } else if (name === 'sector') {
+            setFormEditUserTeknisi((prev) => ({ ...prev, sector_id: e.target.value }))
+        } else if (name === 'regional') {
+            setFormEditUserTeknisi((prev) => ({ ...prev, regional_id: e.target.value }))
+        } else if (name === 'status') {
+            setFormEditUserTeknisi((prev) => ({ ...prev, isActive: e.target.checked === true ? 1 : 0 }))
+        } else if (name === 'team-lead') {
+            setFormEditUserTeknisi((prev) => ({ ...prev, user_id: e.target.value }))
+            if (userInformation.role !== 'admin') return;
+
+            const teamLead = teamLeadUser.find((item) => item.id === parseInt(e.target.value));
+            setFormEditUserTeknisi((prev) =>
+            ({
+                ...prev,
+                partner_id: teamLead?.partner?.id.toString() ?? '',
+                sector_id: teamLead?.sector?.id.toString() ?? '',
+                regional_id: teamLead?.regional?.id.toString() ?? '',
+                witel_id: teamLead?.witel?.id.toString() ?? '',
+            }))
+
+        }
+        else {
+            setFormEditUserTeknisi((prev) => ({ ...prev, witel_id: e.target.value }))
+        }
+    }
+
+    const handleEditForm = async (data: UserTeknisi) => {
+        if (userInformation.role === 'admin') {
+            await getTeamLeadUser();
+        }
+        if (userInformation.role === 'admin') {
+            setFormEditUserTeknisi({
+                nik: data.nik,
+                name: data.name,
+                idTelegram: data.idTelegram,
+                partner_id: data.partner.id.toString(),
+                sector_id: data.sector.id.toString(),
+                regional_id: data.regional.id.toString(),
+                witel_id: data.witel.id.toString(),
+                user_id: data.user.id.toString(),
+                isActive: data.isActive,
+            })
+        } else {
+            const isActive = data?.isActive === 1 ? 0 : 1;
+            setFormEditUserTeknisi({
+                nik: data.nik,
+                name: data.name,
+                idTelegram: data.idTelegram,
+                partner_id: data.partner.id.toString(),
+                sector_id: data.sector.id.toString(),
+                regional_id: data.regional.id.toString(),
+                witel_id: data.witel.id.toString(),
+                user_id: data.user.id.toString(),
+                isActive: isActive,
+            })
+        }
+
+    }
+
+    async function submitEditTeknisiForm() {
+        const { valid, message } = userTeknisiFormValidator(formEditUserTeknisi);
+        if (!valid) {
+            setErrorMessage({
+                show: true,
+                message: message,
+                status: "error"
+            });
+        } else {
+            try {
+                const data = {
+                    ...formEditUserTeknisi,
+                    partner_id: parseInt(formEditUserTeknisi.partner_id),
+                    sector_id: parseInt(formEditUserTeknisi.sector_id),
+                    witel_id: parseInt(formEditUserTeknisi.witel_id),
+                    regional_id: parseInt(formEditUserTeknisi.regional_id),
+                    user_id: parseInt(formEditUserTeknisi.user_id),
+                }
+
+                const res = await ApiFetchRaw(process.env.BASE_URL_API + 'teknisi-user', {
+                    method: 'PATCH',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(data),
+                })
+
+                if (res.body.statusCode === 200) {
+                    setErrorMessage({
+                        show: true,
+                        message: res.body.message,
+                        status: "success"
+                    });
+                    setFormEditUserTeknisi(initialFormTeknsiUser);
+                    userTeknisiData.mutate();
+                    handleClose();
+                } else {
+                    setErrorMessage({
+                        show: true,
+                        message: res.body.message,
+                        status: "error"
+                    });
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+    }
+
     async function submitTeknisUserForm() {
         const { valid, message } = userTeknisiFormValidator(formUserTeknisi);
         if (!valid) {
@@ -150,6 +275,7 @@ export function useTeknisiUser(
                     witel_id: parseInt(formUserTeknisi.witel_id),
                     regional_id: parseInt(formUserTeknisi.regional_id),
                     user_id: userInformation.role !== 'admin' ? userInformation.id : parseInt(formUserTeknisi.user_id),
+                    isActive: 1,
                 }
 
                 const res = await ApiFetchRaw(process.env.BASE_URL_API + 'teknisi-user', {
@@ -289,7 +415,6 @@ export function useTeknisiUser(
                 status: "error"
             });
         }
-
     }
 
     const onSubmit = async () => {
@@ -357,16 +482,20 @@ export function useTeknisiUser(
         isLoading: userTeknisiData.isLoading,
         submitLoading,
         formUserTeknisi,
+        formEditUserTeknisi,
         errorMessage,
         stepForm,
         teamLeadUser: teamLeadUserOptions,
         onChange,
         formOnChange,
+        formEditOnChange,
         resetParams,
         onSubmit,
+        submitEditTeknisiForm,
         onResetForm,
         onCloseError,
         deleteTeknisiUser,
+        handleEditForm,
     }
 }
 
@@ -387,6 +516,7 @@ export interface UserTeknisi {
     witel: FilterOptionsProps;
     regional: FilterOptionsProps;
     user: TeamLead;
+    isActive: number;
 }
 
 export interface FormUserTeknisi {
@@ -398,6 +528,7 @@ export interface FormUserTeknisi {
     witel_id: string;
     regional_id: string;
     user_id: string;
+    isActive: number;
 }
 
 export interface UserTeknisiResponse {
